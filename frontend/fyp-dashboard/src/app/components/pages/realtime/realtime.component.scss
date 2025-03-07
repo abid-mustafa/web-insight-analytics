@@ -1,0 +1,21 @@
+.widgets-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 2rem auto;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  
+  .widget {
+    width: 30%;
+    text-align: center;
+    margin-bottom: 1rem;
+    background: rgb(137, 209, 209);
+  }
+  
+  .counter {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 1rem 0;
+  }
+  

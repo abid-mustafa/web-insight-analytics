@@ -1,0 +1,23 @@
+<div class="date-picker-container">
+  <mat-form-field appearance="outline">
+    <mat-label>From</mat-label>
+    <input matInput [matDatepicker]="fromPicker" [(ngModel)]="fromDate" (dateChange)="onDateChange()">
+    <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+    <mat-datepicker #fromPicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>To</mat-label>
+    <input matInput [matDatepicker]="toPicker" [(ngModel)]="toDate" (dateChange)="onDateChange()">
+    <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+    <mat-datepicker #toPicker></mat-datepicker>
+  </mat-form-field>
+</div>
+
+<!-- Gridster Dashboard -->
+<gridster [options]="options">
+  <gridster-item *ngFor="let item of dashboard" [item]="item">
+    <app-table-widget [endpoint]="item.endpoint" [fromDate]="(fromDate | date:'yyyy-MM-dd') ?? ''"
+      [toDate]="(toDate | date:'yyyy-MM-dd') ?? ''"></app-table-widget>
+  </gridster-item>
+</gridster>
