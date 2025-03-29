@@ -88,6 +88,13 @@ module.exports = function(sequelize, DataTypes) {
           { name: "visitor_id" },
         ]
       },
+      {
+        name: "idx_sessions_start",
+        using: "BTREE",
+        fields: [
+          { name: "session_start" },
+        ]
+      },
     ]
   });
 };

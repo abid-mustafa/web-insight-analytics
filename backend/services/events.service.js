@@ -1,22 +1,22 @@
 const { events } = require('../models')
-const { Sequelize, Op } = require('sequelize');
+const { Sequelize, Op } = require('sequelize')
 
-module.exports.countByName = async (offset, startDate, endDate) => {
+module.exports.getCountByName = async (offset, startDate, endDate) => {
     try {
         const result = await events.findAll({
             attributes: [
-                'event_name',
-                [Sequelize.fn('COUNT', Sequelize.col('event_name')), 'event_count']
+                ['event_name', 'Event Name'],
+                [Sequelize.fn('COUNT', Sequelize.col('event_name')), 'Count']
             ],
             where: {
                 timestamp: {
-                    [Op.between]: [new Date(startDate), new Date(endDate)]
+                    [Op.between]: [startDate, endDate]
                 }
             },
             group: ['event_name'],
-            order: [[Sequelize.literal('event_count'), 'DESC']],
+            order: [[Sequelize.literal('Count'), 'DESC']],
             limit: 5,
-            offset,
+            offset: offset,
         })
         return result
     } catch (error) {

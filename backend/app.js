@@ -23,6 +23,11 @@ app.use(
 const eventsRoutes = require('./controllers/events.controller')
 app.use('/api/events/', eventsRoutes)
 
+const pagesRoutes = require('./controllers/pages.controller')
+app.use('/api/pages/', pagesRoutes)
+
+const usersRoutes = require('./controllers/users.controller')
+app.use('/api/users/', usersRoutes)
 
 db.authenticate()
     .then(app.listen(PORT, '0.0.0.0', () => console.log(`Server started on port ${PORT}`)))

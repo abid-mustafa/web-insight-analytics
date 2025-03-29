@@ -52,6 +52,20 @@ module.exports = function(sequelize, DataTypes) {
           { name: "session_id" },
         ]
       },
+      {
+        name: "idx_events_timestamp",
+        using: "BTREE",
+        fields: [
+          { name: "timestamp" },
+        ]
+      },
+      {
+        name: "idx_events_page_url",
+        using: "BTREE",
+        fields: [
+          { name: "page_url", length: 255 },
+        ]
+      },
     ]
   });
 };

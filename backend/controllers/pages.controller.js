@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const eventsService = require('../services/events.service')
+const pagesService = require('../services/pages.service')
 const { isValid, parseISO } = require('date-fns');
 
-router.get('/count-by-name', async (req, res) => {
+router.get('/views-by-title', async (req, res) => {
     try {
         let { offset, start_date, end_date } = req.query;
 
@@ -16,13 +16,13 @@ router.get('/count-by-name', async (req, res) => {
             return res.status(400).json({ message: "Invalid or missing start_date and end_date" })
         }
 
-        const events = await eventsService.getCountByName(offset,
+        const views = await pagesService.getViewsByTitle(offset,
             start, end)
         res.status(200).send({
-            data: events,
+            data: views,
         })
     } catch (error) {
-        console.log('An error occured while getting events count by name', error)
+        console.log('An error occured while getting views by title', error)
         res.status(500).send({ message: "Oops! An error occured" })
     }
 })
