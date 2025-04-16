@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const pagesService = require('../services/pages.service')
+const ecommerceService = require('../services/ecommerce.service')
 const { isValid, parseISO } = require('date-fns')
 
-router.get('/views-by-title', async (req, res, next) => {
+router.get('/item-count-by-name', async (req, res, next) => {
     try {
         let { offset, start_date, end_date } = req.query
 
@@ -18,7 +18,7 @@ router.get('/views-by-title', async (req, res, next) => {
             return next(error)
         }
 
-        const data = await pagesService.getViewsByTitle(offset,
+        const data = await ecommerceService.getItemCountByName(offset,
             start, end)
         res.status(200).send({
             data

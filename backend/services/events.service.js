@@ -1,25 +1,18 @@
-const { events } = require('../models')
-const { Sequelize, Op } = require('sequelize')
+const db = require('../database')
 
 module.exports.getCountByName = async (offset, startDate, endDate) => {
-    try {
-        const result = await events.findAll({
-            attributes: [
-                ['event_name', 'Event Name'],
-                [Sequelize.fn('COUNT', Sequelize.col('event_name')), 'Count']
-            ],
-            where: {
-                timestamp: {
-                    [Op.between]: [startDate, endDate]
-                }
-            },
-            group: ['event_name'],
-            order: [[Sequelize.literal('Count'), 'DESC']],
-            limit: 5,
-            offset: offset,
-        })
-        return result
-    } catch (error) {
-        throw error
-    }
+    const dbConnection = await db.getConnection()
+
+    const [result] = await dbConnection.query(`
+        SELECT 
+            event_name, COUNT(*) AS event_count
+        FROM
+            events
+        WHERE created_at BETWEEN ? AND ?
+        GROUP BY event_name
+        ORDER BY event_count DESC
+        LIMIT 5 OFFSET ?; 
+        `, [startDate, endDate, offset])
+
+    return result
 }

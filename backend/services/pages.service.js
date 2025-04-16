@@ -1,25 +1,18 @@
-const { page_views } = require('../models')
-const { Sequelize, Op } = require('sequelize')
+const db = require('../database')
 
 module.exports.getViewsByTitle = async (offset, startDate, endDate) => {
-    try {
-        const result = await page_views.findAll({
-            attributes: [
-                ['page_title', 'Page Title'],
-                [Sequelize.fn('COUNT', Sequelize.col('page_title')), 'Views']
-            ],
-            where: {
-                timestamp: {
-                    [Op.between]: [startDate, endDate]
-                }
-            },
-            group: ['page_title'],
-            order: [[Sequelize.literal('Views'), 'DESC']],
-            limit: 5,
-            offset: offset,
-        })
-        return result
-    } catch (error) {
-        throw error
-    }
+    const dbConnection = await db.getConnection()
+
+    const [result] = await dbConnection.query(`
+        SELECT 
+            page_title, COUNT(*) AS views
+        FROM
+            page_views
+        WHERE created_at BETWEEN ? AND ?
+        GROUP BY page_title
+        ORDER BY views DESC
+        LIMIT 5 OFFSET ?; 
+        `, [startDate, endDate, offset])
+
+    return result
 }
