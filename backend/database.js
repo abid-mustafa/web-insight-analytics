@@ -1,8 +1,13 @@
 const mysql = require('mysql2/promise')
 
-module.exports = mysql.createPool({
+const db = mysql.createPool({
     host: "localhost",
     user: "root",
     password: "password",
-    database: "web-insight"
+    database: "web-insight",
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 })
+
+module.exports = db

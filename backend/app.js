@@ -14,11 +14,17 @@ app.use(bodyParser.json())
 
 app.use(
     cors({
-        origin: '*',
+        origin: 'http://localhost:4200',
         methods: 'GET, PUT, PATCH, POST, DELETE',
-        credentials: true,
+        // credentials: true,  TODO: change to true later 
+        credentials: false
     })
 )
+
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`)
+    next()
+})
 
 const eventsRoutes = require('./controllers/events.controller')
 app.use('/api/events/', eventsRoutes)

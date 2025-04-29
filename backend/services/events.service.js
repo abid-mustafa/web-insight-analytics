@@ -1,9 +1,7 @@
 const db = require('../database')
 
 module.exports.getCountByName = async (offset, startDate, endDate) => {
-    const dbConnection = await db.getConnection()
-
-    const [result] = await dbConnection.query(`
+    const [result] = await db.query(`
         SELECT 
             event_name, COUNT(*) AS event_count
         FROM

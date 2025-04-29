@@ -1,9 +1,7 @@
 const db = require('../database')
 
 module.exports.getItemCountByName = async (offset, startDate, endDate) => {
-    const dbConnection = await db.getConnection()
-
-    const [result] = await dbConnection.query(`
+    const [result] = await db.query(`
         SELECT 
             i.item_name,
             SUM(i.quantity) AS total_sold

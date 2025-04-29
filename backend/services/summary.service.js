@@ -4,46 +4,13 @@ module.exports.getOverviewMetrics = async (endDate) => {
     const startDate = new Date(endDate)
     startDate.setDate(endDate.getDate() - 6)
 
-    const dbConnection = await db.getConnection()
-
-    const [[{ users }]] = await dbConnection.query(`
-        SELECT 
-            COUNT(DISTINCT (visitor_id)) AS users
-        FROM
-            sessions
-        WHERE created_at BETWEEN ? AND ?
-        `, [startDate, endDate])
-
-    const [[{ views }]] = await dbConnection.query(`
-        SELECT 
-            COUNT(*) AS views
-        FROM
-            page_views
-        WHERE created_at BETWEEN ? AND ?
-        `, [startDate, endDate])
-
-    const [[{ events }]] = await dbConnection.query(`
-        SELECT 
-            COUNT(*) AS events
-        FROM
-            events
-        WHERE created_at BETWEEN ? AND ?
-        `, [startDate, endDate])
-
-    const [[{ sessions }]] = await dbConnection.query(`
-        SELECT 
-            COUNT(*) AS sessions
-        FROM
-            sessions
-        WHERE created_at BETWEEN ? AND ?
-        `, [startDate, endDate])
-
-    const result = {
-        users,
-        views,
-        events,
-        sessions
-    }
+    const [[result]] = await dbConnection.query(`
+        SELECT
+            (SELECT COUNT(DISTINCT(visitor_id)) FROM sessions WHERE created_at BETWEEN ? AND ?) AS users,
+            (SELECT COUNT(*) FROM page_views WHERE created_at BETWEEN ? AND ?) AS views,
+            (SELECT COUNT(*) FROM events WHERE created_at BETWEEN ? AND ?) AS events,
+            (SELECT COUNT(*) FROM sessions WHERE created_at BETWEEN ? AND ?) AS sessions
+    `, [startDate, endDate, startDate, endDate, startDate, endDate, startDate, endDate])
 
     return result
 }

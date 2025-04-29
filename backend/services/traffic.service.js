@@ -1,9 +1,7 @@
 const db = require('../database')
 
 module.exports.getSessionsBySource = async (offset, startDate, endDate) => {
-    const dbConnection = await db.getConnection()
-
-    const [result] = await dbConnection.query(`
+    const [result] = await db.query(`
         SELECT 
             source, COUNT(DISTINCT(session_id)) AS sessions
         FROM
@@ -18,8 +16,6 @@ module.exports.getSessionsBySource = async (offset, startDate, endDate) => {
 }
 
 module.exports.getSessionsByMedium = async (offset, startDate, endDate) => {
-    const dbConnection = await db.getConnection()
-
     const [result] = await dbConnection.query(`
         SELECT 
             medium, COUNT(DISTINCT(session_id)) AS sessions
@@ -35,8 +31,6 @@ module.exports.getSessionsByMedium = async (offset, startDate, endDate) => {
 }
 
 module.exports.getSessionsByCampaign = async (offset, startDate, endDate) => {
-    const dbConnection = await db.getConnection()
-
     const [result] = await dbConnection.query(`
         SELECT 
             campaign, COUNT(DISTINCT(session_id)) AS sessions

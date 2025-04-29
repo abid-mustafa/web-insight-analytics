@@ -37,6 +37,7 @@ router.get('/overview-metrics-by-day', async (req, res, next) => {
         }
 
         const data = await summaryService.getOverviewMetricsByDay(end)
+
         res.status(200).send({
             data
         })

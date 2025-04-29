@@ -1,9 +1,7 @@
 const db = require('../database')
 
 module.exports.getViewsByTitle = async (offset, startDate, endDate) => {
-    const dbConnection = await db.getConnection()
-
-    const [result] = await dbConnection.query(`
+    const [result] = await db.query(`
         SELECT 
             page_title, COUNT(*) AS views
         FROM
