@@ -1,6 +1,6 @@
 const db = require('../database')
 
-module.exports.getItemCountByName = async (offset, startDate, endDate) => {
+exports.getItemCountByName = async (offset, startDate, endDate) => {
     const [result] = await db.query(`
         SELECT 
             i.item_name,
@@ -17,6 +17,18 @@ module.exports.getItemCountByName = async (offset, startDate, endDate) => {
             total_sold DESC
         LIMIT 5 OFFSET ?;
         `, [startDate, endDate, offset])
+
+    const [[total]] = await db.query(`
+            SELECT 
+                COUNT(DISTINCT(i.item_name)) as item_name
+            FROM 
+                items i
+            JOIN 
+            transactions t ON i.transaction_id = t.id
+            WHERE t.created_at BETWEEN ? AND ?;
+        `, [startDate, endDate])
+
+    return { result, total }
 
     return result
 }

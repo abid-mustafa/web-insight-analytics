@@ -1,11 +1,8 @@
 const bcrypt = require('bcrypt')
-
-const express = require('express')
-const router = express.Router()
-
 const db = require('../database.js')
+const service = require('../services/auth.service.js')
 
-router.post('/login', async (req, res, next) => {
+module.exports.login = async (req, res, next) => {
     const email = req.body.email
     const password = req.body.password
 
@@ -14,12 +11,7 @@ router.post('/login', async (req, res, next) => {
     }
 
     try {
-        const [[user]] = await db.query(
-            `SELECT
-                password_hash
-            FROM users
-            WHERE email = ?;
-            `, [email])
+        const user = await service.login(email)
 
         const match = user && await bcrypt.compare(password, user.password_hash)
         if (!match) {
@@ -33,9 +25,9 @@ router.post('/login', async (req, res, next) => {
     } catch (error) {
         next(error)
     }
-})
+}
 
-router.post('/register', async (req, res, next) => {
+module.exports.register = async (req, res, next) => {
     const email = req.body.email
     const password = req.body.password
 
@@ -44,26 +36,20 @@ router.post('/register', async (req, res, next) => {
     }
 
     try {
-        const dbConnection = await db.getConnection()
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        await dbConnection.query(
-            `
-            INSERT INTO users (email, password_hash)
-            VALUES (?, ?);
-            `, [email, hashedPassword])
+        await service.register(email, hashedPassword)
 
-        dbConnection.release()
-        res.status(401).send('Registered Successfuly')
+        res.status(201).send('Registered Successfuly')
     } catch (error) {
         if (error.code === 'ER_DUP_ENTRY') {
             return res.status(409).json({ message: 'This email is already registered.' })
         }
         next(error)
     }
-})
+}
 
-router.post('/logout', (req, res, next) => {
+module.exports.logout = (req, res, next) => {
     try {
         req.session.destroy(err => {
             if (err) return res.status(500).json({ message: 'Could not log out' })
@@ -73,6 +59,4 @@ router.post('/logout', (req, res, next) => {
     } catch (error) {
         next(error)
     }
-})
-
-module.exports = router
+}

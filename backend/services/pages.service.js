@@ -1,6 +1,6 @@
 const db = require('../database')
 
-module.exports.getViewsByTitle = async (offset, startDate, endDate) => {
+exports.getViewsByTitle = async (offset, startDate, endDate) => {
     const [result] = await db.query(`
         SELECT 
             page_title, COUNT(*) AS views
@@ -12,5 +12,11 @@ module.exports.getViewsByTitle = async (offset, startDate, endDate) => {
         LIMIT 5 OFFSET ?; 
         `, [startDate, endDate, offset])
 
-    return result
+    const [[total]] = await db.query(`
+            SELECT COUNT(DISTINCT(page_title)) AS total
+            FROM page_views
+            WHERE created_at BETWEEN ? AND ?;
+        `, [startDate, endDate])
+
+    return { result, total }
 }

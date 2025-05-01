@@ -50,46 +50,37 @@ app.use((req, res, next) => {
     next()
 })
 
-const authRoutes = require('./controllers/auth.controller.js')
+const authRoutes = require('./routes/auth.routes.js')
 app.use('/api/auth/', authRoutes)
 
 // Authentication Middleware
-app.use((req, res, next) => {
-    if (req.session.user) {
-        return next()
-    }
-    res.status(401).json({ message: 'Not authenticated' })
-})
+const authMiddleware = require('./middlewares/auth.middleware.js')
+app.use(authMiddleware)
 
-const eventsRoutes = require('./controllers/events.controller')
+const eventsRoutes = require('./routes/events.routes.js')
 app.use('/api/events/', eventsRoutes)
 
-const pagesRoutes = require('./controllers/pages.controller')
+const pagesRoutes = require('./routes/pages.routes.js')
 app.use('/api/pages/', pagesRoutes)
 
-const visitorsRoutes = require('./controllers/visitors.controller.js')
+const visitorsRoutes = require('./routes/visitors.routes.js')
 app.use('/api/visitors/', visitorsRoutes)
 
-const ecommerceRoutes = require('./controllers/ecommerce.controller.js')
+const ecommerceRoutes = require('./routes/ecommerce.routes.js')
 app.use('/api/ecommerce/', ecommerceRoutes)
 
-const trafficRouter = require('./controllers/traffic.controller.js')
+const trafficRouter = require('./routes/traffic.routes.js')
 app.use('/api/traffic/', trafficRouter)
 
-const summaryRouter = require('./controllers/summary.controller.js')
+const summaryRouter = require('./routes/summary.routes.js')
 app.use('/api/summary', summaryRouter)
 
-const websitesRouter = require('./controllers/websites.controller.js')
+const websitesRouter = require('./routes/websites.routes.js')
 app.use('/api/websites', websitesRouter)
 
-app.use((err, req, res, next) => {
-    const error = {
-        statusCode: err.statusCode || 500,
-        message: err.message
-    }
-    console.error(error)
-    res.status(error.statusCode).send('Something broke!')
-})
+// global error handler
+const errorHandler = require('./middlewares/errorHandler')
+app.use(errorHandler)
 
 io.on('connection', (socket) => {
     console.log('a user connected')

@@ -1,6 +1,6 @@
 const db = require('../database')
 
-module.exports.getCountByName = async (offset, startDate, endDate) => {
+exports.getCountByName = async (offset, startDate, endDate) => {
     const [result] = await db.query(`
         SELECT 
             event_name, COUNT(*) AS event_count
@@ -12,5 +12,11 @@ module.exports.getCountByName = async (offset, startDate, endDate) => {
         LIMIT 5 OFFSET ?; 
         `, [startDate, endDate, offset])
 
-    return result
+    const [[total]] = await db.query(`
+            SELECT COUNT(DISTINCT(event_name)) AS total
+            FROM events
+            WHERE created_at BETWEEN ? AND ?;
+        `, [startDate, endDate])
+
+    return { result, total }
 }

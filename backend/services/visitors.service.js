@@ -1,12 +1,10 @@
 const db = require('../database')
 
-module.exports.getVisitorsByCountry = async (offset, startDate, endDate) => {
-    // const dbConnection = await db.getConnection()
-
+exports.getVisitorsByCountry = async (offset, startDate, endDate) => {
     const [result] = await db.query(`
         SELECT 
             country AS country,
-            COUNT(DISTINCT (visitor_id)) AS visitors
+            COUNT(DISTINCT(visitor_id)) AS visitors
         FROM
             sessions
         WHERE
@@ -16,5 +14,11 @@ module.exports.getVisitorsByCountry = async (offset, startDate, endDate) => {
         LIMIT 5 OFFSET ?;
         `, [startDate, endDate, offset])
 
-    return result
+    const [[total]] = await db.query(`
+            SELECT COUNT(DISTINCT(country)) AS total
+            FROM sessions
+            WHERE created_at BETWEEN ? AND ?;
+        `, [startDate, endDate])
+
+    return { result, total }
 }

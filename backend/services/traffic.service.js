@@ -1,9 +1,10 @@
 const db = require('../database')
 
-module.exports.getSessionsBySource = async (offset, startDate, endDate) => {
+exports.getSessionsBySource = async (offset, startDate, endDate) => {
     const [result] = await db.query(`
         SELECT 
-            source, COUNT(DISTINCT(session_id)) AS sessions
+            source,
+            COUNT(DISTINCT(session_id)) AS sessions
         FROM
             traffic_sources
         WHERE created_at BETWEEN ? AND ?
@@ -12,11 +13,17 @@ module.exports.getSessionsBySource = async (offset, startDate, endDate) => {
         LIMIT 5 OFFSET ?; 
         `, [startDate, endDate, offset])
 
-    return result
+    const [[total]] = await db.query(`
+            SELECT COUNT(DISTINCT(source)) AS total
+            FROM traffic_sources
+            WHERE created_at BETWEEN ? AND ?;
+        `, [startDate, endDate])
+
+    return { result, total }
 }
 
-module.exports.getSessionsByMedium = async (offset, startDate, endDate) => {
-    const [result] = await dbConnection.query(`
+exports.getSessionsByMedium = async (offset, startDate, endDate) => {
+    const [result] = await db.query(`
         SELECT 
             medium, COUNT(DISTINCT(session_id)) AS sessions
         FROM
@@ -27,11 +34,17 @@ module.exports.getSessionsByMedium = async (offset, startDate, endDate) => {
         LIMIT 5 OFFSET ?; 
         `, [startDate, endDate, offset])
 
-    return result
+    const [[total]] = await db.query(`
+            SELECT COUNT(DISTINCT(medium)) AS total
+            FROM sessions
+            WHERE created_at BETWEEN ? AND ?;
+        `, [startDate, endDate])
+
+    return { result, total }
 }
 
-module.exports.getSessionsByCampaign = async (offset, startDate, endDate) => {
-    const [result] = await dbConnection.query(`
+exports.getSessionsByCampaign = async (offset, startDate, endDate) => {
+    const [result] = await db.query(`
         SELECT 
             campaign, COUNT(DISTINCT(session_id)) AS sessions
         FROM
@@ -42,5 +55,11 @@ module.exports.getSessionsByCampaign = async (offset, startDate, endDate) => {
         LIMIT 5 OFFSET ?; 
         `, [startDate, endDate, offset])
 
-    return result
+    const [[total]] = await db.query(`
+            SELECT COUNT(DISTINCT(campaign)) AS total
+            FROM sessions
+            WHERE created_at BETWEEN ? AND ?;
+        `, [startDate, endDate])
+
+    return { result, total }
 }
