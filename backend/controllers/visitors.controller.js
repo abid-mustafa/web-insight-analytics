@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const usersService = require('../services/users.service')
+const visitorsService = require('../services/visitors.service')
 const { isValid, parseISO } = require('date-fns')
 
-router.get('/users-by-country', async (req, res, next) => {
+router.get('/visitors-by-country', async (req, res, next) => {
     try {
         let { offset, start_date, end_date } = req.query
 
@@ -16,7 +16,7 @@ router.get('/users-by-country', async (req, res, next) => {
             return res.status(400).json({ message: "Invalid or missing start_date and end_date" })
         }
 
-        const users = await usersService.getUsersByCountry(offset,
+        const users = await visitorsService.getVisitorsByCountry(offset,
             start, end)
         res.status(200).send({
             data: users,
