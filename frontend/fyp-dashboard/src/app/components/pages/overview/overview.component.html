@@ -1,0 +1,11 @@
+<gridster [options]="options" style="background-color: #D9F6F7; height: 100%;">
+  <gridster-item *ngFor="let item of dashboard" [item]="item">
+      @if(item.displayType === 'table') {
+      <app-table-card [endpoint]="item.endpoint" [title]="item.title" [fromDate]="dateRange.fromDate"
+          [toDate]="dateRange.toDate"></app-table-card>
+      }
+      @else {
+      <app-summary-card [endpoint]="item.endpoint" [title]="item.title"></app-summary-card>
+      }
+  </gridster-item>
+</gridster>

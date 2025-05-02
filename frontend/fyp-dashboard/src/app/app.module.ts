@@ -1,44 +1,50 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './components/header/header.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { GridsterModule } from 'angular-gridster2';
-import { provideHttpClient } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
-// Angular Material Components
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MAT_DATE_FORMATS, provideNativeDateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { GridsterComponent, GridsterItemComponent } from 'angular-gridster2';
+import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
-// Pages Components
-import { DashboardComponent } from './components/pages/dashboard/dashboard.component';
+import { HeaderComponent } from './components/header/header.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { OverviewComponent } from './components/pages/overview/overview.component';
+import { TableCardComponent } from './components/table-card/table-card.component';
 import { RealtimeComponent } from './components/pages/realtime/realtime.component';
-import { AnalyticsComponent } from './components/pages/analytics/analytics.component';
-import { UsersComponent } from './components/pages/users/users.component';
-import { SettingsComponent } from './components/pages/settings/settings.component';
-import { HelpComponent } from './components/pages/help/help.component';
-import { TableWidgetComponent } from './components/table-widget/table-widget.component';
-import { SocketService } from './components/services/socket.service';
+import { provideHttpClient } from '@angular/common/http';
+import { SummaryCardComponent } from './components/summary-card/summary-card.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
 
-const socketConfig: SocketIoConfig = {
-  url: 'http://192.168.154.45:5000', // Replace with your backend URL
-  options: {
-    transports: ['websocket'],
-  }
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YY',
+  },
+  display: {
+    dateInput: 'DD/MM/YY',
+    monthYearLabel: 'MMM YY',
+    dateA11yLabel: 'DD/MM/YY',
+    monthYearA11yLabel: 'MMMM YY',
+  },
 };
 
 @NgModule({
@@ -46,37 +52,43 @@ const socketConfig: SocketIoConfig = {
     AppComponent,
     HeaderComponent,
     SidebarComponent,
-    DashboardComponent,
+    OverviewComponent,
+    TableCardComponent,
     RealtimeComponent,
-    AnalyticsComponent,
-    UsersComponent,
-    SettingsComponent,
-    HelpComponent,
-    TableWidgetComponent
+    SummaryCardComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
-    GridsterModule,
-    FormsModule,
-    MatNativeDateModule,
-    MatDatepickerModule,
-    MatToolbarModule,
-    MatButtonModule,
     MatIconModule,
+    MatButtonModule,
+    MatToolbarModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatMenuModule,
     MatSidenavModule,
     MatListModule,
-    MatCardModule,
+    GridsterComponent,
+    GridsterItemComponent,
     MatTableModule,
     MatPaginatorModule,
-    SocketIoModule.forRoot(socketConfig),
+    MatCardModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
+    BaseChartDirective
   ],
   providers: [
-    SocketService,
-    provideHttpClient()
+    provideAnimationsAsync(),
+    provideNativeDateAdapter(),
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    provideHttpClient(),
+    provideCharts(withDefaultRegisterables()),
   ],
   bootstrap: [AppComponent]
 })

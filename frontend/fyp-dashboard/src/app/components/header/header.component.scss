@@ -1,16 +1,35 @@
-mat-toolbar {
-  display: flex;
-  justify-content: space-between; // Ensures the logo and icon are spaced out across the toolbar
-  align-items: center;
-  background-color: #add8e6; // Light blue background
+.header {
+    position: fixed;
+    top: 0;
+    height: 90px;
+    background-color: #1A2A40;
+    color: #D9D9D9;
+}
 
-  .logo {
-    font-weight: bold;
-    font-size: 24px;
-    color: #006400; // Dark green text
-  }
+.header-spacer {
+    flex: 1 1 auto;
+}
 
-  .toolbar-spacer {
-    flex: 1;
-  }
+.icon {
+    color: #D9D9D9;
+}
+
+.website-selector {
+    color: #1D3557;
+    min-width: 180px;
+    padding-left: 30px;
+    padding-top: 15px;
+    padding-right: 15px;
+}
+
+.date-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.selected-dates {
+    margin-left: 16px;
+    font-weight: 500;
 }

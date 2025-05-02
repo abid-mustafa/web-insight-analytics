@@ -1,0 +1,73 @@
+.custom-card {
+    padding: 16px;
+    background-color: #CFDEE7;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    gap: 16px;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.card-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1A2A40;
+}
+
+.table-container {
+    overflow-x: auto;
+    max-height: 300px;
+    flex-grow: 1;
+    /* Allows table to take up remaining space */
+}
+
+table {
+    width: 100%;
+    // border-spacing: 0;
+    border: 2px solid #1A2A40;
+    border-radius: 2px;
+}
+
+mat-paginator {
+    align-self: flex-end;
+    width: 100%;
+    background-color: #CFDEE7;
+    height: 28px !important;
+    color: #1A2A40;
+}
+
+/* Adjust row height */
+tr {
+    color: #1A2A40;
+    height: 28px !important;
+    /* Adjust row height */
+}
+
+/* Adjust cell padding for compact design */
+td {
+    color: #1A2A40;
+    padding: 4px 6px !important;
+    /* Reduce padding */
+    line-height: 2;
+    vertical-align: middle;
+    /* Align content properly */
+    font-size: 13px;
+    /* Slightly smaller font for compactness */
+}
+
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    /* or whatever height you want for loading space */
+}

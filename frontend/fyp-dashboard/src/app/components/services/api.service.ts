@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  private baseURL = 'http://192.168.154.45:5000/api/';
+  private baseURL = 'http://127.0.0.1:5000/api/';
 
   constructor(private http: HttpClient) { }
 
@@ -23,6 +23,11 @@ export class ApiService {
     return this.http.get<any[]>(url);
   }
 
+  fetchSummaryData(endpoint: string, toDate: string): Observable<any[]> {
+    const url = `${this.baseURL}${endpoint}/?end_date=${toDate}`;
+    return this.http.get<any[]>(url);
+  }
+
   fetchAIResponse(text: string): Observable<any[]> {
     const url = `${this.baseURL}search-bar`;
     return this.http.post<any[]>(url, { text });
@@ -30,6 +35,11 @@ export class ApiService {
 
   getRealtimeData(): Observable<any[]> {
     const url = `${this.baseURL}get-realtime`;
+    return this.http.get<any[]>(url);
+  }
+
+  getWebsites(): Observable<any[]> {
+    const url = `${this.baseURL}websites/by-userid/1`;
     return this.http.get<any[]>(url);
   }
 }
