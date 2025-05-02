@@ -1,9 +1,9 @@
-const pagesService = require('../services/pages.service')
+const service = require('../services/pages.service')
 
 exports.getViewsByTitle = async (req, res, next) => {
     try {
         const { offset, start, end } = req.parsedQuery
-        const data = await pagesService.getViewsByTitle(offset,
+        const data = await service.getViewsByTitle(offset,
             start, end)
         res.status(200).json({
             success: true,

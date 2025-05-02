@@ -1,7 +1,7 @@
 const db = require('../database')
 
 exports.getItemCountByName = async (offset, startDate, endDate) => {
-    const [result] = await db.query(`
+    const [values] = await db.query(`
         SELECT 
             i.item_name,
             SUM(i.quantity) AS total_sold
@@ -18,9 +18,9 @@ exports.getItemCountByName = async (offset, startDate, endDate) => {
         LIMIT 5 OFFSET ?;
         `, [startDate, endDate, offset])
 
-    const [[total]] = await db.query(`
+    const [[{ total }]] = await db.query(`
             SELECT 
-                COUNT(DISTINCT(i.item_name)) as item_name
+                COUNT(DISTINCT(i.item_name)) as total
             FROM 
                 items i
             JOIN 
@@ -28,7 +28,5 @@ exports.getItemCountByName = async (offset, startDate, endDate) => {
             WHERE t.created_at BETWEEN ? AND ?;
         `, [startDate, endDate])
 
-    return { result, total }
-
-    return result
+    return { values, total }
 }

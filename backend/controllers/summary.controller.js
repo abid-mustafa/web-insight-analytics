@@ -1,10 +1,9 @@
-const summaryService = require('../services/summary.service')
-const { isValid, parseISO } = require('date-fns')
+const service = require('../services/summary.service')
 
 exports.getOverviewMetrics = async (req, res, next) => {
     try {
         const { end } = req.parsedQuery
-        const data = await summaryService.getOverviewMetrics(end)
+        const data = await service.getOverviewMetrics(end)
         res.status(200).json({
             success: true,
             data
@@ -17,7 +16,7 @@ exports.getOverviewMetrics = async (req, res, next) => {
 exports.getOverviewMetricsByDay = async (req, res, next) => {
     try {
         const { end } = req.parsedQuery
-        const data = await summaryService.getOverviewMetricsByDay(end)
+        const data = await service.getOverviewMetricsByDay(end)
         res.status(200).json({
             success: true,
             data

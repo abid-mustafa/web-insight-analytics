@@ -10,7 +10,7 @@ logs/
 # Build directories
 dist/
 build/
-public/
+# public/
 
 # Environment variables
 .env

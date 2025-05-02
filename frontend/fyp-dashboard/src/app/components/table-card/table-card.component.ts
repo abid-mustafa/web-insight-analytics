@@ -41,7 +41,7 @@ export class TableCardComponent implements AfterViewInit, OnChanges {
     }
   };
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) { }
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
@@ -75,11 +75,11 @@ export class TableCardComponent implements AfterViewInit, OnChanges {
       this.pageIndex * this.pageSize
     ).subscribe({
       next: (result: any) => {
-        const rows = result.data.result || [];
+        const rows = result.data.values || [];
         const applyResult = () => {
           this.displayedColumns = rows.length ? Object.keys(rows[0]) : [];
           this.dataSource.data = rows;
-          this.length = result.data.total.total ?? rows.length;
+          this.length = result.data.total ?? rows.length;
           this.prepareChartData();
           this.isLoading = false;
         };

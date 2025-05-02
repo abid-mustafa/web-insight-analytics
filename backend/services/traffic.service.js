@@ -1,7 +1,7 @@
 const db = require('../database')
 
 exports.getSessionsBySource = async (offset, startDate, endDate) => {
-    const [result] = await db.query(`
+    const [values] = await db.query(`
         SELECT 
             source,
             COUNT(DISTINCT(session_id)) AS sessions
@@ -13,17 +13,17 @@ exports.getSessionsBySource = async (offset, startDate, endDate) => {
         LIMIT 5 OFFSET ?; 
         `, [startDate, endDate, offset])
 
-    const [[total]] = await db.query(`
+    const [[{ total }]] = await db.query(`
             SELECT COUNT(DISTINCT(source)) AS total
             FROM traffic_sources
             WHERE created_at BETWEEN ? AND ?;
         `, [startDate, endDate])
 
-    return { result, total }
+    return { values, total }
 }
 
 exports.getSessionsByMedium = async (offset, startDate, endDate) => {
-    const [result] = await db.query(`
+    const [values] = await db.query(`
         SELECT 
             medium, COUNT(DISTINCT(session_id)) AS sessions
         FROM
@@ -34,17 +34,17 @@ exports.getSessionsByMedium = async (offset, startDate, endDate) => {
         LIMIT 5 OFFSET ?; 
         `, [startDate, endDate, offset])
 
-    const [[total]] = await db.query(`
+    const [[{ total }]] = await db.query(`
             SELECT COUNT(DISTINCT(medium)) AS total
             FROM sessions
             WHERE created_at BETWEEN ? AND ?;
         `, [startDate, endDate])
 
-    return { result, total }
+    return { values, total }
 }
 
 exports.getSessionsByCampaign = async (offset, startDate, endDate) => {
-    const [result] = await db.query(`
+    const [values] = await db.query(`
         SELECT 
             campaign, COUNT(DISTINCT(session_id)) AS sessions
         FROM
@@ -55,11 +55,11 @@ exports.getSessionsByCampaign = async (offset, startDate, endDate) => {
         LIMIT 5 OFFSET ?; 
         `, [startDate, endDate, offset])
 
-    const [[total]] = await db.query(`
+    const [[{ total }]] = await db.query(`
             SELECT COUNT(DISTINCT(campaign)) AS total
             FROM sessions
             WHERE created_at BETWEEN ? AND ?;
         `, [startDate, endDate])
 
-    return { result, total }
+    return { values, total }
 }

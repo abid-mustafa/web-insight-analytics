@@ -1,4 +1,4 @@
-const websiteService = require('../services/websites.service')
+const service = require('../services/websites.service')
 
 exports.getWebsitesByUserid = async (req, res, next) => {
     try {
@@ -10,7 +10,7 @@ exports.getWebsitesByUserid = async (req, res, next) => {
             return next(error)
         }
 
-        const data = await websiteService.getWebsitesByUserid(userid)
+        const data = await service.getWebsitesByUserid(userid)
         res.status(200).json({
             success: true,
             data
