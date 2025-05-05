@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  private baseURL = 'http://127.0.0.1:5000/api/';
+  private baseURL = 'http://127.0.0.1:5000/api';
 
   constructor(private http: HttpClient) { }
 
@@ -19,27 +19,27 @@ export class ApiService {
    * @returns Observable containing the API response
    */
   fetchTableData(endpoint: string, fromDate: string, toDate: string, offset: number, limit: number = 5): Observable<any[]> {
-    const url = `${this.baseURL}${endpoint}/?start_date=${fromDate}&end_date=${toDate}&offset=${offset}&limit=${limit}`;
-    return this.http.get<any[]>(url);
+    const url = `${this.baseURL}/${endpoint}/?start_date=${fromDate}&end_date=${toDate}&offset=${offset}&limit=${limit}`;
+    return this.http.get<any[]>(url, {withCredentials: true});
   }
 
   fetchSummaryData(endpoint: string, toDate: string): Observable<any[]> {
-    const url = `${this.baseURL}${endpoint}/?end_date=${toDate}`;
+    const url = `${this.baseURL}/${endpoint}/?end_date=${toDate}`;
     return this.http.get<any[]>(url);
   }
 
   fetchAIResponse(text: string): Observable<any[]> {
-    const url = `${this.baseURL}search-bar`;
+    const url = `${this.baseURL}/search-bar`;
     return this.http.post<any[]>(url, { text });
   }
 
   getRealtimeData(): Observable<any[]> {
-    const url = `${this.baseURL}get-realtime`;
+    const url = `${this.baseURL}/get-realtime`;
     return this.http.get<any[]>(url);
   }
 
   getWebsites(): Observable<any[]> {
-    const url = `${this.baseURL}websites/by-userid/1`;
+    const url = `${this.baseURL}/websites/by-userid/1`;
     return this.http.get<any[]>(url);
   }
 }

@@ -23,6 +23,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { GridsterComponent, GridsterItemComponent } from 'angular-gridster2';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { HeaderComponent } from './components/header/header.component';
@@ -81,6 +82,7 @@ export const MY_DATE_FORMATS = {
     MatCardModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
+    MatSnackBarModule,
     BaseChartDirective
   ],
   providers: [

@@ -25,20 +25,64 @@ export class TableCardComponent implements AfterViewInit, OnChanges {
   length = 0;
   isLoading = false;
 
-  // View state: table, line, or bar
+  // View state: table, pie, or bar
   viewType: 'table' | 'pie' | 'bar' = 'table';
   chartType: ChartType = 'pie';
   chartData?: ChartConfiguration['data'];
-  chartOptions: ChartConfiguration['options'] = {
+
+  // Keep full labels for tooltip display
+  private originalLabels: string[] = [];
+
+  // Chart options for bar/line charts (with grid + full-text tooltip)
+  public chartOptions: ChartConfiguration['options'] = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { labels: { color: '#1A2A40' } }
+      legend: { labels: { color: '#1A2A40' } },
+      tooltip: {
+        callbacks: {
+          // show full label on hover
+          title: (items) => {
+            const idx = items[0].dataIndex;
+            return this.originalLabels[idx] || '';
+          },
+          label: (item) => {
+            return `${item.dataset.label}: ${item.formattedValue}`;
+          }
+        }
+      }
     },
     scales: {
-      x: { ticks: { color: '#1A2A40' }, grid: { color: 'rgba(0,0,0,0.1)' } },
-      y: { ticks: { color: '#1A2A40' }, grid: { color: 'rgba(0,0,0,0.1)' } }
+      x: {
+        ticks: { color: '#1A2A40' },
+        grid: { color: 'rgba(0,0,0,0.1)' }
+      },
+      y: {
+        ticks: { color: '#1A2A40' },
+        grid: { color: 'rgba(0,0,0,0.1)' }
+      }
     }
+  };
+
+  // Chart options for pie charts (no grid + full-text tooltip)
+  public pieChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { labels: { color: '#1A2A40' } },
+      tooltip: {
+        callbacks: {
+          title: (items) => {
+            const idx = items[0].dataIndex;
+            return this.originalLabels[idx] || '';
+          },
+          label: (item) => {
+            return `${item.dataset.label}: ${item.formattedValue}`;
+          }
+        }
+      }
+    },
+    scales: {}
   };
 
   constructor(private apiService: ApiService) { }
@@ -99,6 +143,7 @@ export class TableCardComponent implements AfterViewInit, OnChanges {
   }
 
   private prepareChartData(): void {
+    // Only build chart data for non-table views with sufficient data
     if (
       this.viewType === 'table' ||
       !this.dataSource.data.length ||
@@ -106,25 +151,51 @@ export class TableCardComponent implements AfterViewInit, OnChanges {
     ) {
       return;
     }
+
     const labelKey = this.displayedColumns[0];
     const valueKey = this.displayedColumns[1];
-    const labels = this.dataSource.data.map(row => row[labelKey]);
+
+    // 1) grab raw full labels
+    const rawLabels: string[] = this.dataSource.data.map(row => row[labelKey]);
+    this.originalLabels = rawLabels;
+
+    // 2) truncate labels to 12 chars in bar view
+    const labels = rawLabels.map(l =>
+      this.viewType === 'bar' && l.length > 12 ? `${l.slice(0, 12)}…` : l
+    );
+
     const values = this.dataSource.data.map(row => row[valueKey]);
+
+    // Define a palette for slices/bars
+    const backgroundColors = [
+      'rgba(255, 99, 132, 0.6)',
+      'rgba(54, 162, 235, 0.6)',
+      'rgba(255, 206, 86, 0.6)',
+      'rgba(75, 192, 192, 0.6)',
+      'rgba(153, 102, 255, 0.6)',
+      'rgba(255, 159, 64, 0.6)'
+    ];
+    const borderColors = backgroundColors.map(c => c.replace('0.6', '1'));
+
+    // Build dataset
+    const ds: any = {
+      label: valueKey,
+      data: values,
+      labels,  // truncated or full labels go here
+      backgroundColor: backgroundColors.slice(0, values.length),
+      borderColor: borderColors.slice(0, values.length),
+      borderWidth: 1
+    };
+
+    // If pie, reduce radius and add hover offset
+    if (this.viewType === 'pie') {
+      ds.radius = '75%';
+      ds.hoverOffset = 4;
+    }
 
     this.chartData = {
       labels,
-      datasets: [
-        {
-          data: values,
-          label: valueKey,
-          borderColor: 'blue',
-          backgroundColor:
-            this.chartType === 'bar'
-              ? 'rgba(0,0,255,0.6)'
-              : 'rgba(0,0,255,0.0)',
-          fill: this.chartType === 'bar'
-        }
-      ]
+      datasets: [ds]
     };
   }
 }
