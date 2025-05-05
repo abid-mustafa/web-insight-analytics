@@ -1,16 +1,22 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { OverviewComponent } from './components/pages/overview/overview.component';
-import { RealtimeComponent } from './components/pages/realtime/realtime.component';
+
+import { LoginComponent }     from './components/login/login.component';
+import { RegisterComponent }  from './components/register/register.component';
+import { OverviewComponent }  from './components/pages/overview/overview.component';
+import { RealtimeComponent }  from './components/pages/realtime/realtime.component';
 
 const routes: Routes = [
-  { path: 'overview', component: OverviewComponent, title: 'Web Insight | Overview' },
-  { path: 'realtime', component: RealtimeComponent, title: 'Web Insight | Realtime' },
-  { path: '**', redirectTo: 'overview' } // Default route
+  { path: 'login',    component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'overview', component: OverviewComponent },
+  { path: 'realtime', component: RealtimeComponent },
+  { path: '',         redirectTo: 'login', pathMatch: 'full' },
+  { path: '**',       redirectTo: 'login' }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [ RouterModule.forRoot(routes) ],
+  exports: [ RouterModule ]
 })
 export class AppRoutingModule { }

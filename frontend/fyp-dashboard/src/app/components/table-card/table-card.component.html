@@ -26,9 +26,7 @@
                     [matTooltip]="el[col]"
                     matTooltipPosition="above"
                   >
-                    {{ el[col]?.length > 20
-                      ? (el[col] | slice: 0:20) + '…'
-                      : el[col] }}
+                    {{ el[col]?.length > 20 ? (el[col] | slice: 0:20) + '…' : el[col] }}
                   </span>
                 </td>
               </ng-container>
@@ -45,7 +43,6 @@
             (page)="onPageChange($event)"
           ></mat-paginator>
 
-          <!-- Overlay spinner on page change -->
           <div class="overlay-spinner" *ngIf="isLoading">
             <mat-spinner diameter="40"></mat-spinner>
           </div>
@@ -68,10 +65,10 @@
         <canvas
           baseChart
           [data]="chartData"
-          [options]="chartOptions"
+          [options]="viewType === 'pie' ? pieChartOptions : chartOptions"
           [type]="chartType"
           width="600"
-          height="300"
+          height="270"
         ></canvas>
       </div>
     </ng-container>

@@ -2,6 +2,8 @@ import {
   Component,
   Input,
   OnInit,
+  OnChanges,
+  SimpleChanges,
   AfterViewInit,
   AfterViewChecked,
   ViewChild
@@ -15,7 +17,7 @@ import { BaseChartDirective } from 'ng2-charts';
   templateUrl: './summary-card.component.html',
   styleUrls: ['./summary-card.component.scss']
 })
-export class SummaryCardComponent implements OnInit, AfterViewInit, AfterViewChecked {
+export class SummaryCardComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
   @Input() endpoint!: string;
   @Input() title!: string;
   @Input() toDate: string = '2020-11-08';
@@ -30,13 +32,13 @@ export class SummaryCardComponent implements OnInit, AfterViewInit, AfterViewChe
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      x: { 
-        ticks: { color: '#1A2A40' }, 
-        grid: { color: 'rgba(0,0,0,0.1)' } 
+      x: {
+        ticks: { color: '#1A2A40' },
+        grid:  { color: 'rgba(0,0,0,0.1)' }
       },
-      y: { 
-        ticks: { color: '#1A2A40' }, 
-        grid: { color: 'rgba(0,0,0,0.1)' } 
+      y: {
+        ticks: { color: '#1A2A40' },
+        grid:  { color: 'rgba(0,0,0,0.1)' }
       }
     },
     plugins: {
@@ -53,6 +55,12 @@ export class SummaryCardComponent implements OnInit, AfterViewInit, AfterViewChe
 
   ngOnInit(): void {
     this.fetchData();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['toDate'] && !changes['toDate'].firstChange) {
+      this.fetchData();
+    }
   }
 
   ngAfterViewInit(): void {
