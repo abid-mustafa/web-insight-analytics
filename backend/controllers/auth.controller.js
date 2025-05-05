@@ -12,15 +12,16 @@ module.exports.login = async (req, res, next) => {
 
     try {
         const user = await service.login(email)
-
         const match = user && await bcrypt.compare(password, user.password_hash)
-        if (!match) {
-            res.status(401).send('Invalid Credentials')
-        } else {
-            req.session.user = { email: email }
 
-            res.status(200).send('Login Successful')
+        if (!match) {
+            return res.status(401).json({ success: false });
         }
+
+        req.session.user = { email: email, id: user.id }
+        req.session.save(() => {
+            return res.status(200).json({ success: true, user: req.session.user });
+        });
 
     } catch (error) {
         next(error)

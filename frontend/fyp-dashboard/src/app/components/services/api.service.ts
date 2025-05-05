@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  private baseURL = 'http://127.0.0.1:5000/api';
+  private baseURL = 'http://localhost:5000/api';
 
   constructor(private http: HttpClient) { }
 
@@ -20,12 +20,12 @@ export class ApiService {
    */
   fetchTableData(endpoint: string, fromDate: string, toDate: string, offset: number, limit: number = 5): Observable<any[]> {
     const url = `${this.baseURL}/${endpoint}/?start_date=${fromDate}&end_date=${toDate}&offset=${offset}&limit=${limit}`;
-    return this.http.get<any[]>(url, {withCredentials: true});
+    return this.http.get<any[]>(url, { withCredentials: true });
   }
 
   fetchSummaryData(endpoint: string, toDate: string): Observable<any[]> {
     const url = `${this.baseURL}/${endpoint}/?end_date=${toDate}`;
-    return this.http.get<any[]>(url);
+    return this.http.get<any[]>(url, { withCredentials: true });
   }
 
   fetchAIResponse(text: string): Observable<any[]> {

@@ -26,20 +26,19 @@ app.use(bodyParser.json())
 
 app.use(
     cors({
-        // origin: 'http://localhost:4200',
-        origin: '*',
+        origin: 'http://localhost:4200',
         methods: 'GET, PUT, PATCH, POST, DELETE',
-        // credentials: true,  TODO: change to true later 
-        credentials: false
+        credentials: true,
+        // TODO: change to true later 
     })
 )
 
 app.use(session({
-    secret: 'my-secret-key',
+    secret: process.env.SESSION_KEY,
     resave: false,
     saveUninitialized: true,
-    // cookie: { secure: true } TODO: change to true later 
-    cookie: { secure: false }
+    //  TODO: change to true later 
+    cookie: { secure: false, httpOnly: true, maxAge: 360000 }
 }))
 
 // Serve static files from the "public" directory
@@ -47,6 +46,7 @@ app.use('/static', express.static(path.join(__dirname, 'public')))
 
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`)
+
     next()
 })
 

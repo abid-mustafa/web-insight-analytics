@@ -3,10 +3,10 @@ const db = require('../database')
 exports.login = async (email) => {
     const [[result]] = await db.query(
         `SELECT
-                    password_hash
-                FROM users
-                WHERE email = ?;
-                `, [email])
+            id, password_hash
+        FROM users
+        WHERE email = ?;
+        `, [email])
     return result
 }
 
