@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
-const db = require('../database.js')
-const service = require('../services/auth.service.js')
+const db = require('../database')
+const service = require('../services/auth.service')
 
 module.exports.login = async (req, res, next) => {
     const { email, password } = req.body
@@ -13,10 +13,10 @@ module.exports.login = async (req, res, next) => {
         const user = await service.login(email)
 
         if (!user || !(await bcrypt.compare(password, user.password_hash))) {
-            return res.status(401).json({ success: false, message: 'Invalid email or password' })
+            return res.status(401).json({ success: false, message: 'Invalid credentials' })
         }
 
-        req.session.user = { email, id: user.id }
+        req.session.user = { email, id: user.id, name: user.name }
         req.session.save(() => {
             return res.status(200).json({ success: true, user: req.session.user })
         })
@@ -27,15 +27,15 @@ module.exports.login = async (req, res, next) => {
 }
 
 module.exports.register = async (req, res, next) => {
-    const { email, password } = req.body
+    const { name, email, password } = req.body
 
-    if (!email || !password) {
-        return res.status(400).json({ success: false, message: 'Missing email or password' })
+    if (!name || !email || !password) {
+        return res.status(400).json({ success: false, message: 'Missing email, password, or name' })
     }
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10)
-        await service.register(email, hashedPassword)
+        await service.register(name, email, hashedPassword)
 
         return res.status(201).json({ success: true, message: 'Registered successfully' })
     } catch (error) {
