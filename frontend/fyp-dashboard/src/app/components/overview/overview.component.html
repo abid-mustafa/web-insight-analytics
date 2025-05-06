@@ -1,0 +1,30 @@
+<gridster [options]="options" style="background-color: #D9F6F7; height: 100%;">
+  <gridster-item *ngFor="let item of dashboard" [item]="item">
+    <ng-container [ngSwitch]="item.displayType">
+
+      <!-- TABLE VIEW -->
+      <ng-container *ngSwitchCase="'table'">
+        <app-table-card
+          [endpoint]="item.endpoint"
+          [title]="item.title"
+          [fromDate]="dateRange.fromDate"
+          [toDate]="dateRange.toDate">
+        </app-table-card>
+      </ng-container>
+
+      <!-- SUMMARY VIEW -->
+      <ng-container *ngSwitchCase="'summary'">
+        <app-summary-card
+          [endpoint]="item.endpoint"
+          [title]="item.title"
+          [toDate]="dateRange.toDate">
+        </app-summary-card>
+      </ng-container>
+
+      <!-- REALTIME VIEW -->
+      <ng-container *ngSwitchCase="'realtime'">
+        <app-realtime-card [title]="item.title" [endpoint]="item.endpoint" [event]="item.event || ''"></app-realtime-card>
+      </ng-container>
+    </ng-container>
+  </gridster-item>
+</gridster>

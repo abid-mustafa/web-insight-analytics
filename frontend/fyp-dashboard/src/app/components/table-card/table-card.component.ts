@@ -1,39 +1,50 @@
-import { AfterViewInit, Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { ApiService } from '../services/api.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-table-card',
   templateUrl: './table-card.component.html',
   styleUrls: ['./table-card.component.scss']
 })
-export class TableCardComponent implements AfterViewInit, OnChanges {
+export class TableCardComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() endpoint!: string;
   @Input() title!: string;
-  @Input() fromDate: string = '2020-11-01';
-  @Input() toDate: string = '2021-11-02';
+  @Input() fromDate!: string;
+  @Input() toDate!:   string;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  // Table Data
+  // Table state
   dataSource = new MatTableDataSource<any>();
   displayedColumns: string[] = [];
   pageIndex = 0;
-  pageSize = 5;
-  length = 0;
+  pageSize  = 5;
+  length    = 0;
   isLoading = false;
 
-  // View state: table, pie, or bar
+  // Chart state
   viewType: 'table' | 'pie' | 'bar' = 'table';
   chartType: ChartType = 'pie';
   chartData?: ChartConfiguration['data'];
-
-  // Keep full labels for tooltip display
   private originalLabels: string[] = [];
 
-  // Chart options for bar/line charts (with grid + full-text tooltip)
+  // For unsubscribing on destroy
+  private destroy$ = new Subject<void>();
+
+  // Chart options (same as before)
   public chartOptions: ChartConfiguration['options'] = {
     responsive: true,
     maintainAspectRatio: false,
@@ -41,30 +52,20 @@ export class TableCardComponent implements AfterViewInit, OnChanges {
       legend: { labels: { color: '#1A2A40' } },
       tooltip: {
         callbacks: {
-          // show full label on hover
           title: (items) => {
             const idx = items[0].dataIndex;
             return this.originalLabels[idx] || '';
           },
-          label: (item) => {
-            return `${item.dataset.label}: ${item.formattedValue}`;
-          }
+          label: (item) => `${item.dataset.label}: ${item.formattedValue}`
         }
       }
     },
     scales: {
-      x: {
-        ticks: { color: '#1A2A40' },
-        grid: { color: 'rgba(0,0,0,0.1)' }
-      },
-      y: {
-        ticks: { color: '#1A2A40' },
-        grid: { color: 'rgba(0,0,0,0.1)' }
-      }
+      x: { ticks: { color: '#1A2A40' }, grid: { color: 'rgba(0,0,0,0.1)' } },
+      y: { ticks: { color: '#1A2A40' }, grid: { color: 'rgba(0,0,0,0.1)' } }
     }
   };
 
-  // Chart options for pie charts (no grid + full-text tooltip)
   public pieChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     maintainAspectRatio: false,
@@ -76,16 +77,14 @@ export class TableCardComponent implements AfterViewInit, OnChanges {
             const idx = items[0].dataIndex;
             return this.originalLabels[idx] || '';
           },
-          label: (item) => {
-            return `${item.dataset.label}: ${item.formattedValue}`;
-          }
+          label: (item) => `${item.dataset.label}: ${item.formattedValue}`
         }
       }
     },
     scales: {}
   };
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService) {}
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
@@ -110,40 +109,36 @@ export class TableCardComponent implements AfterViewInit, OnChanges {
 
   private fetchData(): void {
     this.isLoading = true;
-    const startTime = Date.now();
 
-    this.apiService.fetchTableData(
-      this.endpoint,
-      this.fromDate,
-      this.toDate,
-      this.pageIndex * this.pageSize
-    ).subscribe({
-      next: (result: any) => {
-        const rows = result.data.values || [];
-        const applyResult = () => {
-          this.displayedColumns = rows.length ? Object.keys(rows[0]) : [];
-          this.dataSource.data = rows;
-          this.length = result.data.total ?? rows.length;
-          this.prepareChartData();
-          this.isLoading = false;
-        };
-
-        const elapsed = Date.now() - startTime;
-        const remaining = 3000 - elapsed;
-        if (remaining > 0) {
-          setTimeout(applyResult, remaining);
-        } else {
-          applyResult();
+    this.apiService
+      .fetchTableData(
+        this.endpoint,
+        this.fromDate,
+        this.toDate,
+        this.pageIndex * this.pageSize
+      )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (result: any) => {
+          if (result.success) {
+            const rows = result.data.values || [];
+            const applyResult = () => {
+              this.displayedColumns = rows.length ? Object.keys(rows[0]) : [];
+              this.dataSource.data    = rows;
+              this.length              = result.data.total ?? rows.length;
+              this.prepareChartData();
+              this.isLoading = false;
+            };
+            applyResult();
         }
       },
-      error: () => {
-        this.isLoading = false;
-      }
-    });
+        error: () => {
+          this.isLoading = false;
+        }
+      });
   }
 
   private prepareChartData(): void {
-    // Only build chart data for non-table views with sufficient data
     if (
       this.viewType === 'table' ||
       !this.dataSource.data.length ||
@@ -155,18 +150,14 @@ export class TableCardComponent implements AfterViewInit, OnChanges {
     const labelKey = this.displayedColumns[0];
     const valueKey = this.displayedColumns[1];
 
-    // 1) grab raw full labels
-    const rawLabels: string[] = this.dataSource.data.map(row => row[labelKey]);
+    const rawLabels = this.dataSource.data.map(row => row[labelKey]);
     this.originalLabels = rawLabels;
 
-    // 2) truncate labels to 12 chars in bar view
     const labels = rawLabels.map(l =>
       this.viewType === 'bar' && l.length > 12 ? `${l.slice(0, 12)}…` : l
     );
-
     const values = this.dataSource.data.map(row => row[valueKey]);
 
-    // Define a palette for slices/bars
     const backgroundColors = [
       'rgba(255, 99, 132, 0.6)',
       'rgba(54, 162, 235, 0.6)',
@@ -177,25 +168,25 @@ export class TableCardComponent implements AfterViewInit, OnChanges {
     ];
     const borderColors = backgroundColors.map(c => c.replace('0.6', '1'));
 
-    // Build dataset
     const ds: any = {
-      label: valueKey,
-      data: values,
-      labels,  // truncated or full labels go here
+      label:     valueKey,
+      data:      values,
+      labels,
       backgroundColor: backgroundColors.slice(0, values.length),
-      borderColor: borderColors.slice(0, values.length),
-      borderWidth: 1
+      borderColor:     borderColors.slice(0, values.length),
+      borderWidth:     1
     };
 
-    // If pie, reduce radius and add hover offset
     if (this.viewType === 'pie') {
-      ds.radius = '75%';
+      ds.radius      = '75%';
       ds.hoverOffset = 4;
     }
 
-    this.chartData = {
-      labels,
-      datasets: [ds]
-    };
+    this.chartData = { labels, datasets: [ds] };
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

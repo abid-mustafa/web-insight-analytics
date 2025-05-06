@@ -1,13 +1,13 @@
 const db = require('../database')
 
 exports.getWebsitesByUserid = async (userid) => {
-    const [result] = await db.query(`
+    const [ result ] = await db.query(`
         SELECT 
-            domain
+            website_id, name
         FROM
             websites
         WHERE user_id = ?; 
         `, [userid])
 
-    return result
+    return result
 }

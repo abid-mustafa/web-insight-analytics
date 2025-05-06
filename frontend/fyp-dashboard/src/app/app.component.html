@@ -1,9 +1,18 @@
-<div class="layout">
+<!-- when showLayout is true, render your full dashboard shell -->
+<ng-container *ngIf="showLayout; else authOnly">
+  <div class="layout">
     <app-header (toggleSidebar)="toggleSidebar()"></app-header>
     <div class="body">
-        <app-sidebar [isExpanded]="isSidebarExpanded"></app-sidebar>
-        <div class="main-content">
-            <router-outlet></router-outlet>
-        </div>
+      <app-sidebar [isExpanded]="isSidebarExpanded"></app-sidebar>
+      <div class="main-content">
+        <!-- your regular pages -->
+        <router-outlet></router-outlet>
+      </div>
     </div>
-</div>
+  </div>
+</ng-container>
+
+<!-- when showLayout is false, only render the routed page (login/register) -->
+<ng-template #authOnly>
+  <router-outlet></router-outlet>
+</ng-template>

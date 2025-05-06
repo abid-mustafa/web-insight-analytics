@@ -38,7 +38,8 @@ export class LoginComponent {
           localStorage.setItem('user', JSON.stringify(data.user));
           this.router.navigate(['/overview']);}
         },
-      error: (err) => this.errorMessage = err.error || 'Invalid credentials'
+      error: (err) => this.errorMessage = err.error?.message || 'Invalid credentials'
+      
     });
   }
 

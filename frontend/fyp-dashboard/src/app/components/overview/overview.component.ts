@@ -3,20 +3,21 @@ import {
   DisplayGrid,
   GridsterConfig,
   GridsterItem,
-  GridType
+  GridType,
 } from 'angular-gridster2';
-import { DateRangeService } from '../../services/date-range.service';
+import { DateRangeService } from '../services/date-range.service';
 
 interface DashboardGridItem extends GridsterItem {
   endpoint: string;
   title: string;
   displayType: string;
+  event?: string;
 }
 
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.component.html',
-  styleUrl: './overview.component.scss'
+  styleUrl: './overview.component.scss',
 })
 export class OverviewComponent implements OnInit {
   options!: GridsterConfig;
@@ -25,7 +26,7 @@ export class OverviewComponent implements OnInit {
   // default dates
   dateRange = {
     fromDate: '2020-11-01',
-    toDate:   '2020-11-10'
+    toDate: '2020-11-10',
   };
 
   constructor(private dateRangeService: DateRangeService) {}
@@ -48,7 +49,17 @@ export class OverviewComponent implements OnInit {
         x: 0,
         endpoint: 'summary/by-day',
         title: 'Overview Summary',
-        displayType: 'summary'
+        displayType: 'summary',
+      },
+      {
+        cols: 1,
+        rows: 1,
+        y: 0,
+        x: 2,
+        endpoint: 'realtime/pageviews',
+        title: 'Pageviews',
+        event: 'get_pageviews',
+        displayType: 'realtime',
       },
       {
         cols: 1,
@@ -57,7 +68,7 @@ export class OverviewComponent implements OnInit {
         x: 0,
         endpoint: 'pages/by-title',
         title: 'Views by Title',
-        displayType: 'table'
+        displayType: 'table',
       },
       {
         cols: 1,
@@ -66,7 +77,7 @@ export class OverviewComponent implements OnInit {
         x: 1,
         endpoint: 'events/by-name',
         title: 'Events by Name',
-        displayType: 'table'
+        displayType: 'table',
       },
       {
         cols: 1,
@@ -75,7 +86,7 @@ export class OverviewComponent implements OnInit {
         x: 2,
         endpoint: 'visitors/by-country',
         title: 'Visitors by Country',
-        displayType: 'table'
+        displayType: 'table',
       },
       {
         cols: 1,
@@ -84,7 +95,7 @@ export class OverviewComponent implements OnInit {
         x: 0,
         endpoint: 'ecommerce/items/by-name',
         title: 'Item Sold by Name',
-        displayType: 'table'
+        displayType: 'table',
       },
       {
         cols: 1,
@@ -93,7 +104,7 @@ export class OverviewComponent implements OnInit {
         x: 1,
         endpoint: 'traffic/by-source',
         title: 'Sessions by Source',
-        displayType: 'table'
+        displayType: 'table',
       },
     ];
 
@@ -102,7 +113,7 @@ export class OverviewComponent implements OnInit {
       if (start && end) {
         this.dateRange = {
           fromDate: start.toISOString().split('T')[0],
-          toDate:   end  .toISOString().split('T')[0]
+          toDate: end.toISOString().split('T')[0],
         };
       }
     });

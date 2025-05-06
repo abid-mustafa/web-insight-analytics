@@ -1,18 +1,6 @@
 <mat-card class="custom-card">
   <div class="card-header">
     <h3 class="card-title">{{ title }}</h3>
-
-    <!-- Toggle between line and bar -->
-    <button
-      mat-mini-fab
-      aria-label="Toggle chart type"
-      (click)="toggleChart()"
-      class="toggle-btn"
-    >
-      <mat-icon>
-        {{ chartType === 'line' ? 'bar_chart' : 'show_chart' }}
-      </mat-icon>
-    </button>
   </div>
 
   <div class="chart-container">
