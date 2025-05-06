@@ -1,0 +1,15 @@
+.custom-card {
+  padding: 16px;
+  background-color: #cfdee7;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .counter {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #1a2a40;
+  }
+}

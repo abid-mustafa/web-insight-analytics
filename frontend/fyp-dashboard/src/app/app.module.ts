@@ -12,7 +12,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DATE_FORMATS, provideNativeDateAdapter } from '@angular/material/core';
+import {
+  MAT_DATE_FORMATS,
+  provideNativeDateAdapter,
+} from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -24,17 +27,23 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { GridsterComponent, GridsterItemComponent } from 'angular-gridster2';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import {
+  BaseChartDirective,
+  provideCharts,
+  withDefaultRegisterables,
+} from 'ng2-charts';
 
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { OverviewComponent } from './components/pages/overview/overview.component';
+import { OverviewComponent } from './components/overview/overview.component';
 import { TableCardComponent } from './components/table-card/table-card.component';
-import { RealtimeComponent } from './components/pages/realtime/realtime.component';
+import { RealtimeComponent } from './components/realtime/realtime.component';
 import { provideHttpClient } from '@angular/common/http';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
+import { RealtimeCardComponent } from './components/realtime-card/realtime-card.component';
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -48,6 +57,13 @@ export const MY_DATE_FORMATS = {
   },
 };
 
+const socketConfig: SocketIoConfig = {
+  url: 'http://127.0.0.1:5000', // Replace with your backend URL
+  options: {
+    transports: ['websocket'],
+  }
+};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -58,7 +74,8 @@ export const MY_DATE_FORMATS = {
     RealtimeComponent,
     SummaryCardComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    RealtimeCardComponent,
   ],
   imports: [
     BrowserModule,
@@ -83,7 +100,8 @@ export const MY_DATE_FORMATS = {
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatSnackBarModule,
-    BaseChartDirective
+    BaseChartDirective,
+    SocketIoModule.forRoot(socketConfig),
   ],
   providers: [
     provideAnimationsAsync(),
@@ -92,6 +110,6 @@ export const MY_DATE_FORMATS = {
     provideHttpClient(),
     provideCharts(withDefaultRegisterables()),
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

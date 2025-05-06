@@ -1,26 +1,61 @@
 import { Component } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  AbstractControl,
+} from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
-  name = '';
-  email = '';
-  password = '';
-  confirmPassword = '';
+  registerForm: FormGroup;
+  errorMessage = '';
 
-  constructor(private router: Router) { }
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router
+  ) {
+    this.registerForm = this.fb.group(
+      {
+        name: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', Validators.required],
+      },
+      { validators: this.passwordsMatch }
+    );
+  }
 
-  register() {
-    if (this.password !== this.confirmPassword) {
-      alert('Passwords do not match');
+  private passwordsMatch(ctrl: AbstractControl) {
+    const pw = ctrl.get('password')?.value;
+    const cpw = ctrl.get('confirmPassword')?.value;
+    return pw === cpw ? null : { mismatch: true };
+  }
+
+  register(): void {
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
       return;
     }
-    // TODO: hook up real registration
-    console.log('Registering', this.name, this.email);
-    this.router.navigate(['/login']);
+
+    const { name, email, password } = this.registerForm.value;
+    this.auth.register({ name, email, password }).subscribe({
+      next: (data: any) => {
+        if (data.success) {
+          localStorage.setItem('user', JSON.stringify(data.user));
+          this.router.navigate(['/overview']);
+        }
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Registration failed';
+      },
+    });
   }
 }

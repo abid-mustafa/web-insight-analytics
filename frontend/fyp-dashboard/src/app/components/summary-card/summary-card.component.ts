@@ -31,6 +31,10 @@ export class SummaryCardComponent implements OnInit, OnChanges, AfterViewInit, A
   public chartOptions: ChartConfiguration['options'] = {
     responsive: true,
     maintainAspectRatio: false,
+    layout: {
+      padding: {
+        bottom:90,
+      }},
     scales: {
       x: {
         ticks: { color: '#1A2A40' },

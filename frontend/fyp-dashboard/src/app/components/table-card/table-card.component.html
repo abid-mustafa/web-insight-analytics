@@ -14,7 +14,7 @@
   <div class="content-container">
     <!-- TABLE VIEW -->
     <ng-container *ngIf="viewType === 'table'">
-      <ng-container *ngIf="dataSource.data.length; else initialLoading">
+      <ng-container *ngIf="dataSource.data.length || !isLoading; else initialLoading">
         <div class="table-wrapper">
           <div class="table-scroll">
             <table mat-table [dataSource]="dataSource" class="custom-table">
