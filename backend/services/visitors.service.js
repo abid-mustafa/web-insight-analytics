@@ -1,24 +1,25 @@
 const db = require('../database')
+const { getWebsiteIdFromUid } = require("../util/website-utils")
 
-exports.getVisitorsByCountry = async (offset, startDate, endDate) => {
+exports.getVisitorsByCountry = async (websiteUid, offset, startDate, endDate) => {
+    const websiteId = await getWebsiteIdFromUid(websiteUid)
+
     const [values] = await db.query(`
         SELECT 
-            country AS country,
-            COUNT(DISTINCT(visitor_id)) AS visitors
-        FROM
-            sessions
-        WHERE
-            created_at BETWEEN ? AND ?
-        GROUP BY country
+            COALESCE(country, 'Unknown') AS country,
+            COUNT(DISTINCT visitor_id) AS visitors
+        FROM sessions
+        WHERE website_id = ? AND created_at BETWEEN ? AND ?
+        GROUP BY COALESCE(country, 'Unknown')
         ORDER BY visitors DESC
         LIMIT 5 OFFSET ?;
-        `, [startDate, endDate, offset])
+    `, [websiteId, startDate, endDate, offset])
 
     const [[{ total }]] = await db.query(`
-            SELECT COUNT(DISTINCT(country)) AS total
-            FROM sessions
-            WHERE created_at BETWEEN ? AND ?;
-        `, [startDate, endDate])
+        SELECT COUNT(DISTINCT COALESCE(country, 'Unknown')) AS total
+        FROM sessions
+        WHERE website_id = ? AND created_at BETWEEN ? AND ?;
+    `, [websiteId, startDate, endDate])
 
     return { values, total }
 }

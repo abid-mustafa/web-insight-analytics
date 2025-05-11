@@ -2,8 +2,8 @@ const service = require('../services/visitors.service')
 
 exports.getVisitorsByCountry = async (req, res, next) => {
     try {
-        const { offset, start, end } = req.parsedQuery
-        const data = await service.getVisitorsByCountry(offset,
+        const { websiteUid, offset, start, end } = req.parsedQuery
+        const data = await service.getVisitorsByCountry(websiteUid, offset,
             start, end)
         res.status(200).json({
             success: true,

@@ -1,12 +1,10 @@
 const { isValid, parseISO } = require('date-fns')
 
 module.exports = function validateDateRange(req, res, next) {
-    const { end_date } = req.query
-    console.log(end_date);
+    const { website_uid, end_date } = req.query
 
-
-    if (!end_date) {
-        const error = new Error("Missing end_date")
+    if (!website_uid || !end_date) {
+        const error = new Error("Missing website_uid or end_date")
         error.status = 400
         return next(error)
     }
@@ -20,6 +18,7 @@ module.exports = function validateDateRange(req, res, next) {
     }
 
     req.parsedQuery = {
+        websiteUid: website_uid || 1,
         end
     }
 

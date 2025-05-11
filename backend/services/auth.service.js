@@ -1,4 +1,6 @@
 const db = require('../database')
+const { v4 } = require('uuid')
+
 
 exports.login = async (email) => {
     const [[result]] = await db.query(
@@ -12,13 +14,14 @@ exports.login = async (email) => {
 
 exports.register = async (name, email, hashedPassword) => {
     const dbConnection = await db.getConnection()
+    const userid = v4()
 
     try {
         await dbConnection.query(
             `
-            INSERT INTO users (name, email, password_hash)
-            VALUES (?, ?, ?);
-            `, [name, email, hashedPassword])
+            INSERT INTO users (user_id, name, email, password_hash)
+            VALUES (?, ?, ?, ?);
+            `, [userid, name, email, hashedPassword])
     } catch (error) {
         throw error
     }
