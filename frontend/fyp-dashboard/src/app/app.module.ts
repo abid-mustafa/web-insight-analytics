@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { AuthInterceptorProvider } from './components/services/auth-interceptor.interceptor';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -32,18 +33,25 @@ import {
   provideCharts,
   withDefaultRegisterables,
 } from 'ng2-charts';
+import { MatChipsModule } from '@angular/material/chips';
 
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { OverviewComponent } from './components/overview/overview.component';
 import { TableCardComponent } from './components/table-card/table-card.component';
 import { RealtimeComponent } from './components/realtime/realtime.component';
-import { provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { RealtimeCardComponent } from './components/realtime-card/realtime-card.component';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { BehaviorComponent } from './components/behavior/behavior.component';
+import { EcommerceComponent } from './components/e-commerce/e-commerce.component';
+import { AiComponent } from './components/ai/ai.component';
+import { EventsComponent } from './components/behavior/events/events.component';
+import { PagesComponent } from './components/behavior/pages/pages.component';
+import { VisitorsComponent } from './components/behavior/visitors/visitors.component';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -58,10 +66,10 @@ export const MY_DATE_FORMATS = {
 };
 
 const socketConfig: SocketIoConfig = {
-  url: 'http://127.0.0.1:5000', // Replace with your backend URL
+  url: 'http://127.0.0.1:5000',
   options: {
     transports: ['websocket'],
-  }
+  },
 };
 
 @NgModule({
@@ -76,6 +84,12 @@ const socketConfig: SocketIoConfig = {
     LoginComponent,
     RegisterComponent,
     RealtimeCardComponent,
+    BehaviorComponent,
+    EcommerceComponent,
+    AiComponent,
+    EventsComponent,
+    PagesComponent,
+    VisitorsComponent,
   ],
   imports: [
     BrowserModule,
@@ -102,13 +116,19 @@ const socketConfig: SocketIoConfig = {
     MatSnackBarModule,
     BaseChartDirective,
     SocketIoModule.forRoot(socketConfig),
+    MatChipsModule,
   ],
   providers: [
     provideAnimationsAsync(),
     provideNativeDateAdapter(),
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
-    provideHttpClient(),
+    provideHttpClient(withInterceptorsFromDi()),
     provideCharts(withDefaultRegisterables()),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorProvider,
+      multi: true
+    },
   ],
   bootstrap: [AppComponent],
 })

@@ -1,0 +1,36 @@
+<div class="ai-page">
+  <div class="ai-container">
+    <mat-card class="ai-card">
+      <mat-card-content>
+        <!-- wrap in a form so Enter will trigger onSubmit -->
+        <form class="input-section" (ngSubmit)="onSubmit()">
+          <mat-form-field appearance="outline" class="ai-textfield">
+            <mat-label>Your input</mat-label>
+            <input
+              matInput
+              name="userInput"
+              required
+              [(ngModel)]="userInput"
+              placeholder="Type something AI-related..."
+            />
+          </mat-form-field>
+          <button mat-raised-button class="submit-btn" type="submit">
+            <mat-icon>send</mat-icon>
+            Submit
+          </button>
+        </form>
+
+        <!-- Response display -->
+        <div *ngIf="submitted" class="response-section">
+          <div class="response-header">
+            <mat-icon>chat_bubble</mat-icon>
+            <span>Your Text</span>
+          </div>
+          <div class="response-content">
+            {{ userInput }}
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

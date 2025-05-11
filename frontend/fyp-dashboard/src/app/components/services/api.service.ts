@@ -3,12 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
   private baseURL = 'http://localhost:5000/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   /**
    * Fetch data from the API based on the selected date range and pagination.
@@ -18,7 +18,13 @@ export class ApiService {
    * @param offset Offset for pagination (0, 5, 10, etc.)
    * @returns Observable containing the API response
    */
-  fetchTableData(endpoint: string, fromDate: string, toDate: string, offset: number, limit: number = 5): Observable<any[]> {
+  fetchTableData(
+    endpoint: string,
+    fromDate: string,
+    toDate: string,
+    offset: number,
+    limit: number = 5
+  ): Observable<any[]> {
     const url = `${this.baseURL}/${endpoint}/?start_date=${fromDate}&end_date=${toDate}&offset=${offset}&limit=${limit}`;
     return this.http.get<any[]>(url, { withCredentials: true });
   }

@@ -4,7 +4,7 @@
     <app-header (toggleSidebar)="toggleSidebar()"></app-header>
     <div class="body">
       <app-sidebar [isExpanded]="isSidebarExpanded"></app-sidebar>
-      <div class="main-content">
+      <div class="main-content" [class.sidebar-collapsed]="!isSidebarExpanded">
         <!-- your regular pages -->
         <router-outlet></router-outlet>
       </div>

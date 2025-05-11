@@ -1,0 +1,16 @@
+<section class="behavior-section">
+  <div class="section-header">
+    <h2 class="section-title">Events</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="tables-grid">
+    <app-table-card
+      *ngFor="let tbl of pageTables"
+      [title]="tbl.title"
+      [endpoint]="tbl.endpoint"
+      [fromDate]="fromDate"
+      [toDate]="toDate"
+      class="table-card"
+    ></app-table-card>
+  </div>
+</section>

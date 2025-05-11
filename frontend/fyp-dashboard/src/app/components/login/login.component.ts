@@ -6,7 +6,7 @@ import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
   loginForm: FormGroup;
@@ -18,8 +18,8 @@ export class LoginComponent {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      email:    ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
     });
   }
 
@@ -31,15 +31,16 @@ export class LoginComponent {
 
     const { email, password } = this.loginForm.value;
     this.auth.login({ email, password }).subscribe({
-      next: (data: any) =>{ 
+      next: (data: any) => {
         console.log(data);
         console.log(data.success);
         if (data.success) {
           localStorage.setItem('user', JSON.stringify(data.user));
-          this.router.navigate(['/overview']);}
-        },
-      error: (err) => this.errorMessage = err.error?.message || 'Invalid credentials'
-      
+          this.router.navigate(['/overview']);
+        }
+      },
+      error: (err) =>
+        (this.errorMessage = err.error?.message || 'Invalid credentials'),
     });
   }
 

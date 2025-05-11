@@ -51,7 +51,7 @@
         </small>
       </div>
 
-      <div class="errors" *ngIf="errorMessage">{{ errorMessage }}</div>
+      <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
 
       <button type="submit" [disabled]="loginForm.invalid">Login</button>
 

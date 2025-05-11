@@ -1,18 +1,35 @@
 .layout {
-    height: 100vh;
+  height: 100vh;
+  // overflow: hidden;
 }
 
 .body {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: calc(100vh - 90px);
+  position: relative;
+  top: 90px;
+  // overflow-y: auto;
 }
 
 .main-content {
-    position: fixed;
-    top: 90px;
-    width: 75%;
-    // header size (90px) and padding top and bottom(16px)
-    height: calc(100% - 90px - 16px - 16px);
-    left: 15%;
-    padding: 16px 64px;
+  position: absolute;
+  width: 75%;
+  height: 100%;
+  left: 15%;
+  padding: 16px 64px;
+  // overflow-y: auto;
+}
+
+@media (max-width: 1024px) {
+  .main-content {
+    margin-left: 240px;
+    padding: 20px 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding: 16px 20px;
+  }
 }
