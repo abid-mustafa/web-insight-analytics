@@ -1,0 +1,39 @@
+<div class="form-container">
+  <form [formGroup]="websiteForm" (ngSubmit)="onSubmit()" class="website-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Domain</mat-label>
+      <input matInput formControlName="domain" placeholder="Enter domain (e.g., example.com)">
+      <mat-error *ngIf="websiteForm.get('domain')?.hasError('required')">
+        Domain is required
+      </mat-error>
+      <mat-error *ngIf="websiteForm.get('domain')?.hasError('pattern')">
+        Please enter a valid domain
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Website Name</mat-label>
+      <input matInput formControlName="websiteName" placeholder="Enter website name">
+      <mat-error *ngIf="websiteForm.get('websiteName')?.hasError('required')">
+        Website name is required
+      </mat-error>
+      <mat-error *ngIf="websiteForm.get('websiteName')?.hasError('minlength')">
+        Website name must be at least 2 characters
+      </mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="!websiteForm.valid">
+      Submit
+    </button>
+  </form>
+
+  <div *ngIf="submittedData" class="submitted-data">
+    <h3>Submitted Information:</h3>
+    <div class="data-item">
+      <strong>Domain:</strong> {{ submittedData.domain }}
+    </div>
+    <div class="data-item">
+      <strong>Website Name:</strong> {{ submittedData.websiteName }}
+    </div>
+  </div>
+</div>

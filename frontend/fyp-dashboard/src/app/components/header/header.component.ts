@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router, NavigationEnd, Event } from '@angular/router';
 import { filter } from 'rxjs/operators';
+
 import { DateRangeService, DateRange } from '../services/date-range.service';
 import { AuthService } from '../services/auth.service';
 import { WebsiteService } from '../services/website.service';
@@ -14,17 +15,17 @@ import { WebsiteService } from '../services/website.service';
 export class HeaderComponent implements OnInit {
   readonly range = new FormGroup({
     start: new FormControl<Date | null>(null),
-    end: new FormControl<Date | null>(null),
+    end:   new FormControl<Date | null>(null),
   });
 
   @Output() toggleSidebar = new EventEmitter<void>();
 
-  showLayout = true;
-  userName: string | null = null;
+  showLayout       = true;
+  userName: string | null  = null;
   userEmail: string | null = null;
 
-  websites: any[] = [];
-  selectedWebsite: any = null;
+  websites: any[]            = [];
+  selectedWebsite: number | null = null;
 
   constructor(
     private dateRangeService: DateRangeService,
@@ -32,42 +33,55 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private websiteService: WebsiteService
   ) {
+    // Hide header on login/register routes
     this.router.events
-      .pipe(
-        filter((e: Event): e is NavigationEnd => e instanceof NavigationEnd)
-      )
+      .pipe(filter((e: Event): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe((e) => {
-        this.showLayout = !['/login', '/register'].includes(
-          e.urlAfterRedirects
-        );
+        this.showLayout = !['/login', '/register'].includes(e.urlAfterRedirects);
       });
   }
 
   ngOnInit(): void {
-    // pull user object out of localStorage
+    // Load user info from localStorage
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    this.userName = user?.name ?? null;
-    this.userEmail = user?.email ?? null; // ← populate it
+    this.userName  = user?.name  ?? null;
+    this.userEmail = user?.email ?? null;
 
+    // Watch date-range picker and broadcast changes
     this.range.valueChanges.subscribe((val: Partial<DateRange>) => {
       const { start, end } = val;
       if (start && end) {
         this.dateRangeService.setRange({ start, end });
       }
     });
-    this.getWebsites();
+
+    // Fetch websites and select the first one by default
+    this.loadWebsites();
+  }
+
+  private loadWebsites(): void {
+    this.websiteService.getWebsites().subscribe({
+      next: (res: any) => {
+        // if API returns { data: [...] }, unwrap; otherwise assume it's already an array
+        const arr = Array.isArray(res) ? res : res.data;
+        this.websites = Array.isArray(arr) ? arr : [];
+
+        if (this.websites.length) {
+          const firstId = this.websites[0].website_id;
+          this.onWebsiteChange(firstId);
+        }
+      },
+      error: (err) => console.error('Failed to load websites', err),
+    });
+  }
+
+  onWebsiteChange(websiteId: number): void {
+    this.selectedWebsite = websiteId;
+    this.websiteService.setSelectedWebsite(websiteId);
   }
 
   onToggleSidebar(): void {
     this.toggleSidebar.emit();
-  }
-
-  getWebsites(): void {
-    // fetch websites list
-    this.websiteService.getWebsites().subscribe({
-      next: (result: any) => (this.websites = result.data),
-      error: (err) => console.error('Failed to load websites', err),
-    });
   }
 
   logout(): void {

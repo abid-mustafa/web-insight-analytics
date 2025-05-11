@@ -6,8 +6,9 @@ import {
   DisplayGrid,
 } from 'angular-gridster2';
 import { DateRangeService } from '../services/date-range.service';
+import { ecommerceDashboard } from '../dashboardConfig/ecommerceDashboard';
 
-interface EcommerceGridItem extends GridsterItem {
+export interface EcommerceGridItem extends GridsterItem {
   endpoint: string;
   title: string;
   displayType: 'summary' | 'table' | 'realtime';
@@ -21,53 +22,7 @@ interface EcommerceGridItem extends GridsterItem {
 })
 export class EcommerceComponent implements OnInit {
   options!: GridsterConfig;
-  dashboard: EcommerceGridItem[] = [
-    {
-      cols: 2,
-      rows: 1,
-      x: 0,
-      y: 0,
-      endpoint: 'ecommerce/sales',
-      title: 'Total Sales',
-      displayType: 'summary',
-    },
-    {
-      cols: 1,
-      rows: 1,
-      x: 2,
-      y: 0,
-      endpoint: 'ecommerce/orders',
-      title: 'Orders',
-      displayType: 'summary',
-    },
-    {
-      cols: 1,
-      rows: 1,
-      x: 0,
-      y: 1,
-      endpoint: 'ecommerce/top-products',
-      title: 'Top Products',
-      displayType: 'table',
-    },
-    {
-      cols: 1,
-      rows: 1,
-      x: 1,
-      y: 1,
-      endpoint: 'ecommerce/returns',
-      title: 'Returns',
-      displayType: 'table',
-    },
-    {
-      cols: 1,
-      rows: 1,
-      x: 2,
-      y: 1,
-      endpoint: 'ecommerce/inventory',
-      title: 'Inventory',
-      displayType: 'table',
-    },
-  ];
+  dashboard: EcommerceGridItem[] = ecommerceDashboard;
 
   fromDate = '2020-11-01';
   toDate = '2020-11-07';

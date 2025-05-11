@@ -46,6 +46,20 @@
         >
           <span class="label">Visitors</span>
         </a>
+        <a
+          mat-list-item
+          routerLink="/behavior/sessions"
+          routerLinkActive="active"
+        >
+          <span class="label">Sessions</span>
+        </a>
+        <a
+          mat-list-item
+          routerLink="/behavior/traffic"
+          routerLinkActive="active"
+        >
+          <span class="label">Traffic</span>
+        </a>
       </div>
 
       <!-- E-commerce -->
@@ -58,6 +72,12 @@
       <a mat-list-item routerLink="/ai" routerLinkActive="active">
         <mat-icon class="icon">memory</mat-icon>
         <span class="label">AI</span>
+      </a>
+
+      <!-- Custom -->
+      <a mat-list-item routerLink="/custom" routerLinkActive="active">
+        <mat-icon class="icon">manual</mat-icon>
+        <span class="label">Custom</span>
       </a>
     </mat-nav-list>
   </mat-sidenav>

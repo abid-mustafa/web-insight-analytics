@@ -52,6 +52,10 @@ import { AiComponent } from './components/ai/ai.component';
 import { EventsComponent } from './components/behavior/events/events.component';
 import { PagesComponent } from './components/behavior/pages/pages.component';
 import { VisitorsComponent } from './components/behavior/visitors/visitors.component';
+import { SessionsComponent } from './components/behavior/sessions/sessions.component';
+import { TrafficComponent } from './components/behavior/traffic/traffic.component';
+import { CustomComponent } from './components/custom/custom.component';
+import { FormComponent } from './components/form/form.component';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -90,6 +94,10 @@ const socketConfig: SocketIoConfig = {
     EventsComponent,
     PagesComponent,
     VisitorsComponent,
+    SessionsComponent,
+    TrafficComponent,
+    CustomComponent,
+    FormComponent,
   ],
   imports: [
     BrowserModule,

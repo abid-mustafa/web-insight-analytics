@@ -10,7 +10,7 @@ export interface DateRange {
 export class DateRangeService {
   private rangeSubject = new BehaviorSubject<DateRange>({
     start: new Date('2020-11-01'),
-    end: new Date('2020-11-10'),
+    end: new Date('2020-11-07'),
   });
   readonly range$ = this.rangeSubject.asObservable();
   setRange(range: DateRange) {

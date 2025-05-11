@@ -12,7 +12,7 @@ interface TableConfig {
   styleUrls: ['./events.component.scss'],
 })
 export class EventsComponent implements OnInit {
-  pageTables: TableConfig[] = [
+  eventTables: TableConfig[] = [
     { title: 'Event Stat 1', endpoint: '' },
     { title: 'Event Stat 2', endpoint: '' },
     { title: 'Event Stat 3', endpoint: '' },

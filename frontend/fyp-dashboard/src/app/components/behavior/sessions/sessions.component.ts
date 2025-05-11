@@ -7,17 +7,17 @@ interface TableConfig {
 }
 
 @Component({
-  selector: 'app-visitors',
-  templateUrl: './visitors.component.html',
-  styleUrls: ['./visitors.component.scss'],
+  selector: 'app-sessions',
+  templateUrl: './sessions.component.html',
+  styleUrls: ['./sessions.component.scss'],
 })
-export class VisitorsComponent implements OnInit {
-  visitorTables: TableConfig[] = [
-    { title: 'Visitor Stat 1', endpoint: '' },
-    { title: 'Visitor Stat 2', endpoint: '' },
-    { title: 'Visitor Stat 3', endpoint: '' },
-    { title: 'Visitor Stat 4', endpoint: '' },
-    { title: 'Visitor Stat 5', endpoint: '' },
+export class SessionsComponent implements OnInit {
+  sessionTables: TableConfig[] = [
+    { title: 'Session Stat 1', endpoint: '' },
+    { title: 'Session Stat 2', endpoint: '' },
+    { title: 'Session Stat 3', endpoint: '' },
+    { title: 'Session Stat 4', endpoint: '' },
+    { title: 'Session Stat 5', endpoint: '' },
   ];
 
   fromDate = '';
