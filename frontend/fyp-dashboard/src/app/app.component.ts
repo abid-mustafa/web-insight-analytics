@@ -10,7 +10,7 @@ import { filter } from 'rxjs/operators';
 export class AppComponent {
   title = 'Web Insight';
   isSidebarExpanded = true;
-  showLayout = true;
+  showLayout = false;
 
   constructor(private router: Router) {
     this.router.events

@@ -6,7 +6,11 @@
 
   <mat-form-field class="website-selector">
     <mat-label>Select</mat-label>
-    <mat-select [(value)]="selectedWebsite" placeholder="Select a site">
+    <mat-select
+      [(value)]="selectedWebsite"
+      (selectionChange)="onWebsiteChange($event.value)"
+      placeholder="Select a site"
+    >
       <mat-option *ngFor="let site of websites" [value]="site.website_id">
         {{ site.name }}
       </mat-option>
@@ -62,6 +66,11 @@
     </div>
 
     <mat-divider></mat-divider>
+
+    <button mat-menu-item routerLink="/form" routerLinkActive="active">
+      <mat-icon>note</mat-icon>
+      <span>Add Website</span>
+    </button>
 
     <button mat-menu-item (click)="logout()" class="logout-btn">
       <mat-icon>logout</mat-icon>

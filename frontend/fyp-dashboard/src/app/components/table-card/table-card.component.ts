@@ -1,8 +1,9 @@
 import {
-  AfterViewInit,
   Component,
   Input,
+  OnInit,
   OnChanges,
+  AfterViewInit,
   OnDestroy,
   SimpleChanges,
   ViewChild,
@@ -11,6 +12,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { ApiService } from '../services/api.service';
+import { WebsiteService } from '../services/website.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -19,7 +21,9 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './table-card.component.html',
   styleUrls: ['./table-card.component.scss'],
 })
-export class TableCardComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class TableCardComponent
+  implements OnInit, AfterViewInit, OnChanges, OnDestroy
+{
   @Input() endpoint!: string;
   @Input() title!: string;
   @Input() fromDate!: string;
@@ -41,10 +45,12 @@ export class TableCardComponent implements AfterViewInit, OnChanges, OnDestroy {
   chartData?: ChartConfiguration['data'];
   private originalLabels: string[] = [];
 
-  // For unsubscribing on destroy
+  // Tracks selected website
+  private currentWebsiteId: number | null = null;
+
+  // For unsubscribing
   private destroy$ = new Subject<void>();
 
-  // Chart options (same as before)
   public chartOptions: ChartConfiguration['options'] = {
     responsive: true,
     maintainAspectRatio: false,
@@ -61,8 +67,14 @@ export class TableCardComponent implements AfterViewInit, OnChanges, OnDestroy {
       },
     },
     scales: {
-      x: { ticks: { color: '#1A2A40' }, grid: { color: 'rgba(0,0,0,0.1)' } },
-      y: { ticks: { color: '#1A2A40' }, grid: { color: 'rgba(0,0,0,0.1)' } },
+      x: {
+        ticks: { color: '#1A2A40' },
+        grid: { color: 'rgba(0,0,0,0.1)' },
+      },
+      y: {
+        ticks: { color: '#1A2A40' },
+        grid: { color: 'rgba(0,0,0,0.1)' },
+      },
     },
   };
 
@@ -84,14 +96,38 @@ export class TableCardComponent implements AfterViewInit, OnChanges, OnDestroy {
     scales: {},
   };
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private websiteService: WebsiteService
+  ) {}
+
+  ngOnInit(): void {
+    // Listen for website changes
+    this.websiteService.selectedWebsite$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((id) => {
+        this.currentWebsiteId = id;
+        // clear out old data
+        this.dataSource.data = [];
+        this.length = 0;
+        this.pageIndex = 0;
+        if (id) {
+          this.fetchData();
+        }
+      });
+  }
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['fromDate'] || changes['toDate']) {
+    // if date range changes, reset page and re-fetch
+    if (
+      (changes['fromDate'] && !changes['fromDate'].firstChange) ||
+      (changes['toDate'] && !changes['toDate'].firstChange)
+    ) {
+      this.pageIndex = 0;
       this.fetchData();
     }
   }
@@ -108,28 +144,34 @@ export class TableCardComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   private fetchData(): void {
+    if (!this.currentWebsiteId) {
+      console.error('Website ID missing or not authenticated');
+      this.isLoading = false;
+      return;
+    }
     this.isLoading = true;
 
     this.apiService
       .fetchTableData(
+        this.currentWebsiteId,
         this.endpoint,
         this.fromDate,
         this.toDate,
-        this.pageIndex * this.pageSize
+        this.pageIndex * this.pageSize,
+        this.pageSize
       )
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (result: any) => {
+          this.isLoading = false;
           if (result.success) {
             const rows = result.data.values || [];
-            const applyResult = () => {
-              this.displayedColumns = rows.length ? Object.keys(rows[0]) : [];
-              this.dataSource.data = rows;
-              this.length = result.data.total ?? rows.length;
-              this.prepareChartData();
-              this.isLoading = false;
-            };
-            applyResult();
+            this.displayedColumns = rows.length
+              ? Object.keys(rows[0])
+              : [];
+            this.dataSource.data = rows;
+            this.length = result.data.total ?? rows.length;
+            this.prepareChartData();
           }
         },
         error: () => {
@@ -149,7 +191,6 @@ export class TableCardComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     const labelKey = this.displayedColumns[0];
     const valueKey = this.displayedColumns[1];
-
     const rawLabels = this.dataSource.data.map((row) => row[labelKey]);
     this.originalLabels = rawLabels;
 

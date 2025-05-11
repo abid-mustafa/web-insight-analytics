@@ -19,18 +19,23 @@ export class ApiService {
    * @returns Observable containing the API response
    */
   fetchTableData(
+    websiteUid: number,
     endpoint: string,
     fromDate: string,
     toDate: string,
     offset: number,
     limit: number = 5
   ): Observable<any[]> {
-    const url = `${this.baseURL}/${endpoint}/?start_date=${fromDate}&end_date=${toDate}&offset=${offset}&limit=${limit}`;
+    const url = `${this.baseURL}/${endpoint}/?website_uid=${websiteUid}&start_date=${fromDate}&end_date=${toDate}&offset=${offset}&limit=${limit}`;
     return this.http.get<any[]>(url, { withCredentials: true });
   }
 
-  fetchSummaryData(endpoint: string, toDate: string): Observable<any[]> {
-    const url = `${this.baseURL}/${endpoint}/?end_date=${toDate}`;
+  fetchSummaryData(
+    websiteUid: number,
+    endpoint: string,
+    toDate: string
+  ): Observable<any[]> {
+    const url = `${this.baseURL}/${endpoint}/?website_uid=${websiteUid}&end_date=${toDate}`;
     return this.http.get<any[]>(url, { withCredentials: true });
   }
 
@@ -41,11 +46,6 @@ export class ApiService {
 
   getRealtimeData(): Observable<any[]> {
     const url = `${this.baseURL}/get-realtime`;
-    return this.http.get<any[]>(url);
-  }
-
-  getWebsites(): Observable<any[]> {
-    const url = `${this.baseURL}/websites/by-userid/1`;
     return this.http.get<any[]>(url);
   }
 }

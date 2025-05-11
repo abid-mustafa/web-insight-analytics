@@ -6,8 +6,9 @@
     GridType,
   } from 'angular-gridster2';
   import { DateRangeService } from '../services/date-range.service';
+  import { overviewDashboard } from '../dashboardConfig/overviewDashboard';
 
-  interface DashboardGridItem extends GridsterItem {
+  export interface DashboardGridItem extends GridsterItem {
     endpoint: string;
     title: string;
     displayType: string;
@@ -41,72 +42,7 @@
       };
 
       // 2) initial dashboard layout
-      this.dashboard = [
-        {
-          cols: 2,
-          rows: 1,
-          y: 0,
-          x: 0,
-          endpoint: 'summary/by-day',
-          title: 'Overview Summary',
-          displayType: 'summary',
-        },
-        {
-          cols: 1,
-          rows: 1,
-          y: 0,
-          x: 2,
-          endpoint: 'realtime/pageviews',
-          title: 'Pageviews',
-          event: 'get_pageviews',
-          displayType: 'realtime',
-        },
-        {
-          cols: 1,
-          rows: 1,
-          y: 1,
-          x: 0,
-          endpoint: 'pages/by-title',
-          title: 'Views by Title',
-          displayType: 'table',
-        },
-        {
-          cols: 1,
-          rows: 1,
-          y: 1,
-          x: 1,
-          endpoint: 'events/by-name',
-          title: 'Events by Name',
-          displayType: 'table',
-        },
-        {
-          cols: 1,
-          rows: 1,
-          y: 1,
-          x: 2,
-          endpoint: 'visitors/by-country',
-          title: 'Visitors by Country',
-          displayType: 'table',
-        },
-        {
-          cols: 1,
-          rows: 1,
-          y: 2,
-          x: 0,
-          endpoint: 'ecommerce/items/by-name',
-          title: 'Item Sold by Name',
-          displayType: 'table',
-        },
-        {
-          cols: 1,
-          rows: 1,
-          y: 2,
-          x: 1,
-          endpoint: 'traffic/by-source',
-          title: 'Sessions by Source',
-          displayType: 'table',
-        },
-      ];
+      this.dashboard = overviewDashboard;
 
       // 3) subscribe to header date changes
       this.dateRangeService.range$.subscribe(({ start, end }) => {
