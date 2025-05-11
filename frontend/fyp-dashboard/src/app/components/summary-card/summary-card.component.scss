@@ -1,25 +1,47 @@
 .custom-card {
-  padding: 16px;
-  background-color: #CFDEE7;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 24px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
   height: 100%;
   display: flex;
   flex-direction: column;
+  border: 1px solid rgba(26, 42, 64, 0.08);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(26, 42, 64, 0.08);
 
   .toggle-btn {
-    /* match styling of other mini-fab buttons */
-    background-color: #e5e1f5;
-    color: #1A2A40;
+    background-color: #f1f5f9;
+    color: #475569;
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    &:hover {
+      background-color: #e2e8f0;
+      color: #1a2a40;
+    }
 
     mat-icon {
       font-size: 20px;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
     }
   }
 }
@@ -28,14 +50,15 @@
   margin: 0;
   font-size: 1.25rem;
   font-weight: 600;
-  color: #1A2A40;
+  color: #475569;
+  letter-spacing: -0.01em;
 }
 
 .chart-container {
   position: relative;
   flex-grow: 1;
   width: 100%;
-  padding-bottom: 16px;
+  min-height: 200px;
 }
 
 .loader-container {
@@ -43,4 +66,7 @@
   justify-content: center;
   align-items: center;
   height: 100%;
+  min-height: 200px;
+  background-color: transparent;
+  border-radius: 8px;
 }

@@ -12,7 +12,7 @@ export class RealtimeCardComponent implements OnInit {
   @Input() endpoint!: string;
   @Input() event!: string;
 
-  value: number= 0;
+  value: number = 0;
 
   constructor(
     private socketService: SocketService,

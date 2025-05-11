@@ -4,14 +4,12 @@
   </div>
 
   <div class="chart-container">
-    <!-- Loading state -->
     <ng-container *ngIf="isLoading || !chartData">
       <div class="loader-container">
         <mat-spinner></mat-spinner>
       </div>
     </ng-container>
 
-    <!-- Chart -->
     <ng-container *ngIf="chartData">
       <canvas
         baseChart

@@ -48,7 +48,7 @@ export class HeaderComponent implements OnInit {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     this.userName = user?.name ?? null;
     this.userEmail = user?.email ?? null; // ← populate it
-    
+
     this.range.valueChanges.subscribe((val: Partial<DateRange>) => {
       const { start, end } = val;
       if (start && end) {
@@ -57,19 +57,19 @@ export class HeaderComponent implements OnInit {
     });
     this.getWebsites();
   }
-  
+
   onToggleSidebar(): void {
     this.toggleSidebar.emit();
   }
-  
+
   getWebsites(): void {
     // fetch websites list
     this.websiteService.getWebsites().subscribe({
-      next: (result:any) => this.websites = result.data,
-      error:  err   => console.error('Failed to load websites', err)
+      next: (result: any) => (this.websites = result.data),
+      error: (err) => console.error('Failed to load websites', err),
     });
   }
-  
+
   logout(): void {
     this.auth.logout().subscribe(() => {
       localStorage.clear();

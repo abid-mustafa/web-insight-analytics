@@ -3,10 +3,9 @@ import { Socket } from 'ngx-socket-io';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SocketService {
-
   constructor(private socket: Socket) {}
 
   // Emit a message to the server

@@ -1,15 +1,52 @@
 .custom-card {
-  padding: 16px;
-  background-color: #cfdee7;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 24px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  height: 100%;
+  border: 1px solid rgba(26, 42, 64, 0.08);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+
+  mat-card-header {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(26, 42, 64, 0.08);
+  }
+
+  mat-card-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #475569;
+    letter-spacing: -0.01em;
+  }
+
+  mat-card-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+  }
 
   .counter {
-    font-size: 2.5rem;
-    font-weight: bold;
+    font-size: 2.75rem;
+    font-weight: 700;
     color: #1a2a40;
+    text-align: center;
+    line-height: 1.2;
+    font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #2563eb;
+    }
   }
 }

@@ -1,0 +1,24 @@
+.realtime-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+app-realtime-card {
+  height: 180px;
+  min-width: 0; // Prevents overflow in grid
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .realtime-container {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    padding: 16px;
+  }
+}

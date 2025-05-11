@@ -1,0 +1,144 @@
+/* src/app/components/ai/ai.component.scss */
+
+.ai-page {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  padding: 32px;
+  background-color: var(--bg-primary);
+}
+
+.ai-container {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.ai-header {
+  text-align: center;
+  margin-bottom: 32px;
+
+  h1 {
+    color: var(--text-primary);
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
+.ai-card {
+  width: 100%;
+  max-width: 800px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+}
+
+.input-section {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ai-textfield {
+  flex: 1;
+  width: 100%;
+
+  ::ng-deep .mat-mdc-form-field-flex {
+    background-color: var(--bg-tertiary);
+    border-radius: 8px;
+    padding: 0 12px;
+  }
+
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background-color: transparent;
+    padding: 0;
+  }
+
+  ::ng-deep input.mat-mdc-input-element,
+  ::ng-deep textarea.mat-mdc-input-element {
+    color: var(--text-primary);
+    font-size: 1rem;
+
+    &::placeholder {
+      color: var(--text-tertiary);
+    }
+  }
+
+  ::ng-deep .mat-mdc-form-field-label {
+    color: var(--text-secondary);
+  }
+}
+
+.submit-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 24px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  border-radius: 8px;
+  background-color: var(--primary-600);
+  color: white;
+  transition: all 0.2s ease;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    background-color: var(--primary-700);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.response-section {
+  margin-top: 32px;
+  padding: 24px;
+  background-color: var(--bg-tertiary);
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+
+  .response-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+
+    mat-icon {
+      color: var(--primary-500);
+    }
+
+    span {
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 1rem;
+    }
+  }
+
+  .response-content {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+}
