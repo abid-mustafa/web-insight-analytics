@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const controller = require('../controllers/websites.controller')
 
-router.get('/by-userid/:userid', controller.getWebsitesByUserid)
+router.get('/', controller.getWebsitesByUserid)
+router.post('/', controller.addWebsite)
 
 module.exports = router

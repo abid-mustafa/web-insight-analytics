@@ -1,11 +1,9 @@
 const db = require('../database')
-const { v4 } = require('uuid')
-
 
 exports.login = async (email) => {
     const [[result]] = await db.query(
         `SELECT
-            id, name, password_hash
+            email, id, name, password_hash
         FROM users
         WHERE email = ?;
         `, [email])
@@ -13,19 +11,16 @@ exports.login = async (email) => {
 }
 
 exports.register = async (name, email, hashedPassword) => {
-    const dbConnection = await db.getConnection()
-    const userid = v4()
+    const [result] = await db.query(`
+    INSERT INTO users (name, email, password_hash)
+    VALUES (?, ?, ?)`, [name, email, hashedPassword])
 
-    try {
-        await dbConnection.query(
-            `
-            INSERT INTO users (user_id, name, email, password_hash)
-            VALUES (?, ?, ?, ?);
-            `, [userid, name, email, hashedPassword])
-    } catch (error) {
-        throw error
-    }
-    finally {
-        dbConnection.release()
-    }
+    const insertedId = result.insertId
+
+    const [[user]] = await db.query(`
+    SELECT id, name, email
+    FROM users
+    WHERE id = ?`, [insertedId])
+
+    return user
 }

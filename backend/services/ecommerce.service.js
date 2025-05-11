@@ -1,5 +1,5 @@
 const db = require('../database')
-const { getWebsiteIdFromUid } = require("../util/website-utils")
+const { getWebsiteIdFromUid } = require("../util/website.utils")
 
 exports.getItemCountByName = async (websiteUid, offset, startDate, endDate) => {
     const websiteId = await getWebsiteIdFromUid(websiteUid)

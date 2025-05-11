@@ -3,8 +3,6 @@ node_modules/
 npm-debug.log
 yarn-error.log
 
-**/.angular/cache
-
 # Log files
 logs/
 *.log
@@ -34,3 +32,15 @@ venv/
 # Temporary files
 tmp/
 temp/
+
+# Ignore Angular build output inside the subdirectory
+/frontend/fyp-dashboard/dist/
+/frontend/fyp-dashboard/.angular/
+/frontend/fyp-dashboard/.angular-cache/
+/frontend/fyp-dashboard/node_modules/
+/frontend/fyp-dashboard/.env
+/frontend/fyp-dashboard/.env.*.local
+/frontend/fyp-dashboard/*.log
+
+# Optional: IDE/editor-specific ignores for the frontend
+/frontend/fyp-dashboard/.vscode/

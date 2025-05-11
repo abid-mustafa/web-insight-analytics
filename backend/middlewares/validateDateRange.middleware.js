@@ -19,7 +19,7 @@ module.exports = function validateDateRange(req, res, next) {
     }
 
     req.parsedQuery = {
-        websiteUid: website_uid || 1,
+        websiteUid: website_uid,
         offset: parseInt(offset) || 0,
         start,
         end

@@ -1,12 +1,12 @@
 const bcrypt = require('bcrypt')
-const db = require('../database')
 const service = require('../services/auth.service')
+const validator = require('validator')
 
-module.exports.login = async (req, res, next) => {
+exports.login = async (req, res, next) => {
     const { email, password } = req.body
 
-    if (!email || !password) {
-        return res.status(400).json({ success: false, message: 'Missing email or password' })
+    if (!email || !validator.isEmail(email) || !password) {
+        return res.status(400).json({ success: false, message: 'Invalid or missing email/password' })
     }
 
     try {
@@ -16,9 +16,11 @@ module.exports.login = async (req, res, next) => {
             return res.status(401).json({ success: false, message: 'Invalid credentials' })
         }
 
-        req.session.user = { email, id: user.id, name: user.name }
+        req.session.user = { id: user.id, name: user.name }
         req.session.save(() => {
-            return res.status(200).json({ success: true, user: req.session.user })
+            return res.status(200).json({
+                success: true, user: { name: user.name, email: user.email }
+            })
         })
 
     } catch (error) {
@@ -26,18 +28,25 @@ module.exports.login = async (req, res, next) => {
     }
 }
 
-module.exports.register = async (req, res, next) => {
+exports.register = async (req, res, next) => {
     const { name, email, password } = req.body
 
-    if (!name || !email || !password) {
-        return res.status(400).json({ success: false, message: 'Missing email, password, or name' })
+    if (!email || !validator.isEmail(email) || !name || !password) {
+        return res.status(400).json({ success: false, message: 'Invalid or missing email, password, or name' })
     }
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10)
-        await service.register(name, email, hashedPassword)
+        const newUser = await service.register(name, email, hashedPassword)
 
-        return res.status(201).json({ success: true, message: 'Registered successfully' })
+        req.session.user = { id: newUser.id, name: newUser.name }
+
+        req.session.save(() => {
+            return res.status(201).json({
+                success: true,
+                user: { name: newUser.name, email: newUser.email }
+            })
+        })
     } catch (error) {
         if (error.code === 'ER_DUP_ENTRY') {
             return res.status(409).json({ success: false, message: 'This email is already registered' })
@@ -46,7 +55,7 @@ module.exports.register = async (req, res, next) => {
     }
 }
 
-module.exports.logout = (req, res, next) => {
+exports.logout = (req, res, next) => {
     req.session.destroy(err => {
         if (err) {
             return res.status(500).json({ success: false, message: 'Could not log out' })
