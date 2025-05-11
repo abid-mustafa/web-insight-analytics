@@ -1,5 +1,5 @@
 const db = require('../database')
-const { getWebsiteIdFromUid } = require("../util/website.utils")
+const { getWebsiteIdFromUid } = require("../utils/website.utils")
 
 // exports.getOverviewMetrics = async (endDate) => {
 //     const startDate = new Date(endDate)

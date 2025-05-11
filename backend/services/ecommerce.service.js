@@ -1,12 +1,12 @@
 const db = require('../database')
-const { getWebsiteIdFromUid } = require("../util/website.utils")
+const { getWebsiteIdFromUid } = require("../utils/website.utils")
 
-exports.getItemCountByName = async (websiteUid, offset, startDate, endDate) => {
+exports.getItemsGrouped = async (websiteUid, groupBy, groupByColumn, offset, startDate, endDate) => {
     const websiteId = await getWebsiteIdFromUid(websiteUid)
 
     const [values] = await db.query(`
         SELECT 
-            i.item_name,
+            ${groupByColumn} AS ${groupBy},
             SUM(i.quantity) AS total_sold
         FROM 
             items i
@@ -17,7 +17,7 @@ exports.getItemCountByName = async (websiteUid, offset, startDate, endDate) => {
         WHERE 
             s.website_id = ? AND t.created_at BETWEEN ? AND ?
         GROUP BY 
-            i.item_name
+            ${groupByColumn}
         ORDER BY 
             total_sold DESC
         LIMIT 5 OFFSET ?;
@@ -25,7 +25,7 @@ exports.getItemCountByName = async (websiteUid, offset, startDate, endDate) => {
 
     const [[{ total }]] = await db.query(`
         SELECT 
-            COUNT(DISTINCT(i.item_name)) AS total
+            COUNT(DISTINCT(${groupByColumn})) AS total
         FROM 
             items i
         JOIN 
