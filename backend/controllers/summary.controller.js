@@ -33,7 +33,7 @@ exports.getOverviewMetricsByDay = async (req, res, next) => {
 
         // If not cached, fetch and cache
         const data = await service.getOverviewMetricsByDay(websiteUid, end)
-        await redis.set(cacheKey, JSON.stringify(data), { EX: process.env.DEFULT_EXPIRATION_TIME })
+        await redis.set(cacheKey, JSON.stringify(data), { EX: process.env.DEFULT_EXPIRATION_TIME || 3600 })
 
         res.status(200).json({
             success: true,

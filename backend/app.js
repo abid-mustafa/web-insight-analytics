@@ -6,7 +6,7 @@ const express = require('express')
 const session = require('express-session')
 const path = require('path')
 
-const PORT = process.env.SERVER_PORT
+const PORT = process.env.SERVER_PORT || 5000
 
 const db = require('./database.js')
 
@@ -26,7 +26,7 @@ app.use(bodyParser.json())
 
 app.use(
     cors({
-        origin: 'http://localhost:4200',
+        origin: process.env.NODE_ENV === 'production' ? process.env.CORS_ORIGIN : 'http://localhost:4200',
         methods: 'GET, PUT, PATCH, POST, DELETE',
         credentials: true,
         // TODO: change to true later 
@@ -38,7 +38,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     //  TODO: change to true later 
-    cookie: { secure: false, httpOnly: true, maxAge: 360000 }
+    cookie: { secure: process.env.NODE_ENV === 'production', httpOnly: true, maxAge: 360000 }
 }))
 
 // Serve static files from the "public" directory

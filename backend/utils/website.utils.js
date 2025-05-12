@@ -10,7 +10,9 @@ async function getWebsiteIdFromUid(websiteUid) {
     `, [websiteUid])
 
     if (!result) {
-        throw { status: 404, message: 'Website not found' }
+        const error = new Error('Website not found')
+        error.status = 404
+        throw error
     }
 
     return result.id

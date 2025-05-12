@@ -21,13 +21,14 @@ module.exports.getGroupedData = (serviceMethod) => async (req, res, next) => {
 
         // If not cached, fetch and cache
         const data = await serviceMethod(websiteUid, groupBy, groupByColumn, offset, start, end)
-        await redis.set(cacheKey, JSON.stringify(data), { EX: process.env.DEFULT_EXPIRATION_TIME })
+        await redis.set(cacheKey, JSON.stringify(data), { EX: process.env.DEFAULT_EXPIRATION_TIME || 3600 })
 
         res.status(200).json({
             success: true,
             data
         })
     } catch (error) {
+        console.error('Error fetching grouped data:', error)
         next(error)
     }
 }

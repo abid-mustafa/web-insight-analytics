@@ -11,14 +11,14 @@ module.exports = function validateGroupBy(endpointName) {
         const groupBy = req.query.groupBy
         const allowedFields = allowedGroupBys[endpointName]
 
-        if (!groupBy || allowedFields?.[groupBy]) {
+        if (!groupBy || allowedFields && allowedFields[groupBy]) {
             req.groupBy = groupBy
-            req.groupByColumn = allowedFields?.[groupBy] || null // safe SQL reference
+            req.groupByColumn = allowedFields ? allowedFields[groupBy] : null // safe SQL reference
             return next()
         }
 
         const error = new Error(`Invalid groupBy for ${endpointName}`)
-        error.status = 400
+        error.statusCode = 400
         return next(error)
     }
 }
