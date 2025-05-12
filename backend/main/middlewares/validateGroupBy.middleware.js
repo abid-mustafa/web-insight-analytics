@@ -1,9 +1,9 @@
 const allowedGroupBys = {
     'sessions': { 'country': 's.country', 'city': 's.city', 'device': 's.device', 'os': 's.os', 'browser': 's.browser' },
-    'pages': { 'page_title': 'p.page_title', 'page_url': 'p.page_url', 'referrer': 'p.referrer' },
-    'events': { 'event_name': 'e.event_name', 'page_url': 'e.page_url' },
+    'pages': { 'title': 'p.page_title', 'url': 'p.page_url', 'referrer': 'p.referrer' },
+    'events': { 'name': 'e.event_name', 'url': 'e.page_url' },
     'traffic': { 'source': 't.source', 'medium': 't.medium', 'campaign': 't.campaign' },
-    'items': { 'item_category': 'i.item_category', 'item_name': 'i.item_name', 'item_id': 'i.item_id' }
+    'items': { 'category': 'i.item_category', 'name': 'i.item_name', 'id': 'i.item_id' }
 }
 
 module.exports = function validateGroupBy(endpointName) {

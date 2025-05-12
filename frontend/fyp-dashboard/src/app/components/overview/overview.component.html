@@ -4,35 +4,21 @@
       <ng-container [ngSwitch]="item.displayType">
         <!-- TABLE VIEW -->
         <ng-container *ngSwitchCase="'table'">
-          <app-table-card
-            [endpoint]="item.endpoint"
-            [title]="item.title"
-            [fromDate]="dateRange.fromDate"
-            [toDate]="dateRange.toDate"
-            class="dashboard-card"
-          >
+          <app-table-card [endpoint]="item.endpoint ?? ''" [title]="item.title" [fromDate]="dateRange.fromDate"
+            [toDate]="dateRange.toDate" [groupBy]="item.groupBy ?? ''" class="dashboard-card">
           </app-table-card>
         </ng-container>
 
         <!-- SUMMARY VIEW -->
         <ng-container *ngSwitchCase="'summary'">
-          <app-summary-card
-            [endpoint]="item.endpoint"
-            [title]="item.title"
-            [toDate]="dateRange.toDate"
-            class="dashboard-card"
-          >
+          <app-summary-card [endpoint]="item.endpoint ?? ''" [title]="item.title" [toDate]="dateRange.toDate"
+            class="dashboard-card">
           </app-summary-card>
         </ng-container>
 
         <!-- REALTIME VIEW -->
         <ng-container *ngSwitchCase="'realtime'">
-          <app-realtime-card
-            [title]="item.title"
-            [endpoint]="item.endpoint"
-            [event]="item.event || ''"
-            class="dashboard-card"
-          ></app-realtime-card>
+          <app-realtime-card [title]="item.title" [event]="item.event || ''" class="dashboard-card"></app-realtime-card>
         </ng-container>
       </ng-container>
     </gridster-item>

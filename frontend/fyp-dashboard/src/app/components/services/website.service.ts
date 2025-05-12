@@ -11,19 +11,20 @@ export class WebsiteService {
   private selectedWebsiteSubject = new BehaviorSubject<number | null>(null);
   public selectedWebsite$ = this.selectedWebsiteSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /** Fetch all websites for the logged-in user */
   getWebsites(): Observable<any[]> {
     const userItem = localStorage.getItem('user');
     const user = userItem && JSON.parse(userItem);
-    const userId = user && user.id;
-    if (!userId) {
-      console.error('User ID missing or not authenticated');
+    const userName = user && user.name;
+
+    if (!userName) {
+      console.error('Username missing or not authenticated');
       return of([]);
     }
     return this.http.get<any[]>(
-      `${this.baseUrl}/by-userid/${userId}`,
+      `${this.baseUrl}`,
       { withCredentials: true }
     );
   }

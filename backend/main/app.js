@@ -27,9 +27,9 @@ app.use(bodyParser.json())
 app.use(
     cors({
         origin: process.env.NODE_ENV === 'production' ? process.env.CORS_ORIGIN : 'http://localhost:4200',
-        methods: 'GET, PUT, PATCH, POST, DELETE',
+        methods: 'GET, POST',
+        // TODO: change to true later
         credentials: true,
-        // TODO: change to true later 
     })
 )
 
@@ -38,7 +38,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     //  TODO: change to true later 
-    cookie: { secure: process.env.NODE_ENV === 'production', httpOnly: true, maxAge: 360000 }
+    cookie: { secure: process.env.NODE_ENV === 'production', httpOnly: true, maxAge: 1800000 }
 }))
 
 // Serve static files from the "public" directory

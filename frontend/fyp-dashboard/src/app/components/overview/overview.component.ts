@@ -1,73 +1,74 @@
-  import { Component, OnInit } from '@angular/core';
-  import {
-    DisplayGrid,
-    GridsterConfig,
-    GridsterItem,
-    GridType,
-  } from 'angular-gridster2';
-  import { DateRangeService } from '../services/date-range.service';
-  import { overviewDashboard } from '../dashboardConfig/overviewDashboard';
+import { Component, OnInit } from '@angular/core';
+import {
+  DisplayGrid,
+  GridsterConfig,
+  GridsterItem,
+  GridType,
+} from 'angular-gridster2';
+import { DateRangeService } from '../services/date-range.service';
+import { overviewDashboard } from '../dashboardConfig/overviewDashboard';
 
-  export interface DashboardGridItem extends GridsterItem {
-    endpoint: string;
-    title: string;
-    displayType: string;
-    event?: string;
-  }
+export interface DashboardGridItem extends GridsterItem {
+  endpoint?: string;
+  title: string;
+  displayType: string;
+  event?: string;
+  groupBy?: string;
+}
 
-  @Component({
-    selector: 'app-overview',
-    templateUrl: './overview.component.html',
-    styleUrl: './overview.component.scss',
-  })
-  export class OverviewComponent implements OnInit {
-    options!: GridsterConfig;
-    dashboard: DashboardGridItem[] = [];
+@Component({
+  selector: 'app-overview',
+  templateUrl: './overview.component.html',
+  styleUrl: './overview.component.scss',
+})
+export class OverviewComponent implements OnInit {
+  options!: GridsterConfig;
+  dashboard: DashboardGridItem[] = [];
 
-    // default dates
-    dateRange = {
-      fromDate: '2020-11-01',
-      toDate: '2020-11-10',
+  // default dates
+  dateRange = {
+    fromDate: '2020-11-01',
+    toDate: '2020-11-10',
+  };
+
+  constructor(private dateRangeService: DateRangeService) { }
+
+  ngOnInit() {
+    // 1) gridster setup
+    this.options = {
+      gridType: GridType.ScrollVertical,
+      displayGrid: DisplayGrid.OnDragAndResize,
+      draggable: { enabled: true },
+      itemChangeCallback: this.onItemChange.bind(this),
     };
 
-    constructor(private dateRangeService: DateRangeService) {}
+    // 2) initial dashboard layout
+    this.dashboard = overviewDashboard;
 
-    ngOnInit() {
-      // 1) gridster setup
-      this.options = {
-        gridType: GridType.ScrollVertical,
-        displayGrid: DisplayGrid.OnDragAndResize,
-        draggable: { enabled: true },
-        itemChangeCallback: this.onItemChange.bind(this),
-      };
+    // 3) subscribe to header date changes
+    this.dateRangeService.range$.subscribe(({ start, end }) => {
+      if (start && end) {
+        this.dateRange = {
+          fromDate: start.toISOString().split('T')[0],
+          toDate: end.toISOString().split('T')[0],
+        };
+      }
+    });
+  }
 
-      // 2) initial dashboard layout
-      this.dashboard = overviewDashboard;
+  onItemChange() {
+    this.saveDashboard();
+  }
 
-      // 3) subscribe to header date changes
-      this.dateRangeService.range$.subscribe(({ start, end }) => {
-        if (start && end) {
-          this.dateRange = {
-            fromDate: start.toISOString().split('T')[0],
-            toDate: end.toISOString().split('T')[0],
-          };
-        }
-      });
-    }
-
-    onItemChange() {
+  removeItem(item: DashboardGridItem) {
+    const idx = this.dashboard.indexOf(item);
+    if (idx > -1) {
+      this.dashboard.splice(idx, 1);
       this.saveDashboard();
     }
-
-    removeItem(item: DashboardGridItem) {
-      const idx = this.dashboard.indexOf(item);
-      if (idx > -1) {
-        this.dashboard.splice(idx, 1);
-        this.saveDashboard();
-      }
-    }
-
-    saveDashboard() {
-      localStorage.setItem('dashboardConfig', JSON.stringify(this.dashboard));
-    }
   }
+
+  saveDashboard() {
+    localStorage.setItem('dashboardConfig', JSON.stringify(this.dashboard));
+  }
+}

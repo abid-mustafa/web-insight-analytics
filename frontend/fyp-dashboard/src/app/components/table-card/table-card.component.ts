@@ -22,12 +22,12 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./table-card.component.scss'],
 })
 export class TableCardComponent
-  implements OnInit, AfterViewInit, OnChanges, OnDestroy
-{
+  implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() endpoint!: string;
   @Input() title!: string;
   @Input() fromDate!: string;
   @Input() toDate!: string;
+  @Input() groupBy!: string;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -99,7 +99,7 @@ export class TableCardComponent
   constructor(
     private apiService: ApiService,
     private websiteService: WebsiteService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Listen for website changes
@@ -158,7 +158,8 @@ export class TableCardComponent
         this.fromDate,
         this.toDate,
         this.pageIndex * this.pageSize,
-        this.pageSize
+        this.pageSize,
+        this.groupBy
       )
       .pipe(takeUntil(this.destroy$))
       .subscribe({

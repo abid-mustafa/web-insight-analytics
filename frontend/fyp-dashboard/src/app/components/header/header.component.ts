@@ -15,16 +15,16 @@ import { WebsiteService } from '../services/website.service';
 export class HeaderComponent implements OnInit {
   readonly range = new FormGroup({
     start: new FormControl<Date | null>(null),
-    end:   new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
   });
 
   @Output() toggleSidebar = new EventEmitter<void>();
 
-  showLayout       = true;
-  userName: string | null  = null;
+  showLayout = true;
+  userName: string | null = null;
   userEmail: string | null = null;
 
-  websites: any[]            = [];
+  websites: any[] = [];
   selectedWebsite: number | null = null;
 
   constructor(
@@ -44,14 +44,19 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     // Load user info from localStorage
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    this.userName  = user?.name  ?? null;
+    this.userName = user?.name ?? null;
     this.userEmail = user?.email ?? null;
+
+    console.log(user);
+
 
     // Watch date-range picker and broadcast changes
     this.range.valueChanges.subscribe((val: Partial<DateRange>) => {
       const { start, end } = val;
       if (start && end) {
         this.dateRangeService.setRange({ start, end });
+      } else {
+        this.range.setErrors({ invalidRange: true });
       }
     });
 
@@ -82,6 +87,44 @@ export class HeaderComponent implements OnInit {
 
   onToggleSidebar(): void {
     this.toggleSidebar.emit();
+  }
+
+  selectPreset(preset: string): void {
+    const today = new Date();
+    let start: Date;
+    let end: Date;
+
+    switch (preset) {
+      case 'today':
+        start = end = today;
+        break;
+      case 'yesterday':
+        start = end = new Date(today.setDate(today.getDate() - 1));
+        break;
+      case 'last7':
+        end = new Date();
+        start = new Date();
+        start.setDate(end.getDate() - 6);
+        break;
+      case 'last30':
+        end = new Date();
+        start = new Date();
+        start.setDate(end.getDate() - 29);
+        break;
+      case 'thisMonth':
+        end = new Date();
+        start = new Date(end.getFullYear(), end.getMonth(), 1);
+        break;
+      case 'lastMonth':
+        const prev = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        start = new Date(prev.getFullYear(), prev.getMonth(), 1);
+        end = new Date(prev.getFullYear(), prev.getMonth() + 1, 0);
+        break;
+      default:
+        return;
+    }
+
+    this.range.setValue({ start, end });
   }
 
   logout(): void {

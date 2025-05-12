@@ -19,8 +19,9 @@ export class AuthInterceptorProvider implements HttpInterceptor {
             error: (err) => {
                 if (err instanceof HttpErrorResponse) {
                     console.log('ERR', err);
-                    localStorage.clear();
-                    this.router.navigate(['login']);
+                    // alert(`Session expired. Please login again. ${err.error.message}`,);
+                    // localStorage.clear();
+                    // this.router.navigate(['login']);
                 }
             },
         }
