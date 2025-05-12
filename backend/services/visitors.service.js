@@ -1,9 +1,6 @@
 const db = require('../database')
-const { getWebsiteIdFromUid } = require("../utils/website.utils")
 
-exports.getVisitorsGrouped = async (websiteUid, groupBy, groupByColumn, offset, startDate, endDate) => {
-    const websiteId = await getWebsiteIdFromUid(websiteUid)
-
+exports.getVisitorsGrouped = async (websiteId, groupBy, groupByColumn, offset, startDate, endDate) => {
     const [values] = await db.query(`
         SELECT 
             COALESCE(${groupByColumn}, 'Unknown') AS \`${groupBy}\`, COUNT(DISTINCT visitor_id) AS visitors

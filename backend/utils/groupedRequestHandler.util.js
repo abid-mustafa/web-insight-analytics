@@ -3,11 +3,13 @@ const redis = require('../redis')
 
 module.exports.getGroupedData = (serviceMethod) => async (req, res, next) => {
     try {
-        const { websiteUid, offset, start, end } = req.parsedQuery
+        const { offset, startDate, endDate } = req.parsedQuery
+        const websiteUid = req.websiteUid
         const groupByColumn = req.groupByColumn
         const groupBy = req.groupBy
+        const websiteId = req.websiteId
 
-        const cacheKey = `grouped:${websiteUid}:${groupBy}:${offset}:${start}:${end}`
+        const cacheKey = `grouped:${websiteUid}:${groupBy}:${offset}:${startDate}:${endDate}`
 
         // Check Redis cache
         const cached = await redis.get(cacheKey)
@@ -20,7 +22,7 @@ module.exports.getGroupedData = (serviceMethod) => async (req, res, next) => {
         }
 
         // If not cached, fetch and cache
-        const data = await serviceMethod(websiteUid, groupBy, groupByColumn, offset, start, end)
+        const data = await serviceMethod(websiteId, groupBy, groupByColumn, offset, startDate, endDate)
         await redis.set(cacheKey, JSON.stringify(data), { EX: process.env.DEFAULT_EXPIRATION_TIME || 3600 })
 
         res.status(200).json({

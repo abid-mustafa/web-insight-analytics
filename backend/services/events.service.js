@@ -1,9 +1,6 @@
 const db = require('../database')
-const { getWebsiteIdFromUid } = require("../utils/website.utils")
 
-exports.getEventsGrouped = async (websiteUid, groupBy, groupByColumn, offset, startDate, endDate) => {
-    const websiteId = await getWebsiteIdFromUid(websiteUid)
-
+exports.getEventsGrouped = async (websiteId, groupBy, groupByColumn, offset, startDate, endDate) => {
     const [values] = await db.query(`
         SELECT 
             ${groupByColumn} AS ${groupBy}, COUNT(*) as event_count

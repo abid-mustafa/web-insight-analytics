@@ -4,8 +4,8 @@ const service = require('../services/summary.service')
 
 // exports.getOverviewMetrics = async (req, res, next) => {
 //     try {
-//         const { end } = req.parsedQuery
-//         const data = await service.getOverviewMetrics(end)
+//         const { endDate } = req.parsedQuery
+//         const data = await service.getOverviewMetrics(endDate)
 //         res.status(200).json({
 //             success: true,
 //             data
@@ -16,9 +16,12 @@ const service = require('../services/summary.service')
 // }
 
 exports.getOverviewMetricsByDay = async (req, res, next) => {
-    const { websiteUid, end } = req.parsedQuery
+    const endDate = req.endDate
+    const websiteUid = req.websiteUid
+    const websiteId = parseInt(req.websiteId)
+
     try {
-        const cacheKey = `overview:${websiteUid}:${end}`
+        const cacheKey = `overview:${websiteUid}:${endDate}`
 
         // Check Redis cache
         const cached = await redis.get(cacheKey)
@@ -32,7 +35,7 @@ exports.getOverviewMetricsByDay = async (req, res, next) => {
         }
 
         // If not cached, fetch and cache
-        const data = await service.getOverviewMetricsByDay(websiteUid, end)
+        const data = await service.getOverviewMetricsByDay(websiteId, endDate)
         await redis.set(cacheKey, JSON.stringify(data), { EX: process.env.DEFULT_EXPIRATION_TIME || 3600 })
 
         res.status(200).json({

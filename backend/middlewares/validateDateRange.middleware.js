@@ -1,19 +1,19 @@
 const { isValid, parseISO } = require('date-fns')
 
 module.exports = function validateDateRange(req, res, next) {
-    const { website_uid, offset, start_date, end_date } = req.query
+    const { offset, startDate, endDate } = req.query
 
-    if (!website_uid || !start_date || !end_date) {
-        const error = new Error("Missing website_uid or start_date or end_date")
+    if (!startDate || !endDate) {
+        const error = new Error("Missing startDate or endDate")
         error.statusCode = 400
         return next(error)
     }
 
-    const start = parseISO(start_date)
-    const end = parseISO(end_date)
+    const start = parseISO(startDate)
+    const end = parseISO(endDate)
 
     if (!isValid(start) || !isValid(end) || start > end) {
-        const error = new Error("Invalid start_date or end_date")
+        const error = new Error("Invalid startDate or endDate")
         error.statusCode = 400
         return next(error)
     }
@@ -22,10 +22,9 @@ module.exports = function validateDateRange(req, res, next) {
     const finalOffset = Number.isNaN(parsedOffset) ? 0 : parsedOffset
 
     req.parsedQuery = {
-        websiteUid: website_uid,
         offset: finalOffset,
-        start,
-        end
+        startDate: start,
+        endDate: end
     }
 
     return next()

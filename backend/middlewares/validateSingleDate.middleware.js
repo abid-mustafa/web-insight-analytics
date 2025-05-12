@@ -1,26 +1,23 @@
 const { isValid, parseISO } = require('date-fns')
 
 module.exports = function validateDateRangeSingle(req, res, next) {
-    const { website_uid, end_date } = req.query
+    const { endDate } = req.query
 
-    if (!website_uid || !end_date) {
-        const error = new Error("Missing website_uid or end_date")
+    if (!endDate) {
+        const error = new Error("Missing endDate")
         error.status = 400
         return next(error)
     }
 
-    const end = parseISO(end_date)
+    const end = parseISO(endDate)
 
     if (!isValid(end)) {
-        const error = new Error("Invalid end_date")
+        const error = new Error("Invalid endDate")
         error.statusCode = 400
         return next(error)
     }
 
-    req.parsedQuery = {
-        websiteUid: website_uid,
-        end
-    }
+    req.endDate = end
 
     next()
 }

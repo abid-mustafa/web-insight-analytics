@@ -1,9 +1,6 @@
 const db = require('../database')
-const { getWebsiteIdFromUid } = require("../utils/website.utils")
 
-exports.getItemsGrouped = async (websiteUid, groupBy, groupByColumn, offset, startDate, endDate) => {
-    const websiteId = await getWebsiteIdFromUid(websiteUid)
-
+exports.getItemsGrouped = async (websiteId, groupBy, groupByColumn, offset, startDate, endDate) => {
     const [values] = await db.query(`
         SELECT 
             ${groupByColumn} AS ${groupBy},
