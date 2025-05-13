@@ -2,17 +2,18 @@
   <button mat-icon-button (click)="onToggleSidebar()" class="icon">
     <mat-icon>menu</mat-icon>
   </button>
-  <span>Web Insight</span>
+  <span><b>Web Insight</b></span>
 
-  <mat-form-field class="website-selector">
-    <mat-label>Select</mat-label>
-    <mat-select [(value)]="selectedWebsite" (selectionChange)="onWebsiteChange($event.value)"
-      placeholder="Select a site">
-      <mat-option *ngFor="let site of websites" [value]="site.website_id">
-        {{ site.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+  <div class="website-selector">
+    <mat-form-field>
+      <mat-select [(ngModel)]="selectedWebsite" (selectionChange)="onWebsiteChange($event.value)">
+        <mat-option [value]="null" disabled>Select a site</mat-option>
+        <mat-option *ngFor="let site of websites" [value]="site.website_id">
+          {{ site.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 
   <button mat-icon-button [matMenuTriggerFor]="menu" class="icon">
     <mat-icon>calendar_today</mat-icon>
@@ -34,8 +35,11 @@
         <input matStartDate formControlName="start" placeholder="Start date" />
         <input matEndDate formControlName="end" placeholder="End date" />
       </mat-date-range-input>
-      <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
-      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-hint>DD/MM/YYYY - DD/MM/YYYY</mat-hint>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
       <mat-date-range-picker #picker></mat-date-range-picker>
 
       <mat-error *ngIf="range.hasError('invalidRange')">
@@ -46,7 +50,7 @@
 
   <p *ngIf="range.value.start && range.value.end" class="selected-dates">
     Selected dates: {{ range.value.start | date : "dd/MM/yyyy" }}
-    –
+    -
     {{ range.value.end | date : "dd/MM/yyyy" }}
   </p>
 
@@ -57,21 +61,6 @@
   </button>
 
   <mat-menu #userMenu="matMenu" class="user-menu" xPosition="before" yPosition="below">
-    <div class="user-info">
-      <p class="user-name">{{ userName }}</p>
-      <p class="user-email">{{ userEmail }}</p>
-    </div>
-
-    <mat-divider></mat-divider>
-
-    <button mat-menu-item routerLink="/form" routerLinkActive="active">
-      <mat-icon>note</mat-icon>
-      <span>Add Website</span>
-    </button>
-
-    <button mat-menu-item (click)="logout()" class="logout-btn">
-      <mat-icon>logout</mat-icon>
-      <span>Logout</span>
-    </button>
+    <app-user-menu [userName]="userName" [userEmail]="userEmail"></app-user-menu>
   </mat-menu>
 </mat-toolbar>

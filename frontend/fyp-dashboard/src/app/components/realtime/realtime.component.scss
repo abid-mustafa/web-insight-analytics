@@ -14,11 +14,3 @@ app-realtime-card {
   min-width: 0; // Prevents overflow in grid
   width: 100%;
 }
-
-@media (max-width: 768px) {
-  .realtime-container {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 16px;
-    padding: 16px;
-  }
-}

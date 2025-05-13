@@ -12,6 +12,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDividerModule } from '@angular/material/divider';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MAT_DATE_FORMATS,
@@ -55,7 +56,9 @@ import { VisitorsComponent } from './components/behavior/visitors/visitors.compo
 import { SessionsComponent } from './components/behavior/sessions/sessions.component';
 import { TrafficComponent } from './components/behavior/traffic/traffic.component';
 import { CustomComponent } from './components/custom/custom.component';
-import { FormComponent } from './components/form/form.component';
+import { WebsiteFormComponent } from './components/website-form/website-form.component';
+import { WebsiteManagementComponent } from './components/website-management/website-management.component';
+import { UserMenuComponent } from './components/header/user-menu/user-menu.component';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -97,7 +100,9 @@ const socketConfig: SocketIoConfig = {
     SessionsComponent,
     TrafficComponent,
     CustomComponent,
-    FormComponent,
+    WebsiteFormComponent,
+    WebsiteManagementComponent,
+    UserMenuComponent
   ],
   imports: [
     BrowserModule,
@@ -122,6 +127,7 @@ const socketConfig: SocketIoConfig = {
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatSnackBarModule,
+    MatDividerModule,
     BaseChartDirective,
     SocketIoModule.forRoot(socketConfig),
     MatChipsModule,

@@ -1,8 +1,8 @@
+// src/app/components/header/header.component.ts
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router, NavigationEnd, Event } from '@angular/router';
 import { filter } from 'rxjs/operators';
-
 import { DateRangeService, DateRange } from '../services/date-range.service';
 import { AuthService } from '../services/auth.service';
 import { WebsiteService } from '../services/website.service';
@@ -23,7 +23,6 @@ export class HeaderComponent implements OnInit {
   showLayout = true;
   userName: string | null = null;
   userEmail: string | null = null;
-
   websites: any[] = [];
   selectedWebsite: number | null = null;
 
@@ -33,7 +32,6 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private websiteService: WebsiteService
   ) {
-    // Hide header on login/register routes
     this.router.events
       .pipe(filter((e: Event): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe((e) => {
@@ -42,41 +40,52 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Load user info from localStorage
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     this.userName = user?.name ?? null;
     this.userEmail = user?.email ?? null;
 
-    console.log(user);
-
-
-    // Watch date-range picker and broadcast changes
+    const { start, end } = this.dateRangeService['rangeSubject'].getValue();
+    this.range.setValue({ start, end });
     this.range.valueChanges.subscribe((val: Partial<DateRange>) => {
       const { start, end } = val;
       if (start && end) {
-        this.dateRangeService.setRange({ start, end });
+        // Normalize dates to start and end of day
+        const normalizedStart = new Date(start);
+        normalizedStart.setHours(0, 0, 0, 0);
+        
+        const normalizedEnd = new Date(end);
+        normalizedEnd.setHours(23, 59, 59, 999);
+
+        // Validate dates
+        if (normalizedStart > normalizedEnd) {
+          this.range.setErrors({ invalidRange: true });
+          return;
+        }
+
+        // Format dates consistently
+        const formattedRange = {
+          start: normalizedStart,
+          end: normalizedEnd
+        };
+
+        this.dateRangeService.setRange(formattedRange);
       } else {
         this.range.setErrors({ invalidRange: true });
       }
     });
 
-    // Fetch websites and select the first one by default
     this.loadWebsites();
   }
 
   private loadWebsites(): void {
     this.websiteService.getWebsites().subscribe({
       next: (res: any) => {
-        // if API returns { data: [...] }, unwrap; otherwise assume it's already an array
         const arr = Array.isArray(res) ? res : res.data;
         this.websites = Array.isArray(arr) ? arr : [];
-
         if (this.websites.length) {
-          const firstId = this.websites[0].website_id;
-          this.onWebsiteChange(firstId);
+          this.onWebsiteChange(this.websites[0].website_id);
         }
       },
-      error: (err) => console.error('Failed to load websites', err),
     });
   }
 
@@ -89,42 +98,22 @@ export class HeaderComponent implements OnInit {
     this.toggleSidebar.emit();
   }
 
-  selectPreset(preset: string): void {
-    const today = new Date();
-    let start: Date;
-    let end: Date;
+  navigateToForm(): void {
+    this.router.navigate(['/website-form']).then(() => {
+      (document.activeElement as HTMLElement)?.blur();
+    });
+  }
 
-    switch (preset) {
-      case 'today':
-        start = end = today;
-        break;
-      case 'yesterday':
-        start = end = new Date(today.setDate(today.getDate() - 1));
-        break;
-      case 'last7':
-        end = new Date();
-        start = new Date();
-        start.setDate(end.getDate() - 6);
-        break;
-      case 'last30':
-        end = new Date();
-        start = new Date();
-        start.setDate(end.getDate() - 29);
-        break;
-      case 'thisMonth':
-        end = new Date();
-        start = new Date(end.getFullYear(), end.getMonth(), 1);
-        break;
-      case 'lastMonth':
-        const prev = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-        start = new Date(prev.getFullYear(), prev.getMonth(), 1);
-        end = new Date(prev.getFullYear(), prev.getMonth() + 1, 0);
-        break;
-      default:
-        return;
+  navigateToWebsiteManager(): void {
+    this.router.navigate(['/manage-websites']).then(() => {
+      (document.activeElement as HTMLElement)?.blur();
+    });
+  }
+
+  confirmLogout(): void {
+    if (window.confirm('Are you sure you want to log out?')) {
+      this.logout();
     }
-
-    this.range.setValue({ start, end });
   }
 
   logout(): void {

@@ -1,23 +1,26 @@
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav mode="side" [opened]="isExpanded" class="sidebar">
+<mat-sidenav-container
+  class="sidenav-container"
+  [class.collapsed]="!isExpanded"
+>
+  <mat-sidenav
+    mode="side"
+    opened
+    class="sidebar"
+    [class.collapsed]="!isExpanded"
+  >
     <mat-nav-list>
-      <!-- Overview -->
       <a mat-list-item routerLink="/overview" routerLinkActive="active">
         <mat-icon class="icon">analytics</mat-icon>
         <span class="label">Overview</span>
       </a>
-
-      <!-- Realtime -->
       <a mat-list-item routerLink="/realtime" routerLinkActive="active">
         <mat-icon class="icon">schedule</mat-icon>
         <span class="label">Realtime</span>
       </a>
-
-      <!-- Behavior parent toggle -->
       <a
         mat-list-item
         class="behavior-toggle"
-        (click)="toggleBehavior()"
+        (click)="onBehaviorClick()"
         [class.active]="behaviorOpen || isChildRouteActive('/behavior')"
       >
         <mat-icon class="icon">table_chart</mat-icon>
@@ -26,8 +29,6 @@
           {{ behaviorOpen ? "expand_less" : "expand_more" }}
         </mat-icon>
       </a>
-
-      <!-- Behavior children -->
       <div *ngIf="behaviorOpen" class="behavior-children">
         <a mat-list-item routerLink="/behavior/pages" routerLinkActive="active">
           <span class="label">Pages</span>
@@ -61,20 +62,14 @@
           <span class="label">Traffic</span>
         </a>
       </div>
-
-      <!-- E-commerce -->
       <a mat-list-item routerLink="/e-commerce" routerLinkActive="active">
         <mat-icon class="icon">shopping_cart</mat-icon>
         <span class="label">E-commerce</span>
       </a>
-
-      <!-- AI -->
       <a mat-list-item routerLink="/ai" routerLinkActive="active">
         <mat-icon class="icon">memory</mat-icon>
         <span class="label">AI</span>
       </a>
-
-      <!-- Custom -->
       <a mat-list-item routerLink="/custom" routerLinkActive="active">
         <mat-icon class="icon">manual</mat-icon>
         <span class="label">Custom</span>
