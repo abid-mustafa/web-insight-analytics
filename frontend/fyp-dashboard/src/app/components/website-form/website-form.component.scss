@@ -23,7 +23,7 @@
   }
 }
 
-.submitted-data {
+.tracking-script {
   margin-top: 24px;
   padding: 16px;
   background-color: var(--surface-800);
@@ -35,19 +35,33 @@
     color: var(--primary-400);
   }
 
-  .data-item {
-    margin-bottom: 8px;
-    color: var(--text-primary);
+ .script-snippet {
+  background-color: #f9f9f9;
+  border-left: 4px solid #007acc;
+  padding: 1rem;
+  margin-top: 1rem;
+  font-family: monospace;
+  word-break: break-word;
 
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    strong {
-      color: var(--text-secondary);
-      margin-right: 8px;
-    }
+  strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
   }
+
+  pre {
+    background-color: #eaeaea;
+    padding: 0.75rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+}
+
+
+  
 }
 
 // Dark theme overrides for mat-form-field
@@ -73,3 +87,4 @@
     color: var(--text-primary) !important;
   }
 }
+

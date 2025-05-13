@@ -1,0 +1,152 @@
+.custom-dashboard {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 90px);
+  margin-top: 0;
+  background-color: #f3f4f6;
+  position: relative;
+}
+
+.dashboard-nav {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 12px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 90px;
+  z-index: 10;
+
+  .nav-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-selector {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    mat-form-field {
+      width: 240px;
+      margin: 0;
+
+      ::ng-deep {
+        .mat-mdc-form-field-subscript-wrapper {
+          display: none;
+        }
+
+        .mat-mdc-form-field-flex {
+          background-color: #ffffff;
+        }
+
+        .mat-mdc-form-field-infix {
+          padding-top: 8px;
+          padding-bottom: 8px;
+        }
+      }
+    }
+
+    button {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      &:not(:disabled) {
+        background-color: #1a2a40;
+        color: #ffffff;
+
+        &:hover {
+          background-color: #2a3a50;
+        }
+      }
+    }
+  }
+}
+
+.dashboard-content {
+  flex: 1;
+  padding: 24px;
+  overflow: auto;
+  position: relative;
+
+  gridster {
+    background: transparent;
+    min-height: 100%;
+    margin-top: 0;
+  }
+
+  .dashboard-card {
+    height: 100%;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    .card-header {
+      padding: 16px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #f9fafb;
+
+      h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #1f2937;
+      }
+
+      .remove-btn {
+        color: #6b7280;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: #ef4444;
+        }
+      }
+    }
+
+    .card-content {
+      flex: 1;
+      padding: 16px;
+      overflow: auto;
+    }
+  }
+}
+
+::ng-deep {
+  .gridster-item {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      z-index: 1;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    &.gridster-item-moving {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  .gridster-item-resizing {
+    z-index: 2;
+  }
+}
+

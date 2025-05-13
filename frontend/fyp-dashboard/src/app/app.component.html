@@ -3,9 +3,11 @@
   <div class="layout">
     <app-header (toggleSidebar)="toggleSidebar()"></app-header>
     <div class="body">
-      <app-sidebar [isExpanded]="isSidebarExpanded"></app-sidebar>
-      <div class="main-content" [class.sidebar-collapsed]="!isSidebarExpanded">
-        <!-- your regular pages -->
+      <app-sidebar
+        [isExpanded]="isSidebarExpanded"
+        (toggleSidebar)="toggleSidebar()"
+      ></app-sidebar>
+      <div class="main-content">
         <router-outlet></router-outlet>
       </div>
     </div>

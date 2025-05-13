@@ -1,0 +1,51 @@
+<div class="form-container">
+  <form [formGroup]="websiteForm" (ngSubmit)="onSubmit()" class="website-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Domain</mat-label>
+      <input
+        matInput
+        formControlName="domain"
+        placeholder="Enter domain (e.g., example.com)"
+      />
+      <mat-error *ngIf="websiteForm.get('domain')?.hasError('required')">
+        Domain is required
+      </mat-error>
+      <mat-error *ngIf="websiteForm.get('domain')?.hasError('pattern')">
+        Please enter a valid domain
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Website Name</mat-label>
+      <input matInput formControlName="name" placeholder="Enter website name" />
+      <mat-error *ngIf="websiteForm.get('name')?.hasError('required')">
+        Website name is required
+      </mat-error>
+      <mat-error *ngIf="websiteForm.get('name')?.hasError('minlength')">
+        Website name must be at least 2 characters
+      </mat-error>
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="!websiteForm.valid"
+    >
+      Submit
+    </button>
+  </form>
+
+  <div *ngIf="websiteId" class="tracking-script">
+    <h3>Tracking Script</h3>
+    <div class="script-snippet">
+      <strong
+        >Add this snippet to your HTML head tag to track your website:</strong
+      >
+      <pre>
+        &lt;script async src="http://127.0.0.1:5000/static/tracker.js?websiteId={{ websiteId }}"&gt;&lt;/script&gt;
+      </pre>
+    </div>
+  </div>
+  <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
+</div>

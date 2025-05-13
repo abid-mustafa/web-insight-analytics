@@ -1,4 +1,4 @@
-// src/app/services/website.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
@@ -27,6 +27,22 @@ export class WebsiteService {
       `${this.baseUrl}`,
       { withCredentials: true }
     );
+  }
+
+  addWebsite( domain: String, name: String ): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}`,
+      { domain, name },
+      { withCredentials: true }
+    );
+  }
+
+  getWebsiteDetails(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/details`);
+  }
+
+  updateWebsite(websiteId: string, domain: string, name: string): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/update`, { websiteId, domain, name });
   }
 
   /** ← NEW: call this whenever the header selection changes */

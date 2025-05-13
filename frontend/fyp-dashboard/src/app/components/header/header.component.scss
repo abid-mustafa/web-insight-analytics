@@ -25,11 +25,55 @@
 }
 
 .website-selector {
-  color: #1d3557;
   min-width: 180px;
   padding-left: 30px;
   padding-top: 15px;
   padding-right: 15px;
+  
+  ::ng-deep {
+    .mat-mdc-form-field .mdc-text-field {
+      background-color: #ffffff !important;
+    }
+
+    .mdc-text-field--outlined {
+      --mdc-outlined-text-field-outline-color: rgba(0, 0, 0, 0.2);
+      --mdc-outlined-text-field-hover-outline-color: rgba(0, 0, 0, 0.3);
+      --mdc-outlined-text-field-focus-outline-color: rgba(0, 0, 0, 0.4);
+      --mdc-outlined-text-field-label-text-color: rgba(0, 0, 0, 0.6);
+      --mdc-outlined-text-field-caret-color: #000000;
+      --mdc-outlined-text-field-focus-label-text-color: #000000;
+    }
+
+    .mat-mdc-form-field-flex {
+      background-color: #ffffff;
+    }
+
+    .mat-mdc-select-value-text {
+      color: #000000;
+    }
+
+    .mat-mdc-select-arrow {
+      color: #000000;
+    }
+
+    .mdc-floating-label {
+      color: rgba(0, 0, 0, 0.6) !important;
+    }
+
+    .mat-mdc-select-panel {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .mat-mdc-input-element {
+      color: #000000;
+      font-size: 0.875rem;
+
+      &::placeholder {
+        color: rgba(0, 0, 0, 0.4);
+      }
+    }
+  }
 }
 
 .date-menu {
@@ -136,21 +180,5 @@
   
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
-  }
-}
-
-@media (max-width: 768px) {
-  .header {
-    padding: 0 16px;
-  }
-  
-  .website-selector {
-    min-width: 160px;
-    padding-left: 20px;
-    padding-right: 10px;
-  }
-  
-  .selected-dates {
-    display: none;
   }
 }

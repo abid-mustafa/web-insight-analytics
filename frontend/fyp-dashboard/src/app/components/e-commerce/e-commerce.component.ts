@@ -1,19 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {
   GridsterConfig,
-  GridsterItem,
   GridType,
   DisplayGrid,
 } from 'angular-gridster2';
 import { DateRangeService } from '../services/date-range.service';
-import { ecommerceDashboard } from '../dashboardConfig/ecommerceDashboard';
-
-export interface EcommerceGridItem extends GridsterItem {
-  endpoint: string;
-  title: string;
-  displayType: 'summary' | 'table' | 'realtime';
-  event?: string;
-}
+import {ecommerceDashboard } from '../dashboard-config/e-commerce-dashboard-config';
+import { DashboardGridItem } from '../dashboard-config/dashboard-grid-item.interface';
 
 @Component({
   selector: 'app-ecommerce-page',
@@ -22,7 +15,7 @@ export interface EcommerceGridItem extends GridsterItem {
 })
 export class EcommerceComponent implements OnInit {
   options!: GridsterConfig;
-  dashboard: EcommerceGridItem[] = ecommerceDashboard;
+  dashboard: DashboardGridItem[] = ecommerceDashboard;
 
   fromDate = '2020-11-01';
   toDate = '2020-11-07';

@@ -1,17 +1,17 @@
 .custom-card {
-  padding: 24px;
+  padding: 16px;
   background-color: #ffffff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   height: 100%;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   border: 1px solid rgba(26, 42, 64, 0.08);
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease;
 
   &:hover {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-    transform: translateY(-2px);
   }
 }
 
@@ -19,46 +19,25 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
   padding-bottom: 12px;
   border-bottom: 1px solid rgba(26, 42, 64, 0.08);
-
-  .toggle-btn {
-    background-color: #f1f5f9;
-    color: #475569;
-    border: none;
-    border-radius: 8px;
-    padding: 8px;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-
-    &:hover {
-      background-color: #e2e8f0;
-      color: #1a2a40;
-    }
-
-    mat-icon {
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
-    }
-  }
 }
 
 .card-title {
   margin: 0;
   font-size: 1.25rem;
   font-weight: 600;
-  color: #475569;
+  color: #1a2a40;
   letter-spacing: -0.01em;
 }
 
 .chart-container {
   position: relative;
-  flex-grow: 1;
-  width: 100%;
-  min-height: 200px;
+  flex: 1;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .loader-container {
@@ -69,4 +48,64 @@
   min-height: 200px;
   background-color: transparent;
   border-radius: 8px;
+  position: relative;
+}
+
+.overlay-spinner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  backdrop-filter: blur(2px);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    animation: pulse 1.2s ease-in-out infinite;
+    box-shadow: 0 0 15px rgba(37, 99, 235, 0.15);
+  }
+
+  &::before {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(37, 99, 235, 0.15);
+    animation-delay: -0.4s;
+  }
+
+  &::after {
+    width: 75%;
+    height: 75%;
+    background-color: rgba(37, 99, 235, 0.3);
+    top: 12.5%;
+    left: 12.5%;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0.85);
+    opacity: 0.4;
+  }
 }
