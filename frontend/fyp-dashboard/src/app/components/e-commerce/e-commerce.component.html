@@ -15,13 +15,14 @@
           [title]="item.title"
           [fromDate]="fromDate"
           [toDate]="toDate"
+          [toDate]="toDate"
+          [groupBy]="item.groupBy || ''"
         >
         </app-table-card>
       </ng-container>
       <ng-container *ngSwitchCase="'realtime'">
         <app-realtime-card
           [title]="item.title"
-          [endpoint]="item.endpoint || ''"
           [event]="item.event || ''"
         >
         </app-realtime-card>

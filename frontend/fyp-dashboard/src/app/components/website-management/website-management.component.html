@@ -2,7 +2,7 @@
   <h2>Manage Websites</h2>
 
   <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
-  <!-- <mat-success *ngIf="successMessage">{{ successMessage }}</mat-success> -->
+  <div class="success-message" *ngIf="successMessage">{{ successMessage }}</div>
 
   <table mat-table [dataSource]="websites" class="website-table">
     <ng-container matColumnDef="name">
@@ -18,7 +18,9 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let website">
-        <button mat-raised-button color="primary" (click)="onEdit(website.websiteId, website.name, website.domain)"><mat-icon>edit</mat-icon></button>
+        <button mat-raised-button color="primary" (click)="onEdit(website.website_id, website.name, website.domain)">
+          <mat-icon>edit</mat-icon>
+        </button>
       </td>
     </ng-container>
 
@@ -26,33 +28,9 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
-  <div *ngIf="selectedWebsiteId">
-    <h3>Edit Website</h3>
-    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
-      <mat-form-field appearance="outline">
-        <mat-label>Website Name</mat-label>
-        <input matInput formControlName="name" placeholder="Enter website name" />
-        <mat-error *ngIf="editForm.get('name')?.hasError('required')">
-          Website name is required
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Domain</mat-label>
-        <input matInput formControlName="domain" placeholder="Enter domain" />
-        <mat-error *ngIf="editForm.get('domain')?.hasError('required')">
-          Domain is required
-        </mat-error>
-      </mat-form-field>
-
-      <button mat-raised-button color="primary" type="submit" [disabled]="editForm.invalid">
-        Save Changes
-      </button>
-    </form>
-  </div>
-
-  <div *ngIf="selectedWebsiteId" class="tracking-script">
+  <div *ngIf="websites.length > 0" class="tracking-script">
     <h3>Tracking Script</h3>
-    <pre>{{ getTrackingScript(selectedWebsiteId) }}</pre>
+    <p>Add this script to your website to start tracking:</p>
+    <pre>{{ getTrackingScript(websites[0].website_id) }}</pre>
   </div>
 </div>

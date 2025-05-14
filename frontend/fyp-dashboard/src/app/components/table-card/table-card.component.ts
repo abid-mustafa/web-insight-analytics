@@ -55,7 +55,10 @@ export class TableCardComponent
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { labels: { color: '#1A2A40' } },
+      legend: { 
+        display: false,  // Hide legend for bar charts
+        labels: { color: '#1A2A40' } 
+      },
       tooltip: {
         callbacks: {
           title: (items) => {

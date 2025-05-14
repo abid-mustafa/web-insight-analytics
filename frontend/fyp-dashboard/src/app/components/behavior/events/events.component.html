@@ -3,14 +3,14 @@
     <h2 class="section-title">Events</h2>
     <div class="section-divider"></div>
   </div>
-  <div class="tables-grid">
+  <div class="events-container">
     <app-table-card
-      *ngFor="let tbl of eventTables"
-      [title]="tbl.title"
-      [endpoint]="tbl.endpoint"
+      *ngFor="let table of eventTables"
+      [title]="table.title"
+      [endpoint]="table.endpoint"
+      [groupBy]="table.groupBy"
       [fromDate]="fromDate"
       [toDate]="toDate"
-      class="table-card"
     ></app-table-card>
   </div>
 </section>

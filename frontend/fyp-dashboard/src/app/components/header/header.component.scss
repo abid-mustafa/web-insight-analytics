@@ -117,7 +117,7 @@
   margin-left: 16px;
   font-weight: 500;
   color: #d9d9d9;
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 .user-menu {
@@ -177,8 +177,40 @@
 .user-icon-btn {
   border-radius: 50%;
   transition: background-color 0.2s ease;
+  width: 48px !important;
+  height: 48px !important;
   
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  mat-icon {
+    font-size: 32px !important;
+    width: 32px !important;
+    height: 32px !important;
+    line-height: 32px !important;
+  }
+}
+
+button[mat-icon-button] {
+  &.icon {
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+
+// Specific style for user icon
+button[mat-icon-button]:last-of-type {
+  &.icon {
+    padding-bottom: 15px;
+    mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+    }
   }
 }
