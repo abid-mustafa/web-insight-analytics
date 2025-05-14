@@ -8,7 +8,6 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'Web Insight';
   isSidebarExpanded = true;
   showLayout = false;
 

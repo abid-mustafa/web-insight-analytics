@@ -2,6 +2,9 @@
   <button mat-icon-button (click)="onToggleSidebar()" class="icon">
     <mat-icon>menu</mat-icon>
   </button>
+  <span>
+    <img src="assets/logo.ico" alt="Logo" class="logo" />
+  </span>
   <span><b>Web Insight</b></span>
 
   <div class="website-selector">
@@ -36,10 +39,7 @@
         <input matEndDate formControlName="end" placeholder="End date" />
       </mat-date-range-input>
       <mat-hint>DD/MM/YYYY - DD/MM/YYYY</mat-hint>
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="picker"
-      ></mat-datepicker-toggle>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-date-range-picker #picker></mat-date-range-picker>
 
       <mat-error *ngIf="range.hasError('invalidRange')">

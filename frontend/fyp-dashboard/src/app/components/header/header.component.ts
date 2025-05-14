@@ -52,7 +52,7 @@ export class HeaderComponent implements OnInit {
         // Normalize dates to start and end of day
         const normalizedStart = new Date(start);
         normalizedStart.setHours(0, 0, 0, 0);
-        
+
         const normalizedEnd = new Date(end);
         normalizedEnd.setHours(23, 59, 59, 999);
 
@@ -110,11 +110,11 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  confirmLogout(): void {
-    if (window.confirm('Are you sure you want to log out?')) {
-      this.logout();
-    }
-  }
+  // confirmLogout(): void {
+  //   if (window.confirm('Are you sure you want to log out?')) {
+  //     this.logout();
+  //   }
+  // }
 
   logout(): void {
     this.auth.logout().subscribe(() => {
