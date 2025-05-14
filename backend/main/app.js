@@ -57,6 +57,9 @@ app.use('/api/auth/', authRoutes)
 const authMiddleware = require('./middlewares/auth.middleware.js')
 app.use(authMiddleware)
 
+const sessionsRoutes = require('./routes/sessions.routes.js')
+app.use('/api/sessions/', sessionsRoutes)
+
 const eventsRoutes = require('./routes/events.routes.js')
 app.use('/api/events/', eventsRoutes)
 
