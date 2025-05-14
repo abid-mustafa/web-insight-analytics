@@ -32,6 +32,13 @@
   border-radius: 2px;
 }
 
+.events-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  padding: 24px;
+}
+
 .tables-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -50,9 +57,8 @@
 }
 
 @media (max-width: 768px) {
-  .tables-grid {
+  .events-container {
     grid-template-columns: 1fr;
-    gap: 16px;
   }
   .section-title {
     font-size: 1.25rem;

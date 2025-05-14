@@ -1,33 +1,82 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GridsterConfig, GridsterItem } from 'angular-gridster2';
 import { DashboardGridItem } from './dashboard-grid-item.interface';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject, combineLatest } from 'rxjs';
+import { takeUntil, map, startWith } from 'rxjs/operators';
 import { cardMap } from '../dashboard-config/card-config';
+import { DateRangeService } from '../services/date-range.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-custom',
   templateUrl: './custom.component.html',
   styleUrls: ['./custom.component.scss']
 })
-export class CustomComponent implements OnInit {
+export class CustomComponent implements OnInit, OnDestroy {
   options!: GridsterConfig;
   dashboard: DashboardGridItem[] = [];
   availableCards = cardMap;
   selectedCard: string | null = null;
-  cardOptions$: Observable<string[]>;
-  private readonly MAX_CARDS_PER_ROW = 3;
-  private readonly BASE_COL_WIDTH = 300;
+  cardOptions$: Observable<{value: string, disabled: boolean}[]>;
+  filteredCardOptions$: Observable<{value: string, disabled: boolean}[]>;
+  searchControl = new FormControl('');
+  private readonly MAX_CARDS_PER_ROW = 6;
+  private readonly BASE_COL_WIDTH = 175;
   private readonly BASE_ROW_HEIGHT = 200;
   private readonly STORAGE_KEY = 'custom_dashboard_layout';
   private readonly GRID_MARGIN = 16;
+  private destroy$ = new Subject<void>();
 
-  constructor() {
-    this.cardOptions$ = of(Object.keys(this.availableCards));
+  // Date range state
+  dateRange = {
+    fromDate: '2020-11-01',
+    toDate: '2020-11-07'
+  };
+
+  constructor(private dateRangeService: DateRangeService) {
+    this.cardOptions$ = of(this.getSortedCardOptions());
+    this.filteredCardOptions$ = combineLatest([
+      this.cardOptions$,
+      this.searchControl.valueChanges.pipe(startWith(''))
+    ]).pipe(
+      map(([options, searchTerm]) => {
+        if (!searchTerm) return options;
+        const term = searchTerm.toLowerCase();
+        return options.filter(option => 
+          option.value.toLowerCase().includes(term)
+        );
+      })
+    );
+
+    // Subscribe to search control changes to update selectedCard
+    this.searchControl.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(value => {
+        if (typeof value === 'string') {
+          this.selectedCard = value;
+        }
+      });
+  }
+
+  displayFn = (value: string): string => {
+    return value || '';
   }
 
   ngOnInit() {
     this.loadDashboardState();
     this.updateGridOptions();
+
+    // Subscribe to date range changes
+    this.dateRangeService.range$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ start, end }) => {
+        if (start && end) {
+          this.dateRange = {
+            fromDate: start.toISOString().split('T')[0],
+            toDate: end.toISOString().split('T')[0]
+          };
+        }
+      });
   }
 
   private loadDashboardState() {
@@ -41,14 +90,16 @@ export class CustomComponent implements OnInit {
           return baseCard && item.endpoint === baseCard.endpoint;
         }).map((item: DashboardGridItem) => ({
           ...item,
-          // Ensure all required properties are present
-          cols: item.cols || 1,
+          // Ensure all required properties are present with 2x2 default
+          cols: item.cols || 2,
           rows: item.rows || 2,
           x: item.x || 0,
           y: item.y || 0,
           displayType: item.displayType || this.availableCards[item.title].displayType,
           groupBy: item.groupBy || this.availableCards[item.title].groupBy
         }));
+        // Update card options after loading the state
+        this.updateCardOptions();
       } catch (error) {
         console.error('Error loading dashboard state:', error);
         this.dashboard = [];
@@ -67,71 +118,130 @@ export class CustomComponent implements OnInit {
   private updateGridOptions() {
     this.options = {
       draggable: { enabled: true },
-      resizable: { enabled: true },
-      pushItems: true, // Enable pushing items to prevent overlapping
+      resizable: { enabled: false },
+      pushItems: true,
       minCols: 1,
       minRows: 1,
-      maxCols: this.MAX_CARDS_PER_ROW, // Maximum 3 columns
+      maxCols: this.MAX_CARDS_PER_ROW,
       maxRows: 6,
       margin: this.GRID_MARGIN,
-      outerMargin: true,
+      outerMargin: false,
       gridType: 'fixed',
-      displayGrid: 'always',
+      displayGrid: 'none',
       fixedColWidth: this.BASE_COL_WIDTH,
       fixedRowHeight: this.BASE_ROW_HEIGHT,
       rowHeight: this.BASE_ROW_HEIGHT,
       minItemCols: 1,
       minItemRows: 1,
-      maxItemCols: 1, // Each card takes exactly 1 column
+      maxItemCols: this.MAX_CARDS_PER_ROW,
       maxItemRows: 6,
-      defaultItemCols: 1, // Each card takes exactly 1 column
+      defaultItemCols: 2,
       defaultItemRows: 2,
       defaultItemX: 0,
       defaultItemY: 0,
       itemChangeCallback: (item: GridsterItem) => {
-        const itemTitle = (item as any)['title'];
-        // Force items to stay at 1 column width
-        item.cols = 1;
-        if (item.rows !== this.availableCards[itemTitle]?.rows) {
-          item.rows = this.availableCards[itemTitle]?.rows || 2;
-        }
         this.saveDashboardState();
       },
       itemResizeCallback: (item: GridsterItem) => {
-        const itemTitle = (item as any)['title'];
-        // Force items to stay at 1 column width
-        item.cols = 1;
-        if (item.rows !== this.availableCards[itemTitle]?.rows) {
-          item.rows = this.availableCards[itemTitle]?.rows || 2;
-        }
         this.saveDashboardState();
-      }
+      },
+      compactUp: true,
+      compactLeft: true,
+      compactType: 'compactUp&Left'
     };
+  }
+
+  private getSortedCardOptions(): {value: string, disabled: boolean}[] {
+    const usedCards = new Set(this.dashboard.map(item => item.title));
+    const allOptions = Object.keys(this.availableCards);
+    
+    // Split into available and used cards
+    const available = allOptions
+      .filter(option => !usedCards.has(option))
+      .map(option => ({ value: option, disabled: false }));
+    
+    const used = allOptions
+      .filter(option => usedCards.has(option))
+      .map(option => ({ value: option, disabled: true }));
+    
+    // Return combined array with used cards at the bottom
+    return [...available, ...used];
+  }
+
+  private updateCardOptions() {
+    this.cardOptions$ = of(this.getSortedCardOptions());
   }
 
   addSelectedCard() {
     if (this.selectedCard && this.availableCards[this.selectedCard]) {
       const card = this.availableCards[this.selectedCard];
       if (card.endpoint) {
+        // Calculate the position for the new card
+        const position = this.calculateNextPosition();
+        
         const newCard = {
           ...card,
-          x: 0,
-          y: 0
+          cols: 2,
+          rows: 2,
+          x: position.x,
+          y: position.y
         };
         this.dashboard.push(newCard);
         this.selectedCard = null;
         this.updateGridOptions();
-        this.saveDashboardState(); // Save state when adding a card
+        this.updateCardOptions();
+        this.saveDashboardState();
       }
     }
+  }
+
+  private calculateNextPosition(): { x: number, y: number } {
+    if (this.dashboard.length === 0) {
+      return { x: 0, y: 0 };
+    }
+
+    // Sort cards by position (top to bottom, left to right)
+    const sortedCards = [...this.dashboard].sort((a, b) => {
+      if (a.y === b.y) {
+        return a.x - b.x;
+      }
+      return a.y - b.y;
+    });
+
+    // Find the last card
+    const lastCard = sortedCards[sortedCards.length - 1];
+    
+    // Calculate next position
+    let nextX = lastCard.x + lastCard.cols;
+    let nextY = lastCard.y;
+
+    // If next position would exceed max columns, move to next row
+    if (nextX + 2 > this.MAX_CARDS_PER_ROW) {
+      nextX = 0;
+      nextY = lastCard.y + lastCard.rows;
+    }
+
+    return { x: nextX, y: nextY };
   }
 
   removeItem(item: GridsterItem) {
     const index = this.dashboard.indexOf(item as DashboardGridItem);
     if (index > -1) {
+      // Remove the item
       this.dashboard.splice(index, 1);
-      this.updateGridOptions();
-      this.saveDashboardState(); // Save state when removing a card
+      
+      // Force a reflow of the grid
+      setTimeout(() => {
+        this.dashboard = [...this.dashboard];
+        this.updateGridOptions();
+        this.updateCardOptions();
+        this.saveDashboardState();
+      });
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

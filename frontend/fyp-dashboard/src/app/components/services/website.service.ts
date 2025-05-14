@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
@@ -42,7 +41,7 @@ export class WebsiteService {
   }
 
   updateWebsite(websiteId: string, domain: string, name: string): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/update`, { websiteId, domain, name });
+    return this.http.put<any>(`${this.baseUrl}/update`, { websiteId, domain, name }, { withCredentials: true });
   }
 
   /** ← NEW: call this whenever the header selection changes */

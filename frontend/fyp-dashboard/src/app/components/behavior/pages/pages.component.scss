@@ -61,3 +61,85 @@
     margin-bottom: 32px;
   }
 }
+
+.pages-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding: 24px;
+}
+
+.table-container {
+  background: var(--bg-card);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  table {
+    width: 100%;
+    background: transparent;
+
+    .mat-mdc-header-cell {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-weight: 600;
+      padding: 12px 16px;
+    }
+
+    .mat-mdc-cell {
+      padding: 12px 16px;
+      color: var(--text-secondary);
+    }
+
+    .mat-mdc-row {
+      &:hover {
+        background: var(--bg-hover);
+      }
+    }
+
+    // Make the count column right-aligned
+    .mat-column-count {
+      text-align: right;
+      font-weight: 500;
+    }
+
+    // Make long text in cells wrap
+    .mat-column-title,
+    .mat-column-url,
+    .mat-column-referrer {
+      max-width: 300px;
+      white-space: normal;
+      word-break: break-word;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 1200px) {
+  .pages-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .pages-container {
+    grid-template-columns: 1fr;
+  }
+
+  .table-container {
+    table {
+      .mat-column-title,
+      .mat-column-url,
+      .mat-column-referrer {
+        max-width: 200px;
+      }
+    }
+  }
+}

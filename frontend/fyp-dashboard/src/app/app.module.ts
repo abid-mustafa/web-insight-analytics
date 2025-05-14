@@ -29,12 +29,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { GridsterComponent, GridsterItemComponent } from 'angular-gridster2';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import {
   BaseChartDirective,
   provideCharts,
   withDefaultRegisterables,
 } from 'ng2-charts';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
@@ -45,7 +47,6 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@a
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { RealtimeCardComponent } from './components/realtime-card/realtime-card.component';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { BehaviorComponent } from './components/behavior/behavior.component';
 import { EcommerceComponent } from './components/e-commerce/e-commerce.component';
@@ -59,6 +60,9 @@ import { CustomComponent } from './components/custom/custom.component';
 import { WebsiteFormComponent } from './components/website-form/website-form.component';
 import { WebsiteManagementComponent } from './components/website-management/website-management.component';
 import { UserMenuComponent } from './components/header/user-menu/user-menu.component';
+import { RealtimeCardComponent } from './components/realtime-card/realtime-card.component';
+import { DialogComponent } from './components/dialog/dialog.component';
+import { SingleValueCardComponent } from './components/single-value-card/single-value-card.component';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -102,7 +106,9 @@ const socketConfig: SocketIoConfig = {
     CustomComponent,
     WebsiteFormComponent,
     WebsiteManagementComponent,
-    UserMenuComponent
+    UserMenuComponent,
+    DialogComponent,
+    SingleValueCardComponent
   ],
   imports: [
     BrowserModule,
@@ -128,9 +134,11 @@ const socketConfig: SocketIoConfig = {
     MatTooltipModule,
     MatSnackBarModule,
     MatDividerModule,
+    MatAutocompleteModule,
     BaseChartDirective,
     SocketIoModule.forRoot(socketConfig),
     MatChipsModule,
+    MatDialogModule
   ],
   providers: [
     provideAnimationsAsync(),

@@ -1,5 +1,6 @@
+
 import { DashboardGridItem } from './dashboard-grid-item.interface';
-import { ENDPOINTS, TITLES } from './constants';
+import { DISPLAY_TYPES, ENDPOINTS, TITLES } from './constants';
 
 export const overviewDashboard: DashboardGridItem[] = [
   {
@@ -9,7 +10,7 @@ export const overviewDashboard: DashboardGridItem[] = [
     x: 0,
     endpoint: ENDPOINTS.OVERVIEW,
     title: TITLES.OVERVIEW,
-    displayType: 'summary',
+    displayType: DISPLAY_TYPES.SUMMARY,
   },
   {
     cols: 1,
@@ -18,7 +19,7 @@ export const overviewDashboard: DashboardGridItem[] = [
     x: 2,
     title: TITLES.PAGEVIEWS,
     event: 'get_pageviews',
-    displayType: 'realtime',
+    displayType: DISPLAY_TYPES.REALTIME,
   },
   {
     cols: 1,
@@ -28,7 +29,7 @@ export const overviewDashboard: DashboardGridItem[] = [
     endpoint: ENDPOINTS.PAGES_GROUPED,
     title: TITLES.VIEWS_BY_TITLE,
     groupBy: 'title',
-    displayType: 'table',
+    displayType: DISPLAY_TYPES.TABLE,
   },
   {
     cols: 1,
@@ -38,7 +39,7 @@ export const overviewDashboard: DashboardGridItem[] = [
     endpoint: ENDPOINTS.EVENTS_GROUPED,
     title: TITLES.EVENTS_BY_NAME,
     groupBy: 'name',
-    displayType: 'table',
+    displayType: DISPLAY_TYPES.TABLE,
   },
   {
     cols: 1,
@@ -48,7 +49,7 @@ export const overviewDashboard: DashboardGridItem[] = [
     endpoint: ENDPOINTS.VISITORS_GROUPED,
     title: TITLES.VISITORS_BY_COUNTRY,
     groupBy: 'country',
-    displayType: 'table',
+    displayType: DISPLAY_TYPES.TABLE,
   },
   {
     cols: 1,
@@ -58,7 +59,7 @@ export const overviewDashboard: DashboardGridItem[] = [
     endpoint: ENDPOINTS.ITEM_SOLD,
     title: TITLES.ITEM_SOLD_BY_NAME,
     groupBy: 'name',
-    displayType: 'table',
+    displayType: DISPLAY_TYPES.TABLE,
   },
   {
     cols: 1,
@@ -68,6 +69,6 @@ export const overviewDashboard: DashboardGridItem[] = [
     endpoint: ENDPOINTS.TRAFFIC_GROUPED,
     title: TITLES.SESSIONS_BY_SOURCE,
     groupBy: 'source',
-    displayType: 'table',
+    displayType: DISPLAY_TYPES.TABLE,
   },
 ];

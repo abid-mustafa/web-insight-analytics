@@ -2,18 +2,24 @@ import { Component, OnInit } from '@angular/core';
 import { WebsiteService } from '../services/website.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+interface Website {
+  website_id: string;
+  name: string;
+  domain: string;
+}
+
 @Component({
   selector: 'app-website-management',
   templateUrl: './website-management.component.html',
   styleUrls: ['./website-management.component.scss']
 })
 export class WebsiteManagementComponent implements OnInit {
-  websites: any[] = [];
-  selectedWebsiteId: string = '';
-  editForm: FormGroup;
+  websites: Website[] = [];
   errorMessage: string = '';
   successMessage: string = '';
   displayedColumns: string[] = ['name', 'domain', 'actions'];
+  selectedWebsiteId: string | null = null;
+  editForm: FormGroup;
 
   constructor(
     private websiteService: WebsiteService,
@@ -26,24 +32,14 @@ export class WebsiteManagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.loadWebsites();
-   this.loadMockWebsites();
-  }
-
-  // Mocking the data
-  loadMockWebsites() {
-    this.websites = [
-      { websiteId: '1', name: 'Example Website 1', domain: 'example1.com' },
-      { websiteId: '2', name: 'Example Website 2', domain: 'example2.com' },
-      { websiteId: '3', name: 'Example Website 3', domain: 'example3.com' },
-      { websiteId: '4', name: 'Example Website 4', domain: 'example4.com' }
-    ];
+    this.loadWebsites();
   }
 
   loadWebsites() {
     this.websiteService.getWebsites().subscribe({
-      next: (data: any[]) => {
-        this.websites = data;
+      next: (data: any) => {
+        const arr = Array.isArray(data) ? data : data.data;
+        this.websites = Array.isArray(arr) ? arr : [];
       },
       error: (err) => {
         this.errorMessage = err.error?.message || 'Failed to load websites';
@@ -53,34 +49,32 @@ export class WebsiteManagementComponent implements OnInit {
 
   onEdit(websiteId: string, name: string, domain: string) {
     this.selectedWebsiteId = websiteId;
-    this.editForm.patchValue({
-      name: name,
-      domain: domain
-    });
+    this.editForm.patchValue({ name, domain });
   }
 
   onSubmit() {
-    if (this.editForm.invalid) {
-      this.editForm.markAllAsTouched();
-      return;
+    if (this.editForm.valid && this.selectedWebsiteId) {
+      const { name, domain } = this.editForm.value;
+      this.websiteService.updateWebsite(this.selectedWebsiteId, domain, name).subscribe({
+        next: () => {
+          this.successMessage = 'Website data updated successfully!';
+          this.selectedWebsiteId = null;
+          this.editForm.reset();
+          this.loadWebsites();
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.message || 'Failed to update website data';
+        }
+      });
     }
+  }
 
-    const { name, domain } = this.editForm.value;
-
-    this.websiteService.updateWebsite(this.selectedWebsiteId, domain, name).subscribe({
-      next: () => {
-        this.successMessage = 'Website data updated successfully!';
-        this.loadWebsites(); // Reload website list after successful update
-        this.editForm.reset();
-        this.selectedWebsiteId = ''; // Reset selected website ID
-      },
-      error: (err) => {
-        this.errorMessage = err.error?.message || 'Failed to update website data';
-      }
-    });
+  onCancel() {
+    this.selectedWebsiteId = null;
+    this.editForm.reset();
   }
 
   getTrackingScript(websiteId: string) {
-    return `&lt;script async src="http://127.0.0.1:5000/static/tracker.js?websiteId=${websiteId}"&gt;&lt;/script&gt;`;
+    return `<script async src="http://127.0.0.1:5000/static/tracker.js?websiteId=${websiteId}"></script>`;
   }
 }

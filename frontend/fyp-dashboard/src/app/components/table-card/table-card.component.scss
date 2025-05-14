@@ -33,10 +33,12 @@
 
 .table-container {
   overflow-x: auto;
-  max-height: 320px;
+  height: 320px;
   flex-grow: 1;
   border-radius: 8px;
   background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -207,4 +209,15 @@ mat-paginator {
     margin: 0;
     line-height: 1.5;
   }
+}
+
+.chart-container {
+  height: 320px;
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
 }
