@@ -17,8 +17,8 @@ export class CustomComponent implements OnInit, OnDestroy {
   dashboard: DashboardGridItem[] = [];
   availableCards = cardMap;
   selectedCard: string | null = null;
-  cardOptions$: Observable<{value: string, disabled: boolean}[]>;
-  filteredCardOptions$: Observable<{value: string, disabled: boolean}[]>;
+  cardOptions$: Observable<{ value: string, disabled: boolean }[]>;
+  filteredCardOptions$: Observable<{ value: string, disabled: boolean }[]>;
   searchControl = new FormControl('');
   private readonly MAX_CARDS_PER_ROW = 6;
   private readonly BASE_COL_WIDTH = 175;
@@ -42,7 +42,7 @@ export class CustomComponent implements OnInit, OnDestroy {
       map(([options, searchTerm]) => {
         if (!searchTerm) return options;
         const term = searchTerm.toLowerCase();
-        return options.filter(option => 
+        return options.filter(option =>
           option.value.toLowerCase().includes(term)
         );
       })
@@ -151,19 +151,19 @@ export class CustomComponent implements OnInit, OnDestroy {
     };
   }
 
-  private getSortedCardOptions(): {value: string, disabled: boolean}[] {
+  private getSortedCardOptions(): { value: string, disabled: boolean }[] {
     const usedCards = new Set(this.dashboard.map(item => item.title));
     const allOptions = Object.keys(this.availableCards);
-    
+
     // Split into available and used cards
     const available = allOptions
       .filter(option => !usedCards.has(option))
       .map(option => ({ value: option, disabled: false }));
-    
+
     const used = allOptions
       .filter(option => usedCards.has(option))
       .map(option => ({ value: option, disabled: true }));
-    
+
     // Return combined array with used cards at the bottom
     return [...available, ...used];
   }
@@ -178,7 +178,7 @@ export class CustomComponent implements OnInit, OnDestroy {
       if (card.endpoint) {
         // Calculate the position for the new card
         const position = this.calculateNextPosition();
-        
+
         const newCard = {
           ...card,
           cols: 2,
@@ -193,6 +193,10 @@ export class CustomComponent implements OnInit, OnDestroy {
         this.saveDashboardState();
       }
     }
+
+    this.searchControl.setValue('');
+    this.searchControl.updateValueAndValidity();
+    this.selectedCard = null;
   }
 
   private calculateNextPosition(): { x: number, y: number } {
@@ -210,7 +214,7 @@ export class CustomComponent implements OnInit, OnDestroy {
 
     // Find the last card
     const lastCard = sortedCards[sortedCards.length - 1];
-    
+
     // Calculate next position
     let nextX = lastCard.x + lastCard.cols;
     let nextY = lastCard.y;
@@ -229,7 +233,7 @@ export class CustomComponent implements OnInit, OnDestroy {
     if (index > -1) {
       // Remove the item
       this.dashboard.splice(index, 1);
-      
+
       // Force a reflow of the grid
       setTimeout(() => {
         this.dashboard = [...this.dashboard];

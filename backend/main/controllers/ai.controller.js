@@ -3,10 +3,10 @@ const { isValid, parseISO } = require('date-fns')
 const { getWebsiteIdFromUid } = require('../utils/website.utils')
 
 exports.getSearchBarData = async (req, res, next) => {
-    const { text, websiteUid } = req.body
-    const websiteId = await getWebsiteIdFromUid(websiteUid)
-
     try {
+        console.log('Request body:', req.body);
+        const { websiteUid, text } = req.body
+        const websiteId = await getWebsiteIdFromUid(websiteUid)
         const response = await fetch('http://localhost:8000/api/search-bar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -33,26 +33,25 @@ exports.getSearchBarData = async (req, res, next) => {
 }
 
 exports.getAiReportData = async (req, res, next) => {
-    const { websiteUid, startDate, endDate } = req.body
-    const email = req.session.user.email
-    const websiteId = await getWebsiteIdFromUid(websiteUid)
-
-    if (!websiteId || !startDate || !endDate || !email) {
-        const error = new Error("Missing required fields: websiteUid, startDate, endDate, email")
-        error.statusCode = 400
-        return next(error)
-    }
-
-    const start = parseISO(startDate)
-    const end = parseISO(endDate)
-
-    if (!isValid(start) || !isValid(end) || start > end) {
-        const error = new Error("Invalid startDate or endDate")
-        error.statusCode = 400
-        return next(error)
-    }
-
     try {
+        const { websiteUid, startDate, endDate } = req.body
+        const email = req.session.user.email
+        const websiteId = await getWebsiteIdFromUid(websiteUid)
+
+        if (!websiteId || !startDate || !endDate || !email) {
+            const error = new Error("Missing required fields: websiteUid, startDate, endDate, email")
+            error.statusCode = 400
+            return next(error)
+        }
+
+        const start = parseISO(startDate)
+        const end = parseISO(endDate)
+
+        if (!isValid(start) || !isValid(end) || start > end) {
+            const error = new Error("Invalid startDate or endDate")
+            error.statusCode = 400
+            return next(error)
+        }
         const response = await fetch('http://localhost:8000/api/report', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
