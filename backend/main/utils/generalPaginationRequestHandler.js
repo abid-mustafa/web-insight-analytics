@@ -1,15 +1,13 @@
 require('dotenv').config()
 const redis = require('../redis')
 
-module.exports.getGroupedData = (cachePrefix, serviceMethod) => async (req, res, next) => {
+module.exports.getPaginationData = (cachePrefix, serviceMethod) => async (req, res, next) => {
     try {
         const { offset, startDate, endDate } = req.parsedQuery
         const websiteUid = req.websiteUid
-        const groupByColumn = req.groupByColumn
-        const groupBy = req.groupBy
         const websiteId = req.websiteId
 
-        const cacheKey = `${cachePrefix}:${websiteUid}:${groupBy}:${offset}:${startDate}:${endDate}`
+        const cacheKey = `${cachePrefix}:${websiteUid}:${offset}:${startDate}:${endDate}`
 
         // Check Redis cache
         const cached = await redis.get(cacheKey)
@@ -22,7 +20,7 @@ module.exports.getGroupedData = (cachePrefix, serviceMethod) => async (req, res,
         }
 
         // If not cached, fetch and cache
-        const data = await serviceMethod(websiteId, groupBy, groupByColumn, offset, startDate, endDate)
+        const data = await serviceMethod(websiteId, offset, startDate, endDate)
         await redis.set(cacheKey, JSON.stringify(data), { EX: process.env.DEFAULT_EXPIRATION_TIME || 3600 })
 
         res.status(200).json({
@@ -30,7 +28,7 @@ module.exports.getGroupedData = (cachePrefix, serviceMethod) => async (req, res,
             data
         })
     } catch (error) {
-        console.error(`Error Error in ${cachePrefix} grouped data request handler:`, error)
+        console.error('Error fetching grouped data:', error)
         next(error)
     }
 }
