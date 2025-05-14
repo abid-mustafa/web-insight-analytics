@@ -6,5 +6,8 @@ const validateGroupBy = require('../middlewares/validateGroupBy.middleware')
 const websiteIdMiddleware = require('../middlewares/websiteId.middleware')
 
 router.get('/grouped', websiteIdMiddleware, validateDateRange, validateGroupBy('events'), controller.getEventsGrouped)
+router.get('/conversion-rate', websiteIdMiddleware, validateDateRange, controller.getEventConversionRate)
+router.get('/by-country', websiteIdMiddleware, validateDateRange, controller.getEventsByCountry)
+router.get('/by-browser', websiteIdMiddleware, validateDateRange, controller.getEventsByBrowser)
 
 module.exports = router

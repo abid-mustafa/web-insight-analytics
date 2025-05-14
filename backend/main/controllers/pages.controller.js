@@ -3,7 +3,7 @@ require('dotenv').config()
 const { getGroupedData } = require('../utils/groupedRequestHandler.util');
 const service = require('../services/pages.service');
 const { getSimpleData } = require('../utils/simpleRequestHandler.util');
-const { getPaginationData } = require('../utils/generalPaginationRequestHandler');
+const { getPaginationData } = require('../utils/generalPaginationRequestHandler.util');
 
 exports.getPagesGrouped = getGroupedData('pages-grouped', service.getPagesGrouped)
 exports.getUniquePageViews = getSimpleData('unique-page-views', service.getUniquePageViews,)
