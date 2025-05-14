@@ -78,6 +78,9 @@ app.use('/api/summary', summaryRouter)
 const websitesRouter = require('./routes/websites.routes.js')
 app.use('/api/websites', websitesRouter)
 
+const aiRouter = require('./routes/ai.routes.js')
+app.use('/api/ai', aiRouter)
+
 // global error handler
 const errorHandler = require('./middlewares/errorHandler')
 app.use(errorHandler)

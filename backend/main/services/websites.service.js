@@ -13,6 +13,12 @@ exports.getWebsitesByUserid = async (userId) => {
 }
 
 exports.addWebsite = async (userId, domain, websiteUid, name) => {
+    const [result] = await this.getWebsitesByUserid(userId)
+
+    if (result.length >= 3) {
+        throw new Error('You can only add 3 websites')
+    }
+
     await db.query(`
         INSERT INTO websites(user_id, domain, website_id, name)
         VALUES(?, ?, ?, ?) 
