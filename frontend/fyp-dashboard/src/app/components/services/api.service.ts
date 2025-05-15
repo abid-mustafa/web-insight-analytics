@@ -43,6 +43,14 @@ export class ApiService {
     return this.http.get<ApiResponse>(url, { withCredentials: true });
   }
 
+  fetchSingleValueDate(websiteUid: number,
+    endpoint: string,
+    fromDate: string,
+    toDate: string,): Observable<ApiResponse> {
+    const url = `${this.baseURL}/${endpoint}/?websiteUid=${websiteUid}&startDate=${fromDate}&endDate=${toDate}`;
+    return this.http.get<ApiResponse>(url, { withCredentials: true });
+  }
+
   fetchAIResponse(text: string): Observable<ApiResponse> {
     const url = `${this.baseURL}/search-bar`;
     return this.http.post<ApiResponse>(url, { text });

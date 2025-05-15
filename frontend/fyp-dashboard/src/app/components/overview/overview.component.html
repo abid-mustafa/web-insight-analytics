@@ -29,6 +29,16 @@
           class="dashboard-card"
         >
         </app-realtime-card>
+        
+        <app-single-value-card
+          *ngSwitchCase="'single'"
+          [endpoint]="item.endpoint ?? ''"
+          [title]="item.title"
+          [fromDate]="dateRange.fromDate"
+          [toDate]="dateRange.toDate"
+          class="dashboard-card"
+        >
+        </app-single-value-card>
       </ng-container>
     </gridster-item>
   </gridster>

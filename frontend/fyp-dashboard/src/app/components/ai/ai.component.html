@@ -21,8 +21,28 @@
             <mat-icon>chat_bubble</mat-icon>
             <span>AI's Response</span>
           </div>
-          <div *ngIf="aiOutput.prompt_type === 'general_question'" class="response-content">
-            {{ aiOutput }}
+          
+          <!-- Loading Spinner -->
+          <div class="overlay-spinner" *ngIf="isLoading">
+            <div class="loading-spinner"></div>
+          </div>
+
+          <!-- General Question Response -->
+          <div *ngIf="aiOutput?.prompt_type === 'general_question'" class="response-content">
+            {{ aiOutput.text }}
+          </div>
+
+          <!-- Query Response Table -->
+          <div *ngIf="aiOutput?.prompt_type === 'query'" class="table-container">
+            <table mat-table [dataSource]="tableData" class="mat-elevation-z2">
+              <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+                <th mat-header-cell *matHeaderCellDef> {{column | titlecase}} </th>
+                <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
           </div>
         </div>
       </mat-card-content>
