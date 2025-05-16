@@ -24,9 +24,22 @@ const io = new Server(server, {
 
 app.use(bodyParser.json())
 
+const allowedOrigins = [
+    'http://localhost:4200',
+    'http://localhost:5500',
+    'http://127.0.0.1:4200',
+    'http://127.0.0.1:5500'
+]
+
 app.use(
     cors({
-        origin: process.env.NODE_ENV === 'production' ? process.env.CORS_ORIGIN : 'http://localhost:4200',
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error('CORS policy violation'));
+            }
+        },
         methods: 'GET, POST',
         // TODO: change to true later
         credentials: true,
@@ -42,7 +55,7 @@ app.use(session({
 }))
 
 // Serve static files from the "public" directory
-app.use('/static', express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`)
@@ -91,9 +104,24 @@ app.use(errorHandler)
 io.on('connection', (socket) => {
     console.log('a user connected')
 
+    socket.on('track_session', (data) => {
+        console.log(`message: ${JSON.stringify(data)}`)
+        io.emit('get_sessions', data)
+    })
+
     socket.on('track_pageview', (data) => {
-        console.log(`message:  + ${JSON.stringify(data)}`)
+        console.log(`message: ${JSON.stringify(data)}`)
         io.emit('get_pageview', data)
+    })
+
+    socket.on('track_event', (data) => {
+        console.log(`message: ${JSON.stringify(data)}`)
+        io.emit('get_events', data)
+    })
+
+    socket.on('track_visitor', (data) => {
+        console.log(`message: ${JSON.stringify(data)}`)
+        io.emit('get_visitors', data)
     })
 
     socket.on('disconnect', () => {
