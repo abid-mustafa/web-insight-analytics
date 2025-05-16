@@ -50,7 +50,7 @@ export class RegisterComponent {
       next: (data: any) => {
         if (data.success) {
           localStorage.setItem('user', JSON.stringify(data.user));
-          this.router.navigate(['/overview']);
+          this.router.navigate(['/manage-websites']);
         }
       },
       error: (err) => {

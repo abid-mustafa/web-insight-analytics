@@ -1,9 +1,4 @@
 <div class="realtime-container">
-  <app-realtime-card
-    *ngFor="let c of cards"
-    [title]="c.title"
-    [endpoint]="c.endpoint"
-    [event]="c.event"
-  >
+  <app-realtime-card *ngFor="let c of cards" [title]="c.title" [event]="c.event || ''">
   </app-realtime-card>
 </div>

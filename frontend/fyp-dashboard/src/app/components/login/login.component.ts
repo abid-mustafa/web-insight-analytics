@@ -36,7 +36,7 @@ export class LoginComponent {
         console.log(data.success);
         if (data.success) {
           localStorage.setItem('user', JSON.stringify(data.user));
-          this.router.navigate(['/overview']);
+          this.router.navigate(['/manage-websites']);
         }
       },
       error: (err) =>

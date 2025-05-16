@@ -9,22 +9,25 @@ import { ApiService } from '../services/api.service';
 })
 export class RealtimeCardComponent implements OnInit {
   @Input() title!: string;
-  @Input() endpoint!: string;
   @Input() event!: string;
 
   value: number = 0;
 
-  constructor(
-    private socketService: SocketService,
-    private apiService: ApiService
-  ) {}
+  constructor(private socketService: SocketService, private apiService: ApiService) { }
 
   ngOnInit(): void {
-    // initial fetch
-    // this.apiService.getRealtimeData().subscribe((data: any) => {
-    //   // adjust this to match your payload shape
-    //   this.activeUsers = data.users ?? 0;
-    // });
+    const websiteUid = JSON.parse(localStorage.getItem('websiteUid') || '0');
+
+    this.apiService.getRealtimeData(this.event, websiteUid).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.value = res.value;
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching initial data:', err);
+      }
+    });
 
     // live updates
     this.socketService.listenForEvent(this.event).subscribe((val: number) => {

@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
-interface RealtimeCardConfig {
-  title: string;
-  endpoint: string;
-  event: string;
-}
+import { realtimeDashboard } from '../dashboard-config/realtime-dashboard-config';
+import { DashboardGridItem } from '../dashboard-config/dashboard-grid-item.interface';
 
 @Component({
   selector: 'app-realtime',
@@ -12,12 +8,7 @@ interface RealtimeCardConfig {
   styleUrls: ['./realtime.component.scss'],
 })
 export class RealtimeComponent implements OnInit {
-  cards: RealtimeCardConfig[] = [
-    { title: 'Pageviews', endpoint: 'pageviews', event: 'get_pageviews' },
-    { title: 'Events', endpoint: 'events', event: 'get_events' },
-    { title: 'Users', endpoint: 'users', event: 'get_users' },
-    { title: 'Sessions', endpoint: 'sessions', event: 'get_sessions' },
-  ];
+  cards: DashboardGridItem[] = realtimeDashboard;
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 }

@@ -12,6 +12,8 @@ const db = require('./database.js')
 
 const app = express()
 
+const { getRealtimeData, getRealtimeInitial } = require('./utils/realtimeDataHandler.util.js')
+
 // SockerIO configuration
 const http = require('http')
 const server = http.createServer(app)
@@ -35,9 +37,9 @@ app.use(
     cors({
         origin: (origin, callback) => {
             if (!origin || allowedOrigins.includes(origin)) {
-                callback(null, true);
+                callback(null, true)
             } else {
-                callback(new Error('CORS policy violation'));
+                callback(new Error('CORS policy violation'))
             }
         },
         methods: 'GET, POST',
@@ -59,8 +61,16 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`)
-
     next()
+})
+
+app.get('/api/realtime/:event/:websiteUid', async (req, res, next) => {
+    const { event, websiteUid } = req.params
+    if (!['live_sessions', 'live_pageviews', 'live_events', 'live_visitors'].includes(event) || !websiteUid) {
+        return next({ error: 'Invalid event type or missing website UID' })
+    }
+    const data = await getRealtimeInitial(`${event}`, websiteUid)()
+    res.status(200).json(data)
 })
 
 const authRoutes = require('./routes/auth.routes.js')
@@ -101,27 +111,25 @@ app.use('/api/ai', aiRouter)
 const errorHandler = require('./middlewares/errorHandler')
 app.use(errorHandler)
 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
     console.log('a user connected')
 
-    socket.on('track_session', (data) => {
-        console.log(`message: ${JSON.stringify(data)}`)
-        io.emit('get_sessions', data)
+    socket.on('track_session', async (websiteUid) => {
+        getRealtimeData('live_sessions', io, websiteUid)()
     })
 
-    socket.on('track_pageview', (data) => {
-        console.log(`message: ${JSON.stringify(data)}`)
-        io.emit('get_pageview', data)
+    socket.on('track_pageview', (websiteUid) => {
+        getRealtimeData('live_pageviews', io, websiteUid)()
     })
 
-    socket.on('track_event', (data) => {
-        console.log(`message: ${JSON.stringify(data)}`)
-        io.emit('get_events', data)
+    socket.on('track_event', (websiteUid) => {
+        console.log('track_event', websiteUid);
+
+        getRealtimeData('live_events', io, websiteUid)()
     })
 
-    socket.on('track_visitor', (data) => {
-        console.log(`message: ${JSON.stringify(data)}`)
-        io.emit('get_visitors', data)
+    socket.on('track_visitor', (websiteUid) => {
+        getRealtimeData('live_visitors', io, websiteUid)()
     })
 
     socket.on('disconnect', () => {

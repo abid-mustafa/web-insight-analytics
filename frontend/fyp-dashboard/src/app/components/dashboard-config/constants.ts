@@ -56,14 +56,18 @@ export const TITLES = {
   TRAFFIC_BY_MEDIUM: 'Traffic by Medium',
   TRAFFIC_BY_CAMPAIGN: 'Traffic by Campaign',
   TRAFFIC_BY_DATE: 'Traffic by Date',
+  LIVE_SESSIONS: 'Live Sessions',
+  LIVE_PAGEVIEWS: 'Live Pageviews',
+  LIVE_EVENTS: 'Live Events',
+  LIVE_VISITORS: 'Live Visitors',
 };
 
 // Event Types
 export const EVENT_TYPES = {
-  PAGEVIEWS: 'get_pageviews',
-  ITEM_SOLD: 'item_sold',
-  SESSIONS: 'sessions',
-  SALES: 'sales',
+  SESSIONS: 'live_sessions',
+  PAGEVIEWS: 'live_pageviews',
+  VISITORS: 'live_visitors',
+  EVENTS: 'live_events',
 };
 
 export const DISPLAY_TYPES = {

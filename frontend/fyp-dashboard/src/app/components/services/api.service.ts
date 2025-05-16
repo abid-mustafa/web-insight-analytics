@@ -53,11 +53,11 @@ export class ApiService {
 
   fetchAIResponse(text: string): Observable<ApiResponse> {
     const url = `${this.baseURL}/search-bar`;
-    return this.http.post<ApiResponse>(url, { text });
+    return this.http.post<ApiResponse>(url, { text }, { withCredentials: true });
   }
 
-  getRealtimeData(): Observable<ApiResponse> {
-    const url = `${this.baseURL}/get-realtime`;
-    return this.http.get<ApiResponse>(url);
+  getRealtimeData(event: string, websiteUid: string): Observable<any> {
+    const url = `${this.baseURL}/realtime/${event}/${websiteUid}`;
+    return this.http.get<any>(url, { withCredentials: true });
   }
 }

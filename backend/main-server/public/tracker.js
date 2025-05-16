@@ -2,7 +2,8 @@
     'use strict';
 
     const tracker = (() => {
-        const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+        const SESSION_TIMEOUT = 1 * 60 * 1000; // 1 minute
+        // const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
         const API_BASE_URL = `http://127.0.0.1:5000/api`;
 
         // Dynamically load Socket.IO client
@@ -37,17 +38,20 @@
             };
         };
 
-        const getOrCreateId = (key) => {
+        const getOrCreateId = (key, onCreate) => {
             let id = localStorage.getItem(key);
             if (!id) {
                 id = self.crypto.randomUUID();
                 localStorage.setItem(key, id);
+                if (typeof onCreate === 'function') onCreate(id);
             }
             return id;
         };
 
-        const getVisitorId = () => getOrCreateId('visitorId');
-        const getUserId = () => getOrCreateId('userId');
+        const getVisitorId = () => getOrCreateId('visitorId', (id) => {
+            const website_id = getWebsiteId();
+            if (website_id) socket.emit('track_visitor', website_id);
+        });
 
         const getSessionId = () => {
             const now = Date.now();
@@ -71,10 +75,15 @@
         };
 
         const trackSession = async () => {
+            const lastActivity = parseInt(localStorage.getItem('lastActivity') || '0', 10);
+            const now = Date.now();
+            if (lastActivity && now - lastActivity < SESSION_TIMEOUT) {
+                return;
+            }
+
             try {
                 const visitor_id = getVisitorId();
                 const session_id = getSessionId();
-                const user_id = getUserId();
                 const website_id = getWebsiteId();
 
                 localStorage.setItem('lastActivity', Date.now().toString());
@@ -84,7 +93,6 @@
                 const trackingData = {
                     session_id,
                     visitor_id,
-                    user_id,
                     referrer_url: document.referrer,
                     website_id
                 };
@@ -96,7 +104,11 @@
                 await sendTrackingData('tracking/track-session', trackingData);
 
                 if (website_id) {
-                    socket.emit('track_visitor', website_id);
+                    if (!localStorage.getItem('visitorId')) {
+                        localStorage.setItem('visitorId', self.crypto.randomUUID());
+                        socket.emit('track_visitor', website_id);
+                    }
+
                     socket.emit('track_session', website_id);
                 }
             } catch { }
@@ -145,6 +157,8 @@
 
                 element.addEventListener(eventType, async event => {
                     if (eventType === 'submit') event.preventDefault();
+                    console.log('Event triggered:', eventType);
+
 
                     const name = element.getAttribute('data-name') || '';
 
@@ -153,11 +167,15 @@
             });
         };
 
+        let initialized = false;
+
         const init = async () => {
+            if (initialized) return;
+            initialized = true;
+
             await trackSession();
             await Promise.all([trackPageView(), attachEventListeners()]);
         };
-
 
         return {
             init,
@@ -166,7 +184,6 @@
             trackEvent,
             attachEventListeners,
             getVisitorId,
-            getUserId,
             getSessionId
         };
     })();
