@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DisplayGrid, GridsterConfig, GridType } from 'angular-gridster2';
 import { DateRangeService } from '../services/date-range.service';
-import { overviewDashboard } from '../dashboard-config/overview-dashboard-config';
 import { DashboardGridItem } from '../dashboard-config/dashboard-grid-item.interface';
+import { overviewDashboard } from '../dashboard-config/overview-dashboard-config';
 
 @Component({
   selector: 'app-overview',
@@ -19,7 +19,7 @@ export class OverviewComponent implements OnInit {
     toDate: '2020-11-10',
   };
 
-  constructor(private dateRangeService: DateRangeService) {}
+  constructor(private dateRangeService: DateRangeService) { }
 
   ngOnInit() {
     // 1) gridster setup

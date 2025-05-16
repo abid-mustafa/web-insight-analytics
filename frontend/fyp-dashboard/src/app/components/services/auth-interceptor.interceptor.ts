@@ -24,9 +24,15 @@ export class AuthInterceptorProvider implements HttpInterceptor {
             error: (err) => {
                 if (err instanceof HttpErrorResponse) {
                     console.log('Error:', err);
-                    
+
+                    if (err.status === 0 || err.status === 500) {
+                        // Handle server errors
+                        this.showDialog('Server Error', 'An error occurred on the server. Please try again later.');
+                        localStorage.clear();
+                        this.router.navigate(['/login']);
+                    }
                     // Only redirect to login for authentication errors
-                    if (err.status === 401 && !this.isLoginOrRegisterRoute()) {
+                    else if (err.status === 401 && !this.isLoginOrRegisterRoute()) {
                         // Handle session expiration
                         this.showDialog('Session Expired', 'Your session has expired. Please log in again.');
                         localStorage.clear();
@@ -34,12 +40,16 @@ export class AuthInterceptorProvider implements HttpInterceptor {
                     } else if (err.status === 403) {
                         // Handle forbidden access
                         this.showDialog('Access Denied', 'You do not have permission to access this resource.');
-                    } else {
+                    }
+                    else {
                         // Handle other errors without redirecting
                         this.showDialog('Error', err.error.message || 'An error occurred. Please try again.');
                     }
                 }
             },
+            complete: () => {
+
+            }
         }));
     }
 

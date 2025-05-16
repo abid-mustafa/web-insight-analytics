@@ -1,9 +1,11 @@
-import { GridsterItem } from "angular-gridster2";
-
-export interface DashboardGridItem extends GridsterItem {
+export interface DashboardGridItem {
+  cols: number;
+  rows: number;
+  x: number;
+  y: number;
   endpoint?: string;
   title: string;
   displayType: string;
-  event?: string;
   groupBy?: string;
-}
+  event?: string;
+} 

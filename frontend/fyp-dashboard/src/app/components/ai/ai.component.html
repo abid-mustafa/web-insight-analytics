@@ -9,7 +9,7 @@
             <input matInput name="userInput" required [(ngModel)]="userInput"
               placeholder="Type something AI-related..." />
           </mat-form-field>
-          <button mat-raised-button class="submit-btn" type="submit">
+          <button mat-raised-button class="submit-btn" type="submit" [disabled]="!userInput.length">
             <mat-icon>send</mat-icon>
             Submit
           </button>
@@ -28,7 +28,7 @@
             <mat-icon>chat_bubble</mat-icon>
             <span>AI's Response</span>
           </div>
-          
+
           <!-- Loading Spinner -->
           <div class="overlay-spinner" *ngIf="isLoading">
             <div class="loading-spinner"></div>

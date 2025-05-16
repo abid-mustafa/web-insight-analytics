@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GridsterConfig, GridsterItem } from 'angular-gridster2';
-import { DashboardGridItem } from './dashboard-grid-item.interface';
 import { Observable, of, Subject, combineLatest } from 'rxjs';
 import { takeUntil, map, startWith } from 'rxjs/operators';
 import { cardMap } from '../dashboard-config/card-config';
 import { DateRangeService } from '../services/date-range.service';
 import { FormControl } from '@angular/forms';
+import { DashboardGridItem } from '../dashboard-config/dashboard-grid-item.interface';
 
 @Component({
   selector: 'app-custom',

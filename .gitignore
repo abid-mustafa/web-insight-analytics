@@ -1,46 +1,41 @@
-# Node.js dependencies
-node_modules/
-npm-debug.log
-yarn-error.log
+# Node.js
+/backend/main-server/node_modules/
+/backend/main-server/npm-debug.log
+/backend/main-server/yarn-error.log
 
-# Log files
-logs/
+# Logs
 *.log
+logs/
 
-# Build directories
-dist/
-build/
-# public/
-
-# Environment variables
-.env
-.env.local
-.env.development
-.env.production
-.env.test
-.env.*.local
-
-# Python related files
-*.pyc
-__pycache__/
-*.pyo
-*.pyd
-*.swp
-.venv/
-venv/
-
-# Temporary files
-tmp/
-temp/
-
-# Ignore Angular build output inside the subdirectory
+# Build artifacts
+/backend/main-server/dist/
 /frontend/fyp-dashboard/dist/
 /frontend/fyp-dashboard/.angular/
 /frontend/fyp-dashboard/.angular-cache/
-/frontend/fyp-dashboard/node_modules/
+/frontend/fyp-dashboard/build/
+
+# Environment files
+.env
+.env.*
+/backend/main-server/.env
+/backend/ai-server/.env
 /frontend/fyp-dashboard/.env
 /frontend/fyp-dashboard/.env.*.local
-/frontend/fyp-dashboard/*.log
 
-# Optional: IDE/editor-specific ignores for the frontend
+# Python
+*.py[cod]
+__pycache__/
+/backend/ai-server/**/__pycache__/
+/backend/ai-server/*.pyc
+/backend/ai-server/*.pyo
+/backend/ai-server/*.pyd
+/backend/ai-server/.venv/
+backend/ai-server/venv/
+
+# Editor/IDE files
+*.swp
 /frontend/fyp-dashboard/.vscode/
+
+# Temp files
+tmp/
+temp/

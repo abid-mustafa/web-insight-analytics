@@ -4,29 +4,16 @@
       <div class="card-selector">
         <mat-form-field appearance="outline">
           <mat-label>Select a card</mat-label>
-          <input matInput
-                 [formControl]="searchControl"
-                 placeholder="Search cards..."
-                 [matAutocomplete]="auto">
+          <input matInput [formControl]="searchControl" placeholder="Search cards..." [matAutocomplete]="auto">
           <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-            <mat-option
-              *ngFor="let option of filteredCardOptions$ | async"
-              [value]="option.value"
-              [disabled]="option.disabled"
-              class="card-option"
-              [class.used-card]="option.disabled"
-            >
+            <mat-option *ngFor="let option of filteredCardOptions$ | async" [value]="option.value"
+              [disabled]="option.disabled" class="card-option" [class.used-card]="option.disabled">
               {{ option.value }}
               <span *ngIf="option.disabled" class="used-badge">(Added)</span>
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-        <button
-          mat-raised-button
-          color="primary"
-          (click)="addSelectedCard()"
-          [disabled]="!selectedCard"
-        >
+        <button mat-raised-button color="primary" (click)="addSelectedCard()" [disabled]="!selectedCard">
           <mat-icon>add</mat-icon>
           Add Card
         </button>
@@ -40,31 +27,28 @@
         <div class="dashboard-card">
           <div class="card-header">
             <h3>{{ item.title }}</h3>
-            <button
-              mat-icon-button
-              (click)="removeItem(item)"
-              class="remove-btn"
-            >
+            <button mat-icon-button (click)="removeItem(item)" class="remove-btn">
               <mat-icon>close</mat-icon>
             </button>
           </div>
           <div class="card-content">
-            <!-- Card content will be added based on displayType -->
             <ng-container [ngSwitch]="item.displayType">
-              <app-summary-card
-                *ngSwitchCase="'summary'"
-                [endpoint]="item.endpoint || ''"
-                [toDate]="dateRange.toDate"
-              ></app-summary-card>
-              <app-table-card
-                *ngSwitchCase="'table'"
-                [endpoint]="item.endpoint || ''"
-                [title]="item.title"
-                [fromDate]="dateRange.fromDate"
-                [toDate]="dateRange.toDate"
-                [groupBy]="item.groupBy || ''"
-              >
+              <app-table-card *ngSwitchCase="'table'" [endpoint]="item.endpoint ?? ''" [title]="item.title"
+                [fromDate]="dateRange.fromDate" [toDate]="dateRange.toDate" [groupBy]="item.groupBy ?? ''"
+                class="dashboard-card">
               </app-table-card>
+
+              <app-summary-card *ngSwitchCase="'summary'" [endpoint]="item.endpoint ?? ''" [title]="item.title"
+                [toDate]="dateRange.toDate" class="dashboard-card">
+              </app-summary-card>
+
+              <app-realtime-card *ngSwitchCase="'realtime'" [title]="item.title" [event]="item.event || ''"
+                class="dashboard-card">
+              </app-realtime-card>
+
+              <app-single-value-card *ngSwitchCase="'single'" [endpoint]="item.endpoint ?? ''" [title]="item.title"
+                [fromDate]="dateRange.fromDate" [toDate]="dateRange.toDate" class="dashboard-card">
+              </app-single-value-card>
             </ng-container>
           </div>
         </div>
