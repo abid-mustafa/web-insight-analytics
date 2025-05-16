@@ -13,8 +13,14 @@ export class AiComponent {
   displayedColumns: string[] = [];
   tableData: any[] = [];
   isLoading: boolean = false;
+  generatedReportResponse: string = '';
+  error: string = '';
+  dateRange = {
+    fromDate: '2020-11-01',
+    toDate: '2020-11-30',
+  };
 
-  constructor(private aiService: AiService) { }
+  constructor(private aiService: AiService) {}
 
   onSubmit(): void {
     // Only show the response section once user clicks Submit
@@ -28,27 +34,53 @@ export class AiComponent {
       return;
     }
     this.isLoading = true;
-    this.aiService.getIntelligentSearchBarResponse(websiteUid, this.userInput).subscribe((response) => {
-      console.log(response);
+    this.aiService
+      .getIntelligentSearchBarResponse(websiteUid, this.userInput)
+      .subscribe(
+        (response) => {
+          console.log(response);
 
-      if (response.prompt_type === 'general_question') {
-        this.aiOutput = response;
-        this.tableData = [];
-        this.displayedColumns = [];
-      } else if (response.prompt_type === 'query') {
-        this.aiOutput = response;
-        if (response.values && response.values.length > 0) {
-          this.displayedColumns = Object.keys(response.values[0]);
-          this.tableData = response.values;
+          if (response.prompt_type === 'general_question') {
+            this.aiOutput = response;
+            this.tableData = [];
+            this.displayedColumns = [];
+          } else if (response.prompt_type === 'query') {
+            this.aiOutput = response;
+            if (response.values && response.values.length > 0) {
+              this.displayedColumns = Object.keys(response.values[0]);
+              this.tableData = response.values;
+            }
+          }
+          this.isLoading = false;
+        },
+        (error) => {
+          console.error('Error fetching AI response:', error);
+          this.aiOutput = 'An error occurred while fetching the AI response.';
+          this.tableData = [];
+          this.displayedColumns = [];
+          this.isLoading = false;
         }
-      }
-      this.isLoading = false;
-    }, (error) => {
-      console.error('Error fetching AI response:', error);
-      this.aiOutput = 'An error occurred while fetching the AI response.';
-      this.tableData = [];
-      this.displayedColumns = [];
-      this.isLoading = false;
-    });
+      );
+  }
+
+  getAIReport(): void {
+    const websiteUid = JSON.parse((localStorage.getItem('websiteUid') || ''));
+    if (!websiteUid) {
+      this.error = 'Website UID not found';
+      return;
+    }
+    this.isLoading = true;
+    this.aiService
+      .getAIGeneratedReport(websiteUid, this.dateRange.fromDate, this.dateRange.toDate)
+      .subscribe(
+        (response) => {
+          this.generatedReportResponse = response;
+          this.isLoading = false;
+        },
+        (err) => {
+          this.error = 'Failed to load AI report';
+          this.isLoading = false;
+        }
+      );
   }
 }

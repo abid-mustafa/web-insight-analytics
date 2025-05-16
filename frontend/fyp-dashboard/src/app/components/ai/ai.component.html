@@ -13,7 +13,14 @@
             <mat-icon>send</mat-icon>
             Submit
           </button>
+          <button mat-raised-button class="submit-btn" (click)="getAIReport()">
+            Generate Report
+          </button>
         </form>
+
+        <div *ngIf="generatedReportResponse">
+          {{ generatedReportResponse }}
+        </div>
 
         <!-- Response display -->
         <div *ngIf="submitted" class="response-section">
