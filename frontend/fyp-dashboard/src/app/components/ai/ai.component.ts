@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AiService } from '../services/ai.service';
+import { DateRangeService } from '../services/date-range.service';
 
 @Component({
   selector: 'app-ai-page',
   templateUrl: './ai.component.html',
   styleUrls: ['./ai.component.scss'],
 })
-export class AiComponent {
+export class AiComponent implements OnInit {
   userInput: string = '';
   submitted: boolean = false;
   aiOutput: any;
@@ -20,7 +21,18 @@ export class AiComponent {
     toDate: '2020-11-30',
   };
 
-  constructor(private aiService: AiService) {}
+  constructor(private aiService: AiService, private dateRangeService: DateRangeService) { }
+
+  ngOnInit(): void {
+    this.dateRangeService.range$.subscribe(({ start, end }) => {
+      if (start && end) {
+        this.dateRange = {
+          fromDate: start.toISOString().split('T')[0],
+          toDate: end.toISOString().split('T')[0],
+        };
+      }
+    });
+  }
 
   onSubmit(): void {
     // Only show the response section once user clicks Submit
@@ -36,8 +48,8 @@ export class AiComponent {
     this.isLoading = true;
     this.aiService
       .getIntelligentSearchBarResponse(websiteUid, this.userInput)
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           console.log(response);
 
           if (response.prompt_type === 'general_question') {
@@ -53,18 +65,18 @@ export class AiComponent {
           }
           this.isLoading = false;
         },
-        (error) => {
+        error: (error) => {
           console.error('Error fetching AI response:', error);
           this.aiOutput = 'An error occurred while fetching the AI response.';
           this.tableData = [];
           this.displayedColumns = [];
           this.isLoading = false;
         }
-      );
+      });
   }
 
   getAIReport(): void {
-    const websiteUid = JSON.parse((localStorage.getItem('websiteUid') || ''));
+    const websiteUid = JSON.parse((localStorage.getItem('websiteUid') || 'null'));
     if (!websiteUid) {
       this.error = 'Website UID not found';
       return;
@@ -72,15 +84,16 @@ export class AiComponent {
     this.isLoading = true;
     this.aiService
       .getAIGeneratedReport(websiteUid, this.dateRange.fromDate, this.dateRange.toDate)
-      .subscribe(
-        (response) => {
-          this.generatedReportResponse = response;
+      .subscribe({
+        next: (response) => {
+          this.generatedReportResponse = response.message;
           this.isLoading = false;
         },
-        (err) => {
+        error: (err) => {
           this.error = 'Failed to load AI report';
+          this.generatedReportResponse = err.error;
           this.isLoading = false;
         }
-      );
+      });
   }
 }
