@@ -9,8 +9,8 @@ export interface DateRange {
 @Injectable({ providedIn: 'root' })
 export class DateRangeService {
   private rangeSubject = new BehaviorSubject<DateRange>({
-    start: new Date('2020-11-01'),
-    end: new Date('2020-11-07'),
+    start: localStorage.getItem('startDate') ? new Date(localStorage.getItem('startDate')!) : null,
+    end: localStorage.getItem('endDate') ? new Date(localStorage.getItem('endDate')!) : null,
   });
   readonly range$ = this.rangeSubject.asObservable();
   setRange(range: DateRange) {

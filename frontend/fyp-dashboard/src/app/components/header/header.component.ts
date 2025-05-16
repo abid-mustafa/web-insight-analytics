@@ -56,6 +56,9 @@ export class HeaderComponent implements OnInit {
         const normalizedEnd = new Date(end);
         normalizedEnd.setHours(23, 59, 59, 999);
 
+        localStorage.setItem('startDate', normalizedStart.toISOString());
+        localStorage.setItem('endDate', normalizedEnd.toISOString());
+
         // Validate dates
         if (normalizedStart > normalizedEnd) {
           this.range.setErrors({ invalidRange: true });

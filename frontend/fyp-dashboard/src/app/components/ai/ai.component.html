@@ -13,10 +13,10 @@
             <mat-icon>send</mat-icon>
             Submit
           </button>
-          <button mat-raised-button class="submit-btn" (click)="getAIReport()">
-            Generate Report
-          </button>
         </form>
+        <button mat-raised-button class="submit-btn" style="margin-right: 0;" (click)="getAIReport()">
+          Generate Report
+        </button>
 
         <div *ngIf="generatedReportResponse">
           {{ generatedReportResponse }}
