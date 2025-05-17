@@ -4,7 +4,6 @@ const redis = require('../redis')
 module.exports.getRealtimeData = (cachePrefix, io, websiteUid) => async () => {
     const cacheKey = `${cachePrefix}:${websiteUid}`
 
-
     const cached = parseInt(await redis.get(cacheKey) || '0', 10)
     const newCount = cached + 1
     console.log(cachePrefix, newCount);

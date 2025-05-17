@@ -4,7 +4,7 @@
     const tracker = (() => {
         const SESSION_TIMEOUT = 1 * 60 * 1000; // 1 minute
         // const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
-        const API_BASE_URL = `http://127.0.0.1:5000/api`;
+        const API_BASE_URL = `http://127.0.0.1:5000/api/tracking`;
 
         // Dynamically load Socket.IO client
         const socketIoScript = document.createElement("script");
@@ -14,6 +14,7 @@
         let socket;
         socketIoScript.onload = () => {
             socket = io('http://127.0.0.1:5000');
+
             tracker.init();
         };
 
@@ -23,7 +24,7 @@
                 const src = scripts[i].src;
                 if (src && src.includes('tracker.js')) {
                     const url = new URL(src, window.location.origin);
-                    return url.searchParams.get('website_id');
+                    return url.searchParams.get('website_uid');
                 }
             }
             return null;
@@ -38,31 +39,33 @@
             };
         };
 
-        const getOrCreateId = (key, onCreate) => {
+        const getOrCreateId = (key, expirationMs = null) => {
+            const now = Date.now();
+            const lastSet = parseInt(localStorage.getItem(`${key}_time`) || '0', 10);
             let id = localStorage.getItem(key);
-            if (!id) {
+
+            const expired = expirationMs && (!lastSet || now - lastSet > expirationMs);
+
+            if (!id || expired) {
                 id = self.crypto.randomUUID();
                 localStorage.setItem(key, id);
-                if (typeof onCreate === 'function') onCreate(id);
+                if (expirationMs) localStorage.setItem(`${key}_time`, now);
+            }
+
+            return id;
+        };
+
+        const getVisitorUid = () => {
+            const id = getOrCreateId('visitorUid');
+            const website_uid = getWebsiteId();
+            if (!localStorage.getItem('visitorEmitted') && socket && website_uid) {
+                socket.emit('track_visitor', website_uid);
+                localStorage.setItem('visitorEmitted', '1');
             }
             return id;
         };
 
-        const getVisitorId = () => getOrCreateId('visitorId', (id) => {
-            const website_id = getWebsiteId();
-            if (website_id) socket.emit('track_visitor', website_id);
-        });
-
-        const getSessionId = () => {
-            const now = Date.now();
-            const lastActivity = parseInt(localStorage.getItem('lastActivity') || '0', 10);
-            if (!lastActivity || now - lastActivity > SESSION_TIMEOUT) {
-                const newSessionId = self.crypto.randomUUID();
-                localStorage.setItem('sessionId', newSessionId);
-                return newSessionId;
-            }
-            return localStorage.getItem('sessionId');
-        };
+        const getSessionUid = () => getOrCreateId('sessionUid', SESSION_TIMEOUT);
 
         const sendTrackingData = async (endpoint, data) => {
             try {
@@ -75,96 +78,95 @@
         };
 
         const trackSession = async () => {
-            const lastActivity = parseInt(localStorage.getItem('lastActivity') || '0', 10);
+            const visitor_uid = getVisitorUid();
+            const session_uid = getSessionUid();
+            const website_uid = getWebsiteId();
+
+            if (!website_uid || !session_uid || !visitor_uid) return;
+
+            const lastSent = parseInt(localStorage.getItem('lastSessionSent') || '0', 10);
             const now = Date.now();
-            if (lastActivity && now - lastActivity < SESSION_TIMEOUT) {
-                return;
-            }
+            if (now - lastSent < SESSION_TIMEOUT) return;
 
-            try {
-                const visitor_id = getVisitorId();
-                const session_id = getSessionId();
-                const website_id = getWebsiteId();
+            localStorage.setItem('lastSessionSent', now.toString());
 
-                localStorage.setItem('lastActivity', Date.now().toString());
+            const { medium, source, campaign } = getUTMParams();
+            const { ip } = await fetch('https://api.ipify.org?format=json').then(res => res.json());
 
-                const { medium, source, campaign } = getUTMParams();
+            const trackingData = {
+                website_uid,
+                session_uid,
+                visitor_uid,
+                client_ip: ip,
+                ...(medium && { medium }),
+                ...(source && { source }),
+                ...(campaign && { campaign })
+            };
 
-                const trackingData = {
-                    session_id,
-                    visitor_id,
-                    referrer_url: document.referrer,
-                    website_id
-                };
-
-                if (medium) trackingData.traffic_medium = medium;
-                if (source) trackingData.traffic_source = source;
-                if (campaign) trackingData.traffic_campaign = campaign;
-
-                await sendTrackingData('tracking/track-session', trackingData);
-
-                if (website_id) {
-                    if (!localStorage.getItem('visitorId')) {
-                        localStorage.setItem('visitorId', self.crypto.randomUUID());
-                        socket.emit('track_visitor', website_id);
-                    }
-
-                    socket.emit('track_session', website_id);
-                }
-            } catch { }
+            await sendTrackingData('track-session', trackingData);
+            if (socket && website_uid) socket.emit('track_session', website_uid);
         };
 
         const trackPageView = async () => {
-            const session_id = getSessionId();
-            const website_id = getWebsiteId();
+            const session_uid = getSessionUid();
+            const website_uid = getWebsiteId();
+
+            // Ensure visitorUid is set in localStorage
+            getVisitorUid();
 
             const trackingData = {
-                session_id,
+                website_uid,
+                session_uid,
                 page_title: document.title,
-                page_url: document.URL,
-                website_id
+                page_url: document.URL
             };
 
-            await sendTrackingData('tracking/track-pageview', trackingData);
+            await sendTrackingData('track-pageview', trackingData);
 
-            if (website_id) {
-                socket.emit('track_pageview', website_id);
+            if (socket && website_uid) {
+                socket.emit('track_pageview', website_uid);
             }
         };
 
         const trackEvent = async (event_name) => {
-            const session_id = getSessionId();
+            const session_uid = getSessionUid();
             const page_url = document.URL;
-            const website_id = getWebsiteId();
+            const website_uid = getWebsiteId();
+
+            // Ensure visitorUid is set in localStorage
+            getVisitorUid();
 
             const trackingData = {
-                session_id,
+                website_uid,
+                session_uid,
                 event_name,
-                page_url,
-                website_id
+                page_url
             };
 
-            await sendTrackingData('tracking/track-event', trackingData);
+            await sendTrackingData('track-event', trackingData);
 
-            if (website_id) {
-                socket.emit('track_event', website_id);
+            if (socket && website_uid) {
+                socket.emit('track_event', website_uid);
             }
         };
 
         const attachEventListeners = () => {
-            document.querySelectorAll('.track-event').forEach(element => {
-                const eventType = element.getAttribute('data-event') || 'click';
-
-                element.addEventListener(eventType, async event => {
-                    if (eventType === 'submit') event.preventDefault();
-                    console.log('Event triggered:', eventType);
-
-
-                    const name = element.getAttribute('data-name') || '';
-
-                    await trackEvent(name);
+            const addListeners = () => {
+                document.querySelectorAll('.track-event').forEach(element => {
+                    const eventType = element.getAttribute('data-event') || 'click';
+                    element.addEventListener(eventType, async event => {
+                        if (eventType === 'submit') event.preventDefault();
+                        const name = element.getAttribute('data-name') || '';
+                        await tracker.trackEvent(name);
+                    });
                 });
-            });
+            };
+
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                addListeners();
+            } else {
+                document.addEventListener('DOMContentLoaded', addListeners);
+            }
         };
 
         let initialized = false;
@@ -174,7 +176,8 @@
             initialized = true;
 
             await trackSession();
-            await Promise.all([trackPageView(), attachEventListeners()]);
+            await trackPageView();
+            attachEventListeners();
         };
 
         return {
@@ -183,12 +186,11 @@
             trackPageView,
             trackEvent,
             attachEventListeners,
-            getVisitorId,
-            getSessionId
+            getVisitorUid,
+            getSessionUid
         };
     })();
 
     window.tracker = tracker;
     window.addEventListener('load', tracker.init);
-
 })();

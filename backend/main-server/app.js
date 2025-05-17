@@ -30,7 +30,7 @@ const allowedOrigins = [
     'http://localhost:4200',
     'http://localhost:5500',
     'http://127.0.0.1:4200',
-    'http://127.0.0.1:5500'
+    'http://127.0.0.1:5500',
 ]
 
 app.use(
@@ -64,6 +64,16 @@ app.use((req, res, next) => {
     next()
 })
 
+const trackingRoutes = require('./routes/tracking.routes.js')
+app.use('/api/tracking/', trackingRoutes)
+
+const authRoutes = require('./routes/auth.routes.js')
+app.use('/api/auth/', authRoutes)
+
+// Authentication Middleware
+const authMiddleware = require('./middlewares/auth.middleware.js')
+app.use(authMiddleware)
+
 app.get('/api/realtime/:event/:websiteUid', async (req, res, next) => {
     const { event, websiteUid } = req.params
     if (!['live_sessions', 'live_pageviews', 'live_events', 'live_visitors'].includes(event) || !websiteUid) {
@@ -72,13 +82,6 @@ app.get('/api/realtime/:event/:websiteUid', async (req, res, next) => {
     const data = await getRealtimeInitial(`${event}`, websiteUid)()
     res.status(200).json(data)
 })
-
-const authRoutes = require('./routes/auth.routes.js')
-app.use('/api/auth/', authRoutes)
-
-// Authentication Middleware
-const authMiddleware = require('./middlewares/auth.middleware.js')
-app.use(authMiddleware)
 
 const sessionsRoutes = require('./routes/sessions.routes.js')
 app.use('/api/sessions/', sessionsRoutes)

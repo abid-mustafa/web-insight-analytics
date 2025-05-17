@@ -1,4 +1,4 @@
-const { getWebsiteIdFromUid } = require("../utils/website.utils")
+const { getWebsiteIdFromUid } = require("../utils/idFromUid.utils")
 
 const websiteIdMiddleware = async (req, res, next) => {
     try {

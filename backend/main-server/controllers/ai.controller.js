@@ -1,6 +1,6 @@
 const service = require('../services/ai.service')
 const { isValid, parseISO } = require('date-fns')
-const { getWebsiteIdFromUid } = require('../utils/website.utils')
+const { getWebsiteIdFromUid } = require('../utils/idFromUid.utils')
 const fetch = require('node-fetch')
 const validator = require('validator')
 
