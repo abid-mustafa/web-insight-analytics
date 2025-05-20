@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
@@ -8,15 +8,13 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent {
-  loginForm: FormGroup;
-  errorMessage = '';
+export class LoginComponent implements OnInit {
+  loginForm!: FormGroup;
+  errorMessage: string = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private auth: AuthService,
-    private router: Router
-  ) {
+  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) { }
+
+  ngOnInit() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
@@ -31,20 +29,14 @@ export class LoginComponent {
 
     const { email, password } = this.loginForm.value;
     this.auth.login({ email, password }).subscribe({
-      next: (data: any) => {
-        console.log(data);
-        console.log(data.success);
+      next: (data) => {
         if (data.success) {
           localStorage.setItem('user', JSON.stringify(data.user));
           this.router.navigate(['/manage-websites']);
         }
       },
       error: (err) =>
-        (this.errorMessage = err.error?.message || 'Invalid credentials'),
+        (this.errorMessage = err?.error.message || 'Invalid credentials'),
     });
-  }
-
-  back(): void {
-    this.router.navigate(['/register']);
   }
 }

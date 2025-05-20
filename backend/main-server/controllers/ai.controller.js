@@ -46,7 +46,7 @@ exports.getSearchBarData = async (req, res, next) => {
         throw err
     } catch (error) {
         console.error('Error fetching search bar data:', error)
-        next(error)
+        return next(error)
     }
 
 }
@@ -82,6 +82,6 @@ exports.getAiReportData = async (req, res, next) => {
         return res.status(200).json(report)
     } catch (error) {
         console.error('Error fetching AI report data:', error)
-        next(error)
+        return next(error)
     }
 }

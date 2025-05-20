@@ -2,27 +2,27 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background: #f8fafc;
+  height: 100vh;
+  background: var(--bg-primary);
   padding: 24px;
   box-sizing: border-box;
 }
 
 .auth-card {
-  background: #ffffff;
+  background: var(--bg-secondary);
   padding: 32px;
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-sm);
   width: 100%;
-  max-width: 480px;
+  max-width: 400px;
   text-align: center;
-  border: 1px solid rgba(26, 42, 64, 0.08);
+  border: 1px solid var(--border-light);
   transition: all 0.3s ease;
 
   h2 {
     margin: 0 0 24px;
-    color: #1a2a40;
-    font-size: 1.75rem;
+    color: var(--text-primary);
+    font-size: 28px;
     font-weight: 600;
     letter-spacing: -0.01em;
   }
@@ -31,75 +31,33 @@
     margin-bottom: 20px;
     text-align: left;
 
-    label {
+    mat-form-field {
       display: block;
       margin-bottom: 8px;
       font-weight: 500;
-      color: #475569;
-      font-size: 0.875rem;
+      color: var(--text-secondary);
+      font-size: 14px;
     }
 
     input {
       width: 100%;
       padding: 12px 16px;
-      border: 1px solid #e2e8f0;
+      border: 1px solid var(--border-light);
       border-radius: 8px;
-      font-size: 1rem;
-      color: #1a2a40;
-      background-color: #ffffff;
+      font-size: 16px;
+      color: var(--text-primary);
+      background-color: var(--bg-secondary);
       transition: all 0.2s ease;
       box-sizing: border-box;
 
       &:focus {
         outline: none;
-        border-color: #2563eb;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        border-color: var(--primary-600);
+        box-shadow: 0 0 0 3px var(--primary-600);
       }
 
       &::placeholder {
-        color: #94a3b8;
-      }
-    }
-
-    .errors {
-      color: #dc2626;
-      font-size: 0.75rem;
-      margin-top: 4px;
-      display: block;
-    }
-
-    .password-requirements {
-      margin-top: 8px;
-      font-size: 0.75rem;
-      color: #64748b;
-      text-align: left;
-      padding-left: 4px;
-
-      ul {
-        list-style: none;
-        padding: 0;
-        margin: 4px 0 0;
-
-        li {
-          display: flex;
-          align-items: center;
-          margin-bottom: 4px;
-
-          &::before {
-            content: "•";
-            color: #94a3b8;
-            margin-right: 8px;
-          }
-
-          &.valid {
-            color: #059669;
-
-            &::before {
-              content: "✓";
-              color: #059669;
-            }
-          }
-        }
+        color: var(--text-secondary);
       }
     }
   }
@@ -107,26 +65,26 @@
   button {
     width: 100%;
     padding: 12px 24px;
-    background: #2563eb;
+    background: var(--primary-600);
     border: none;
     border-radius: 8px;
-    color: #ffffff;
-    font-size: 1rem;
+    color: white;
+    font-size: 16px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
     margin-top: 8px;
-    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 2px 4px var(--primary-300);
 
     &:disabled {
-      background: #93c5fd;
+      background: var(--primary-200);
       cursor: not-allowed;
       box-shadow: none;
     }
 
     &:hover:not(:disabled) {
-      background: #1d4ed8;
-      box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+      background: var(--primary-700);
+      box-shadow: 0 4px 8px var(--primary-300);
       transform: translateY(-1px);
     }
 
@@ -137,20 +95,27 @@
 
   .switch {
     margin-top: 24px;
-    font-size: 0.875rem;
-    color: #64748b;
+    font-size: 14px;
+    color: var(--text-secondary);
 
     a {
-      color: #2563eb;
+      color: var(--primary-600);
       text-decoration: none;
       font-weight: 500;
       margin-left: 4px;
       transition: color 0.2s ease;
 
       &:hover {
-        color: #1d4ed8;
+        color: var(--primary-700);
         text-decoration: underline;
       }
     }
+  }
+
+  .mat-error {
+    color: var(--error-600);
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
   }
 }

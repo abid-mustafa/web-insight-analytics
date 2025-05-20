@@ -1,10 +1,5 @@
-import { Component } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  AbstractControl,
-} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
@@ -13,15 +8,13 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
-export class RegisterComponent {
-  registerForm: FormGroup;
-  errorMessage = '';
+export class RegisterComponent implements OnInit {
+  registerForm!: FormGroup;
+  errorMessage: string = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private auth: AuthService,
-    private router: Router
-  ) {
+  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) { }
+
+  ngOnInit() {
     this.registerForm = this.fb.group(
       {
         name: ['', Validators.required],
@@ -47,7 +40,7 @@ export class RegisterComponent {
 
     const { name, email, password } = this.registerForm.value;
     this.auth.register({ name, email, password }).subscribe({
-      next: (data: any) => {
+      next: (data) => {
         if (data.success) {
           localStorage.setItem('user', JSON.stringify(data.user));
           this.router.navigate(['/manage-websites']);
