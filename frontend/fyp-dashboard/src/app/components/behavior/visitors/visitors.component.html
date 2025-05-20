@@ -3,14 +3,5 @@
     <h2 class="section-title">Visitors</h2>
     <div class="section-divider"></div>
   </div>
-  <div class="visitors-container">
-    <app-table-card
-      *ngFor="let table of visitorTables"
-      [title]="table.title"
-      [endpoint]="table.endpoint"
-      [groupBy]="table.groupBy"
-      [fromDate]="fromDate"
-      [toDate]="toDate"
-    ></app-table-card>
-  </div>
+  <app-dashboard [items]="items" [fromDate]="fromDate" [toDate]="toDate"></app-dashboard>
 </section>

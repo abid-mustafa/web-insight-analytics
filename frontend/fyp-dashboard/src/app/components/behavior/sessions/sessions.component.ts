@@ -1,36 +1,37 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DateRangeService } from '../../services/date-range.service';
-
-interface TableConfig {
-  title: string;
-  endpoint: string;
-}
+import { Subject, takeUntil } from 'rxjs';
+import { DashboardGridItem } from '../../dashboard-config/dashboard-grid-item.interface';
+import { sessionsDashboard } from '../../dashboard-config/sessions-dashboard-config';
 
 @Component({
   selector: 'app-sessions',
   templateUrl: './sessions.component.html',
   styleUrls: ['./sessions.component.scss'],
 })
-export class SessionsComponent implements OnInit {
-  sessionTables: TableConfig[] = [
-    { title: 'Session Stat 1', endpoint: '' },
-    { title: 'Session Stat 2', endpoint: '' },
-    { title: 'Session Stat 3', endpoint: '' },
-    { title: 'Session Stat 4', endpoint: '' },
-    { title: 'Session Stat 5', endpoint: '' },
-  ];
+export class SessionsComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  items: DashboardGridItem[] = sessionsDashboard;
 
-  fromDate = '';
-  toDate = '';
+  fromDate: string = '';
+  toDate: string = '';
 
-  constructor(private dateRangeService: DateRangeService) {}
+  constructor(private dateRangeService: DateRangeService) { }
 
   ngOnInit(): void {
-    this.dateRangeService.range$.subscribe(({ start, end }) => {
-      if (start && end) {
-        this.fromDate = start.toISOString().split('T')[0];
-        this.toDate = end.toISOString().split('T')[0];
-      }
-    });
+    // Subscribe to date range changes
+    this.dateRangeService.range$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ start, end }) => {
+        if (start && end) {
+          this.fromDate = start.toISOString().split('T')[0];
+          this.toDate = end.toISOString().split('T')[0];
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

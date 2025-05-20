@@ -63,6 +63,7 @@ import { UserMenuComponent } from './components/header/user-menu/user-menu.compo
 import { RealtimeCardComponent } from './components/realtime-card/realtime-card.component';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { SingleValueCardComponent } from './components/single-value-card/single-value-card.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -108,7 +109,8 @@ const socketConfig: SocketIoConfig = {
     WebsiteManagementComponent,
     UserMenuComponent,
     DialogComponent,
-    SingleValueCardComponent
+    SingleValueCardComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -154,4 +156,4 @@ const socketConfig: SocketIoConfig = {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

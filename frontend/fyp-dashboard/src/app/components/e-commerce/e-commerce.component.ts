@@ -1,44 +1,38 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  GridsterConfig,
-  GridType,
-  DisplayGrid,
-} from 'angular-gridster2';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DateRangeService } from '../services/date-range.service';
-import {ecommerceDashboard } from '../dashboard-config/e-commerce-dashboard-config';
+import { Subject, takeUntil } from 'rxjs';
 import { DashboardGridItem } from '../dashboard-config/dashboard-grid-item.interface';
+import { ecommerceDashboard } from '../dashboard-config/e-commerce-dashboard-config';
 
 @Component({
   selector: 'app-ecommerce-page',
   templateUrl: './e-commerce.component.html',
   styleUrls: ['./e-commerce.component.scss'],
 })
-export class EcommerceComponent implements OnInit {
-  options!: GridsterConfig;
+export class EcommerceComponent implements OnInit, OnDestroy {
   dashboard: DashboardGridItem[] = ecommerceDashboard;
 
-  fromDate = '2020-11-01';
-  toDate = '2020-11-07';
+  private destroy$ = new Subject<void>();
 
-  constructor(private dateRangeService: DateRangeService) {}
+  fromDate: string = '';
+  toDate: string = '';
+
+  constructor(private dateRangeService: DateRangeService) { }
 
   ngOnInit(): void {
-    this.options = {
-      gridType: GridType.ScrollVertical,
-      displayGrid: DisplayGrid.OnDragAndResize,
-      draggable: { enabled: true },
-      itemChangeCallback: this.onItemChange.bind(this),
-    };
-
-    this.dateRangeService.range$.subscribe(({ start, end }) => {
-      if (start && end) {
-        this.fromDate = start.toISOString().slice(0, 10);
-        this.toDate = end.toISOString().slice(0, 10);
-      }
-    });
+    // Subscribe to date range changes
+    this.dateRangeService.range$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ start, end }) => {
+        if (start && end) {
+          this.fromDate = start.toISOString().split('T')[0];
+          this.toDate = end.toISOString().split('T')[0];
+        }
+      });
   }
 
-  onItemChange(): void {
-    localStorage.setItem('ecommerceDashboard', JSON.stringify(this.dashboard));
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

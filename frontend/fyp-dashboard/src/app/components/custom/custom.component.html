@@ -34,12 +34,11 @@
           <div class="card-content">
             <ng-container [ngSwitch]="item.displayType">
               <app-table-card *ngSwitchCase="'table'" [endpoint]="item.endpoint ?? ''" [title]="item.title"
-                [fromDate]="dateRange.fromDate" [toDate]="dateRange.toDate" [groupBy]="item.groupBy ?? ''"
-                class="dashboard-card">
+                [fromDate]="fromDate" [toDate]="toDate" [groupBy]="item.groupBy ?? ''" class="dashboard-card">
               </app-table-card>
 
               <app-summary-card *ngSwitchCase="'summary'" [endpoint]="item.endpoint ?? ''" [title]="item.title"
-                [toDate]="dateRange.toDate" class="dashboard-card">
+                [toDate]="toDate" class="dashboard-card">
               </app-summary-card>
 
               <app-realtime-card *ngSwitchCase="'realtime'" [title]="item.title" [event]="item.event || ''"
@@ -47,7 +46,7 @@
               </app-realtime-card>
 
               <app-single-value-card *ngSwitchCase="'single'" [endpoint]="item.endpoint ?? ''" [title]="item.title"
-                [fromDate]="dateRange.fromDate" [toDate]="dateRange.toDate" class="dashboard-card">
+                [fromDate]="fromDate" [toDate]="toDate" class="dashboard-card">
               </app-single-value-card>
             </ng-container>
           </div>

@@ -1,0 +1,23 @@
+.dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding: 24px;
+    container-type: inline-size;
+}
+
+@container (max-width: 920px) {
+    .dashboard-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        padding: 16px;
+    }
+}
+
+@container (max-width: 768px) {
+    .dashboard-container {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 8px;
+    }
+}

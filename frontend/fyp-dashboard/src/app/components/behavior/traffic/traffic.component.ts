@@ -1,14 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DateRangeService } from '../../services/date-range.service';
-import { Observable, Subject, of, combineLatest } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { WebsiteService } from '../../services/website.service';
-
-interface TableConfig {
-  title: string;
-  endpoint: string;
-  groupBy: string;
-}
+import { Subject, takeUntil } from 'rxjs';
+import { DashboardGridItem } from '../../dashboard-config/dashboard-grid-item.interface';
+import { trafficDashboard } from '../../dashboard-config/traffic-dashboard-config';
 
 @Component({
   selector: 'app-traffic',
@@ -18,31 +12,12 @@ interface TableConfig {
 export class TrafficComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
-  trafficTables: TableConfig[] = [
-    {
-      title: 'Traffic by Source',
-      endpoint: 'traffic/grouped',
-      groupBy: 'source'
-    },
-    {
-      title: 'Traffic by Medium',
-      endpoint: 'traffic/grouped',
-      groupBy: 'medium'
-    },
-    {
-      title: 'Traffic by Campaign',
-      endpoint: 'traffic/grouped',
-      groupBy: 'campaign'
-    }
-  ];
+  items: DashboardGridItem[] = trafficDashboard;
 
-  fromDate = '';
-  toDate = '';
+  fromDate: string = '';
+  toDate: string = '';
 
-  constructor(
-    private dateRangeService: DateRangeService,
-    private websiteService: WebsiteService
-  ) {}
+  constructor(private dateRangeService: DateRangeService) { }
 
   ngOnInit(): void {
     // Subscribe to date range changes

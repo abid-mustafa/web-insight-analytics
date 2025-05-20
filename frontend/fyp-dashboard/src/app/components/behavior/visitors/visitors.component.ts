@@ -1,14 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DateRangeService } from '../../services/date-range.service';
-import { Observable, Subject, of, combineLatest } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { WebsiteService } from '../../services/website.service';
-
-interface TableConfig {
-  title: string;
-  endpoint: string;
-  groupBy: string;
-}
+import { Subject, takeUntil } from 'rxjs';
+import { DashboardGridItem } from '../../dashboard-config/dashboard-grid-item.interface';
+import { visitorsDashboard } from '../../dashboard-config/visitor-dashboard-config';
 
 @Component({
   selector: 'app-visitors',
@@ -18,41 +12,12 @@ interface TableConfig {
 export class VisitorsComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
-  visitorTables: TableConfig[] = [
-    {
-      title: 'Visitors by Country',
-      endpoint: 'visitors/grouped',
-      groupBy: 'country'
-    },
-    {
-      title: 'Visitors by City',
-      endpoint: 'visitors/grouped',
-      groupBy: 'city'
-    },
-    {
-      title: 'Visitors by Device',
-      endpoint: 'visitors/grouped',
-      groupBy: 'device'
-    },
-    {
-      title: 'Visitors by OS',
-      endpoint: 'visitors/grouped',
-      groupBy: 'os'
-    },
-    {
-      title: 'Visitors by Browser',
-      endpoint: 'visitors/grouped',
-      groupBy: 'browser'
-    }
-  ];
+  items: DashboardGridItem[] = visitorsDashboard;
 
-  fromDate = '';
-  toDate = '';
+  fromDate: string = '';
+  toDate: string = '';
 
-  constructor(
-    private dateRangeService: DateRangeService,
-    private websiteService: WebsiteService
-  ) {}
+  constructor(private dateRangeService: DateRangeService) { }
 
   ngOnInit(): void {
     // Subscribe to date range changes

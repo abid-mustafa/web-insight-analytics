@@ -3,14 +3,5 @@
     <h2 class="section-title">Sessions</h2>
     <div class="section-divider"></div>
   </div>
-  <div class="tables-grid">
-    <app-table-card
-      *ngFor="let tbl of sessionTables"
-      [title]="tbl.title"
-      [endpoint]="tbl.endpoint"
-      [fromDate]="fromDate"
-      [toDate]="toDate"
-      class="table-card"
-    ></app-table-card>
-  </div>
+  <app-dashboard [items]="items" [fromDate]="fromDate" [toDate]="toDate"></app-dashboard>
 </section>

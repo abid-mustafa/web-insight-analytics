@@ -1,0 +1,54 @@
+.behavior-section {
+    margin-bottom: 40px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.section-header {
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.section-title {
+    margin: 0;
+    color: #1a2a40;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    padding-bottom: 12px;
+}
+
+.section-divider {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(to right, #2563eb, #3b82f6);
+    border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 1.25rem;
+    }
+
+    .behavior-section {
+        margin-bottom: 32px;
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 1200px) {
+    .pages-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .pages-container {
+        grid-template-columns: 1fr;
+    }
+}

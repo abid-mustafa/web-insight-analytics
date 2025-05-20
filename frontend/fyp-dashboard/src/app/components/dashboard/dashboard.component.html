@@ -1,0 +1,21 @@
+<div class="dashboard-container">
+    <div *ngFor="let item of items">
+        <ng-container [ngSwitch]="item.displayType">
+            <app-table-card *ngSwitchCase="'table'" [endpoint]="item.endpoint ?? ''" [title]="item.title"
+                [fromDate]="fromDate" [toDate]="toDate" [groupBy]="item.groupBy ?? ''" class="dashboard-card">
+            </app-table-card>
+
+            <app-summary-card *ngSwitchCase="'summary'" [endpoint]="item.endpoint ?? ''" [title]="item.title"
+                [toDate]="toDate" class="dashboard-card">
+            </app-summary-card>
+
+            <app-realtime-card *ngSwitchCase="'realtime'" [title]="item.title" [event]="item.event || ''"
+                class="dashboard-card">
+            </app-realtime-card>
+
+            <app-single-value-card *ngSwitchCase="'single'" [endpoint]="item.endpoint ?? ''" [title]="item.title"
+                [fromDate]="fromDate" [toDate]="toDate" class="dashboard-card">
+            </app-single-value-card>
+        </ng-container>
+    </div>
+</div>

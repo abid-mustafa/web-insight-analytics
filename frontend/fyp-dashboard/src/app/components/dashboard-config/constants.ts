@@ -15,6 +15,7 @@ export const ENDPOINTS = {
   ITEMS_GROUPED: 'ecommerce/items/grouped',
   SESSIONS_GROUPED: 'sessions/grouped',
   TRAFFIC_GROUPED: 'traffic/grouped',
+  SESSIONS_BY_SOURCE: 'sessions/by-source',
 };
 
 export const TITLES = {

@@ -1,14 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DateRangeService } from '../../services/date-range.service';
-import { Observable, Subject, of, combineLatest } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { WebsiteService } from '../../services/website.service';
-
-interface TableConfig {
-  title: string;
-  endpoint: string;
-  groupBy: string;
-}
+import { Subject, takeUntil } from 'rxjs';
+import { DashboardGridItem } from '../../dashboard-config/dashboard-grid-item.interface';
+import { eventsDashboard } from '../../dashboard-config/events-dashboard.config';
 
 @Component({
   selector: 'app-events',
@@ -18,26 +12,12 @@ interface TableConfig {
 export class EventsComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
-  eventTables: TableConfig[] = [
-    {
-      title: 'Events by Name',
-      endpoint: 'events/grouped',
-      groupBy: 'name'
-    },
-    {
-      title: 'Events by URL',
-      endpoint: 'events/grouped',
-      groupBy: 'url'
-    }
-  ];
+  items: DashboardGridItem[] = eventsDashboard;
 
-  fromDate = '';
-  toDate = '';
+  fromDate: string = '';
+  toDate: string = '';
 
-  constructor(
-    private dateRangeService: DateRangeService,
-    private websiteService: WebsiteService
-  ) {}
+  constructor(private dateRangeService: DateRangeService) { }
 
   ngOnInit(): void {
     // Subscribe to date range changes

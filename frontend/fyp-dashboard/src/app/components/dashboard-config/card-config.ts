@@ -1,7 +1,7 @@
 import { ENDPOINTS, TITLES, DISPLAY_TYPES } from "./constants";
-import { DashboardGridItem } from "./dashboard-grid-item.interface";
+import { DashboardGridsterItem } from "./dashboard-gridster-item.interface";
 
-export const cardMap: Record<string, DashboardGridItem> = {
+export const cardMap: Record<string, DashboardGridsterItem> = {
   'Avg Pageviews per Session': {
     cols: 2,
     rows: 2,

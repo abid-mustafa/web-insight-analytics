@@ -3,14 +3,5 @@
     <h2 class="section-title">Pages</h2>
     <div class="section-divider"></div>
   </div>
-  <div class="pages-container">
-    <app-table-card
-      *ngFor="let table of pageTables"
-      [title]="table.title"
-      [endpoint]="table.endpoint"
-      [groupBy]="table.groupBy"
-      [fromDate]="fromDate"
-      [toDate]="toDate"
-    ></app-table-card>
-  </div>
+  <app-dashboard [items]="items" [fromDate]="fromDate" [toDate]="toDate"></app-dashboard>
 </section>

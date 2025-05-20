@@ -5,7 +5,7 @@ import { takeUntil, map, startWith } from 'rxjs/operators';
 import { cardMap } from '../dashboard-config/card-config';
 import { DateRangeService } from '../services/date-range.service';
 import { FormControl } from '@angular/forms';
-import { DashboardGridItem } from '../dashboard-config/dashboard-grid-item.interface';
+import { DashboardGridsterItem } from '../dashboard-config/dashboard-gridster-item.interface';
 
 @Component({
   selector: 'app-custom',
@@ -14,11 +14,11 @@ import { DashboardGridItem } from '../dashboard-config/dashboard-grid-item.inter
 })
 export class CustomComponent implements OnInit, OnDestroy {
   options!: GridsterConfig;
-  dashboard: DashboardGridItem[] = [];
+  dashboard: DashboardGridsterItem[] = [];
   availableCards = cardMap;
   selectedCard: string | null = null;
-  cardOptions$: Observable<{ value: string, disabled: boolean }[]>;
-  filteredCardOptions$: Observable<{ value: string, disabled: boolean }[]>;
+  cardOptions$!: Observable<{ value: string, disabled: boolean }[]>;
+  filteredCardOptions$!: Observable<{ value: string, disabled: boolean }[]>;
   searchControl = new FormControl('');
   private readonly MAX_CARDS_PER_ROW = 6;
   private readonly BASE_COL_WIDTH = 175;
@@ -27,13 +27,17 @@ export class CustomComponent implements OnInit, OnDestroy {
   private readonly GRID_MARGIN = 16;
   private destroy$ = new Subject<void>();
 
-  // Date range state
-  dateRange = {
-    fromDate: '2020-11-01',
-    toDate: '2020-11-07'
-  };
+  fromDate!: string;
+  toDate!: string;
 
   constructor(private dateRangeService: DateRangeService) {
+  }
+
+  displayFn = (value: string): string => {
+    return value || '';
+  }
+
+  ngOnInit() {
     this.cardOptions$ = of(this.getSortedCardOptions());
     this.filteredCardOptions$ = combineLatest([
       this.cardOptions$,
@@ -56,13 +60,7 @@ export class CustomComponent implements OnInit, OnDestroy {
           this.selectedCard = value;
         }
       });
-  }
 
-  displayFn = (value: string): string => {
-    return value || '';
-  }
-
-  ngOnInit() {
     this.loadDashboardState();
     this.updateGridOptions();
 
@@ -71,10 +69,8 @@ export class CustomComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(({ start, end }) => {
         if (start && end) {
-          this.dateRange = {
-            fromDate: start.toISOString().split('T')[0],
-            toDate: end.toISOString().split('T')[0]
-          };
+          this.fromDate = start.toISOString().split('T')[0];
+          this.toDate = end.toISOString().split('T')[0];
         }
       });
   }
@@ -85,10 +81,10 @@ export class CustomComponent implements OnInit, OnDestroy {
       try {
         const parsedState = JSON.parse(savedState);
         // Validate that the saved state contains valid card configurations
-        this.dashboard = parsedState.filter((item: DashboardGridItem) => {
+        this.dashboard = parsedState.filter((item: DashboardGridsterItem) => {
           const baseCard = this.availableCards[item.title];
           return baseCard && item.endpoint === baseCard.endpoint;
-        }).map((item: DashboardGridItem) => ({
+        }).map((item: DashboardGridsterItem) => ({
           ...item,
           // Ensure all required properties are present with 2x2 default
           cols: item.cols || 2,
@@ -206,7 +202,7 @@ export class CustomComponent implements OnInit, OnDestroy {
 
     // Sort cards by position (top to bottom, left to right)
     const sortedCards = [...this.dashboard].sort((a, b) => {
-      if (a.y === b.y) {
+      if (a?.y === b?.y) {
         return a.x - b.x;
       }
       return a.y - b.y;
@@ -229,7 +225,7 @@ export class CustomComponent implements OnInit, OnDestroy {
   }
 
   removeItem(item: GridsterItem) {
-    const index = this.dashboard.indexOf(item as DashboardGridItem);
+    const index = this.dashboard.indexOf(item as DashboardGridsterItem);
     if (index > -1) {
       // Remove the item
       this.dashboard.splice(index, 1);

@@ -8,7 +8,7 @@ import { DashboardGridItem } from '../dashboard-config/dashboard-grid-item.inter
   styleUrls: ['./realtime.component.scss'],
 })
 export class RealtimeComponent implements OnInit {
-  cards: DashboardGridItem[] = realtimeDashboard;
+  items: DashboardGridItem[] = realtimeDashboard;
 
   ngOnInit(): void { }
 }

@@ -1,14 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DateRangeService } from '../../services/date-range.service';
-import { Observable, Subject, of, combineLatest } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { WebsiteService } from '../../services/website.service';
-
-interface TableConfig {
-  title: string;
-  endpoint: string;
-  groupBy: string;
-}
+import { Subject, takeUntil } from 'rxjs';
+import { DashboardGridItem } from '../../dashboard-config/dashboard-grid-item.interface';
+import { pagesDashboard } from '../../dashboard-config/pages-dashboard.config';
 
 @Component({
   selector: 'app-pages',
@@ -18,31 +12,12 @@ interface TableConfig {
 export class PagesComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
-  pageTables: TableConfig[] = [
-    {
-      title: 'Pages by Title',
-      endpoint: 'pages/grouped',
-      groupBy: 'title'
-    },
-    {
-      title: 'Pages by URL',
-      endpoint: 'pages/grouped',
-      groupBy: 'url'
-    },
-    {
-      title: 'Pages by Referrer',
-      endpoint: 'pages/grouped',
-      groupBy: 'referrer'
-    }
-  ];
+  items: DashboardGridItem[] = pagesDashboard;
 
-  fromDate = '';
-  toDate = '';
+  fromDate: string = '';
+  toDate: string = '';
 
-  constructor(
-    private dateRangeService: DateRangeService,
-    private websiteService: WebsiteService
-  ) {}
+  constructor(private dateRangeService: DateRangeService) { }
 
   ngOnInit(): void {
     // Subscribe to date range changes
