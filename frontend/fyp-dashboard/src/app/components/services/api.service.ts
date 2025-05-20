@@ -22,7 +22,7 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   fetchTableData(
-    websiteUid: number,
+    websiteUid: string,
     endpoint: string,
     fromDate: string,
     toDate: string,
@@ -35,7 +35,7 @@ export class ApiService {
   }
 
   fetchSummaryData(
-    websiteUid: number,
+    websiteUid: string,
     endpoint: string,
     toDate: string
   ): Observable<ApiResponse> {
@@ -43,7 +43,7 @@ export class ApiService {
     return this.http.get<ApiResponse>(url, { withCredentials: true });
   }
 
-  fetchSingleValueDate(websiteUid: number,
+  fetchSingleValueDate(websiteUid: string,
     endpoint: string,
     fromDate: string,
     toDate: string,): Observable<ApiResponse> {

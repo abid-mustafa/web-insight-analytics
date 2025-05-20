@@ -16,13 +16,13 @@ export class SingleValueCardComponent implements OnInit, OnDestroy {
 
   isLoading = false;
   value: number | null = null;
-  private currentWebsiteId: number | null = null;
+  private currentWebsiteId: string | null = null;
   private destroy$ = new Subject<void>();
 
   constructor(
     private apiService: ApiService,
     private websiteService: WebsiteService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.websiteService.selectedWebsite$

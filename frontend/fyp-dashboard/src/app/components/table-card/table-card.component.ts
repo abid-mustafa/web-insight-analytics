@@ -46,7 +46,7 @@ export class TableCardComponent
   private originalLabels: string[] = [];
 
   // Tracks selected website
-  private currentWebsiteId: number | null = null;
+  private currentWebsiteId: string | null = null;
 
   // For unsubscribing
   private destroy$ = new Subject<void>();
@@ -55,9 +55,9 @@ export class TableCardComponent
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { 
+      legend: {
         display: false,  // Hide legend for bar charts
-        labels: { color: '#1A2A40' } 
+        labels: { color: '#1A2A40' }
       },
       tooltip: {
         callbacks: {

@@ -7,7 +7,8 @@ export class WebsiteService {
   private baseUrl = 'http://localhost:5000/api/websites';
 
   // ← NEW: holds the currently selected website ID
-  private selectedWebsiteSubject = new BehaviorSubject<number | null>(null);
+  private selectedWebsiteSubject = new BehaviorSubject<string>(JSON.parse(localStorage.getItem('websiteUid') || '""'));
+
   public selectedWebsite$ = this.selectedWebsiteSubject.asObservable();
 
   constructor(private http: HttpClient) { }
@@ -28,7 +29,7 @@ export class WebsiteService {
     );
   }
 
-  addWebsite( domain: String, name: String ): Observable<any> {
+  addWebsite(domain: String, name: String): Observable<any> {
     return this.http.post<any>(
       `${this.baseUrl}`,
       { domain, name },
@@ -45,7 +46,7 @@ export class WebsiteService {
   }
 
   /** ← NEW: call this whenever the header selection changes */
-  setSelectedWebsite(id: number) {
+  setSelectedWebsite(id: string) {
     this.selectedWebsiteSubject.next(id);
     localStorage.setItem('websiteUid', JSON.stringify(id));
   }

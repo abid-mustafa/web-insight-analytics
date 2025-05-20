@@ -22,8 +22,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./summary-card.component.scss'],
 })
 export class SummaryCardComponent
-  implements OnInit, OnChanges, AfterViewInit, AfterViewChecked, OnDestroy
-{
+  implements OnInit, OnChanges, AfterViewInit, AfterViewChecked, OnDestroy {
   @Input() endpoint!: string;
   @Input() title!: string;
   @Input() toDate!: string;
@@ -53,13 +52,13 @@ export class SummaryCardComponent
   };
 
   private needsResize = false;
-  private currentWebsiteId: number | null = null;
+  private currentWebsiteId: string | null = null;
   private destroy$ = new Subject<void>();
 
   constructor(
     private apiService: ApiService,
     private websiteService: WebsiteService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.websiteService.selectedWebsite$

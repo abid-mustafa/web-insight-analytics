@@ -47,4 +47,8 @@ export class WebsiteFormComponent {
       error: (err) => (this.errorMessage = err.error?.message),
     });
   }
+
+  getTrackingScript(websiteId: string) {
+    return `<script defer src="http://127.0.0.1:5000/tracker.js?website_uid=${websiteId}"></script>`;
+  }
 }

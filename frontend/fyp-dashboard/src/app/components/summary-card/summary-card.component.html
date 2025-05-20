@@ -2,26 +2,22 @@
   <div class="card-header">
     <h3 class="card-title">{{ title }}</h3>
   </div>
+  <ng-container *ngIf="chartData; else initialLoading">
+    <div class="chart-container" *ngIf="chartData?.labels?.length; else noData">
+      <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="chartType"></canvas>
+    </div>
+  </ng-container>
 
-  <div class="chart-container">
-    <!-- initial loader when no chartData -->
-    <div class="overlay-spinner" *ngIf="isLoading && !chartData">
+  <ng-template #noData>
+    <div class="no-data-message">
+      <mat-icon>info</mat-icon>
+      <p>No data available for the selected date range</p>
+    </div>
+  </ng-template>
+
+  <ng-template #initialLoading>
+    <div class="overlay-spinner">
       <div class="loading-spinner"></div>
     </div>
-
-    <!-- chart -->
-    <ng-container *ngIf="chartData">
-      <canvas
-        baseChart
-        [data]="chartData"
-        [options]="chartOptions"
-        [type]="chartType"
-      ></canvas>
-
-      <!-- overlay loader when reloading data -->
-      <div class="overlay-spinner" *ngIf="isLoading">
-        <div class="loading-spinner"></div>
-      </div>
-    </ng-container>
-  </div>
+  </ng-template>
 </mat-card>
