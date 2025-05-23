@@ -49,7 +49,7 @@ exports.register = async (req, res, next) => {
         })
     } catch (error) {
         if (error.code === 'ER_DUP_ENTRY') {
-            return res.status(409).json({ success: false, message: 'This email is already registered' })
+            return res.status(409).json({ success: false, message: 'This email is already registered, try logging in.' })
         }
         next(error)
     }

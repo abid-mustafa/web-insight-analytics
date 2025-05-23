@@ -23,8 +23,8 @@ module.exports = function validateDateRange(req, res, next) {
 
     req.parsedQuery = {
         offset: finalOffset,
-        startDate: start,
-        endDate: end
+        startDate: start.toISOString(),
+        endDate: end.toISOString()
     }
 
     return next()

@@ -26,17 +26,22 @@ export class AuthInterceptorProvider implements HttpInterceptor {
                     if (this.dialogShown) return;
                     this.dialogShown = true;
 
-                    if (err.status === 401 || err.status === 409) {
-                        // For /login or /register routes, do not show dialog; let component handle invalid credentials.
+                    if (err.status === 401) {
                         if (!this.isLoginOrRegisterRoute()) {
-                            this.dialogShown = true;
-                            this.showDialog('Session Expired', 'Your session has expired. Please log in again.');
+                            this.showDialog('Session Expired', 'Your session has expired. Please log in again.', () => {
+                                this.clearData();
+                            });
                         }
                         return;
-                    } else if (err.status === 403) {
-                        this.showDialog('Access Denied', 'You do not have permission to access this resource.');
+                    }
+                    else if (err.status === 409) {
+                        this.showDialog('Email already registered', err.error?.message || 'A user already exists with this email, try logging in', () => {
+                            this.clearData();
+                        });
+
                         return;
-                    } else if (err.status === 0 || err.status === 500) {
+                    }
+                    else if (err.status === 0 || err.status === 500) {
                         this.showDialog('Server Error', 'An error occurred on the server. Please try again later.');
                         return;
                     } else {
@@ -56,14 +61,18 @@ export class AuthInterceptorProvider implements HttpInterceptor {
         return currentRoute === '/login' || currentRoute === '/register';
     }
 
-    private showDialog(title: string, message: string) {
+    private clearData(): void {
+        localStorage.clear();
+        this.router.navigate(['/login']);
+    }
+
+    private showDialog(title: string, message: string, onClose?: () => void) {
         this.dialog.open(DialogComponent, {
             data: { title, message },
             width: '400px',
             disableClose: true
         }).afterClosed().subscribe(() => {
-            localStorage.clear();
-            this.router.navigate(['/login']);
+            if (onClose) onClose();
             this.dialogShown = false;
         });
     }

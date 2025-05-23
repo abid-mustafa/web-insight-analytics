@@ -15,10 +15,7 @@ const db = require('../database')
 //     return result
 // }
 
-exports.getOverviewMetricsByDay = async (websiteId, endDate) => {
-    const startDate = new Date(endDate)
-    startDate.setDate(endDate.getDate() - 6)
-
+exports.getOverviewMetricsByDay = async (websiteId, startDate, endDate) => {
     const [users] = await db.query(`
             SELECT
                 DATE(created_at) AS day,

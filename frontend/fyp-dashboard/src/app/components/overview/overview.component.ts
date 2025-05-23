@@ -24,8 +24,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(({ start, end }) => {
         if (start && end) {
-          this.fromDate = start.toISOString().split('T')[0];
-          this.toDate = end.toISOString().split('T')[0];
+          this.fromDate = start.toISOString();
+          this.toDate = end.toISOString();
         }
       });
   }

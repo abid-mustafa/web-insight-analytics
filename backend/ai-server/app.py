@@ -38,6 +38,7 @@ def IntelligentSearchBar():
 @app.route('/api/report', methods=['POST'])
 def AIDrivenReport():
     data = request.get_json()
+    print(data)
     if not data.get('start') or not data.get('end') or not data.get('websiteId') or not data.get('email'):
         return jsonify({'message': 'Parameters Missing'}),400
     
@@ -204,7 +205,7 @@ def AIDrivenReport():
                 with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
                     smtp.login(sender_email, sender_password)
                     smtp.send_message(msg)
-                return jsonify({"message": "PDF generated and emailed successfully", "status": "success"}), 201
+                return jsonify({"message": "Report generated and emailed successfully", "status": "success"}), 201
             except Exception as e:
                 print("Error sending email:", e)
                 return jsonify({"error": "Failed to send email"}), 500

@@ -22,6 +22,10 @@
           {{ generatedReportResponse }}
         </div>
 
+        <div *ngIf="reportIsLoading">
+          {{ reportIsLoading }}
+        </div>
+
         <!-- Response display -->
         <div *ngIf="submitted" class="response-section">
           <div class="response-header">
@@ -30,7 +34,7 @@
           </div>
 
           <!-- Loading Spinner -->
-          <div class="overlay-spinner" *ngIf="isLoading">
+          <div class="overlay-spinner" *ngIf="searchbarIsLoading">
             <div class="loading-spinner"></div>
           </div>
 

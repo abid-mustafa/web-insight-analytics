@@ -10,6 +10,8 @@ module.exports = function validateDateRangeSingle(req, res, next) {
     }
 
     const end = parseISO(endDate)
+    const start = new Date(end)
+    start.setDate(end.getDate() - 6)
 
     if (!isValid(end)) {
         const error = new Error("Invalid endDate")
@@ -17,7 +19,8 @@ module.exports = function validateDateRangeSingle(req, res, next) {
         return next(error)
     }
 
-    req.endDate = end
+    req.endDate = end.toISOString()
+    req.startDate = start.toISOString()
 
     next()
 }
