@@ -1,10 +1,11 @@
+import { RealtimeComponent } from './components/realtime/realtime.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { AuthInterceptorProvider } from './components/services/auth-interceptor.interceptor';
+import { AuthInterceptorProvider } from './services/auth-interceptor.interceptor';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -40,22 +41,13 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { OverviewComponent } from './components/overview/overview.component';
 import { TableCardComponent } from './components/table-card/table-card.component';
-import { RealtimeComponent } from './components/realtime/realtime.component';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
-import { BehaviorComponent } from './components/behavior/behavior.component';
-import { EcommerceComponent } from './components/e-commerce/e-commerce.component';
 import { AiComponent } from './components/ai/ai.component';
-import { EventsComponent } from './components/behavior/events/events.component';
-import { PagesComponent } from './components/behavior/pages/pages.component';
-import { VisitorsComponent } from './components/behavior/visitors/visitors.component';
-import { SessionsComponent } from './components/behavior/sessions/sessions.component';
-import { TrafficComponent } from './components/behavior/traffic/traffic.component';
 import { CustomComponent } from './components/custom/custom.component';
 import { WebsiteFormComponent } from './components/website-form/website-form.component';
 import { WebsiteManagementComponent } from './components/website-management/website-management.component';
@@ -89,21 +81,13 @@ const socketConfig: SocketIoConfig = {
     AppComponent,
     HeaderComponent,
     SidebarComponent,
-    OverviewComponent,
     TableCardComponent,
-    RealtimeComponent,
     SummaryCardComponent,
     LoginComponent,
     RegisterComponent,
     RealtimeCardComponent,
-    BehaviorComponent,
-    EcommerceComponent,
     AiComponent,
-    EventsComponent,
-    PagesComponent,
-    VisitorsComponent,
-    SessionsComponent,
-    TrafficComponent,
+    RealtimeComponent,
     CustomComponent,
     WebsiteFormComponent,
     WebsiteManagementComponent,

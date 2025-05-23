@@ -11,8 +11,8 @@ import {
 } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { ApiService } from '../services/api.service';
-import { WebsiteService } from '../services/website.service';
+import { ApiService } from '../../services/api.service';
+import { WebsiteService } from '../../services/website.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

@@ -1,7 +1,7 @@
 import { Component, Input, input, OnInit } from '@angular/core';
-import { SocketService } from '../services/socket.service';
-import { ApiService } from '../services/api.service';
-import { WebsiteService } from '../services/website.service';
+import { SocketService } from '../../services/socket.service';
+import { ApiService } from '../../services/api.service';
+import { WebsiteService } from '../../services/website.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({

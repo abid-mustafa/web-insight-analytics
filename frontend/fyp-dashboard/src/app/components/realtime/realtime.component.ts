@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { realtimeDashboard } from '../dashboard-config/realtime-dashboard-config';
-import { DashboardGridItem } from '../dashboard-config/dashboard-grid-item.interface';
+import { realtimeDashboard } from '../../dashboard-config/realtime-dashboard-config';
+import { DashboardGridItem } from '../../dashboard-config/dashboard-grid-item.interface';
 
 @Component({
   selector: 'app-realtime',

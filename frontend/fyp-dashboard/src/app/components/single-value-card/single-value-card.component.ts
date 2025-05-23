@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { ApiService } from '../services/api.service';
-import { WebsiteService } from '../services/website.service';
+import { ApiService } from '../../services/api.service';
+import { WebsiteService } from '../../services/website.service';
 
 @Component({
   selector: 'app-single-value-card',

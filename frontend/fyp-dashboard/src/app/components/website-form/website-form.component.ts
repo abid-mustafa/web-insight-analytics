@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { WebsiteService } from '../services/website.service';
+import { WebsiteService } from '../../services/website.service';
 
 @Component({
   selector: 'app-form',

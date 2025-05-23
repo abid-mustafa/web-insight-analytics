@@ -11,8 +11,8 @@ import {
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { ApiService } from '../services/api.service';
-import { WebsiteService } from '../services/website.service';
+import { ApiService } from '../../services/api.service';
+import { WebsiteService } from '../../services/website.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

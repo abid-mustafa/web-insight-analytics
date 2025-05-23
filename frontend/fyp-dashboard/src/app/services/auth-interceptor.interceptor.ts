@@ -3,7 +3,7 @@ import { HttpErrorResponse, HttpEvent, HttpEventType, HttpHandler, HttpIntercept
 import { Router } from "@angular/router";
 import { Observable, tap } from "rxjs";
 import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent } from '../dialog/dialog.component';
+import { DialogComponent } from '../components/dialog/dialog.component';
 
 @Injectable({
     'providedIn': 'root'

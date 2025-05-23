@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AiService } from '../services/ai.service';
+import { AiService } from '../../services/ai.service';
 import { Subject, takeUntil } from 'rxjs';
-import { DateRangeService } from '../services/date-range.service';
+import { DateRangeService } from '../../services/date-range.service';
 
 @Component({
   selector: 'app-ai-page',

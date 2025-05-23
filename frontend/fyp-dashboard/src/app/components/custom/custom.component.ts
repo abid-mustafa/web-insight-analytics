@@ -2,10 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GridsterConfig, GridsterItem } from 'angular-gridster2';
 import { Observable, of, Subject, combineLatest } from 'rxjs';
 import { takeUntil, map, startWith } from 'rxjs/operators';
-import { cardMap } from '../dashboard-config/card-config';
-import { DateRangeService } from '../services/date-range.service';
+import { cardMap } from '../../dashboard-config/card-config';
+import { DateRangeService } from '../../services/date-range.service';
 import { FormControl } from '@angular/forms';
-import { DashboardGridsterItem } from '../dashboard-config/dashboard-gridster-item.interface';
+import { DashboardGridsterItem } from '../../dashboard-config/dashboard-gridster-item.interface';
 
 @Component({
   selector: 'app-custom',

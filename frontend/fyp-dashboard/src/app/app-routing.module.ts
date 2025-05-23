@@ -3,29 +3,29 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { OverviewComponent } from './components/overview/overview.component';
-import { RealtimeComponent } from './components/realtime/realtime.component';
-import { BehaviorComponent } from './components/behavior/behavior.component';
-import { EventsComponent } from './components/behavior/events/events.component';
-import { PagesComponent } from './components/behavior/pages/pages.component';
-import { VisitorsComponent } from './components/behavior/visitors/visitors.component';
-import { SessionsComponent } from './components/behavior/sessions/sessions.component';
-import { TrafficComponent } from './components/behavior/traffic/traffic.component';
-import { AuthGuard } from './components/services/auth-guard.guard';
-import { EcommerceComponent } from './components/e-commerce/e-commerce.component';
+import { AuthGuard } from './services/auth-guard.guard';
 import { AiComponent } from './components/ai/ai.component';
 import { CustomComponent } from './components/custom/custom.component';
 import { WebsiteFormComponent } from './components/website-form/website-form.component';
 import { WebsiteManagementComponent } from './components/website-management/website-management.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { overviewDashboard } from './dashboard-config/overview-dashboard-config';
+import { pagesDashboard } from './dashboard-config/pages-dashboard.config';
+import { eventsDashboard } from './dashboard-config/events-dashboard.config';
+import { visitorsDashboard } from './dashboard-config/visitor-dashboard-config';
+import { sessionsDashboard } from './dashboard-config/sessions-dashboard-config';
+import { trafficDashboard } from './dashboard-config/traffic-dashboard-config';
+import { ecommerceDashboard } from './dashboard-config/e-commerce-dashboard-config';
+import { RealtimeComponent } from './components/realtime/realtime.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'Web Insight | Login' },
   { path: 'register', component: RegisterComponent, title: 'Web Insight | Register' },
   {
     path: 'overview', title: 'Web Insight | Overview',
-    component: OverviewComponent,
+    component: DashboardComponent,
     canActivate: [AuthGuard],
-    data: { requiresAuth: true }
+    data: { requiresAuth: true, dashboard: overviewDashboard }
   },
   {
     path: 'realtime', title: 'Web Insight | Realtime',
@@ -36,23 +36,22 @@ const routes: Routes = [
   {
     path: 'behavior', title: 'Web Insight | Behavior',
     // Lazy load the BehaviorComponent and its children
-    component: BehaviorComponent,
     canActivate: [AuthGuard],
     data: { requiresAuth: true },
     children: [
-      { path: 'pages', component: PagesComponent, title: 'Web Insight | Pages' },
-      { path: 'events', component: EventsComponent, title: 'Web Insight | Events' },
-      { path: 'visitors', component: VisitorsComponent, title: 'Web Insight | Visitors' },
-      { path: 'sessions', component: SessionsComponent, title: 'Web Insight | Sessions' },
-      { path: 'traffic', component: TrafficComponent, title: 'Web Insight | Traffic' },
+      { path: 'pages', component: DashboardComponent, title: 'Web Insight | Pages', data: { dashboard: pagesDashboard } },
+      { path: 'events', component: DashboardComponent, title: 'Web Insight | Events', data: { dashboard: eventsDashboard } },
+      { path: 'visitors', component: DashboardComponent, title: 'Web Insight | Visitors', data: { dashboard: visitorsDashboard } },
+      { path: 'sessions', component: DashboardComponent, title: 'Web Insight | Sessions', data: { dashboard: sessionsDashboard } },
+      { path: 'traffic', component: DashboardComponent, title: 'Web Insight | Traffic', data: { dashboard: trafficDashboard } },
       { path: '', redirectTo: 'pages', pathMatch: 'full' },
     ],
   },
   {
     path: 'e-commerce', title: 'Web Insight | E-Commerce',
-    component: EcommerceComponent,
+    component: DashboardComponent,
     canActivate: [AuthGuard],
-    data: { requiresAuth: true }
+    data: { requiresAuth: true, dashboard: ecommerceDashboard }
   },
   {
     path: 'ai', title: 'Web Insight | AI',
