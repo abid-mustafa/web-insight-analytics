@@ -1,11 +1,6 @@
 import { Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Router, NavigationEnd, Event } from '@angular/router';
-import { filter, takeUntil } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { DateRangeService, DateRange } from '../../services/date-range.service';
-import { AuthService } from '../../services/auth.service';
-import { WebsiteService } from '../../services/website.service';
 
 @Component({
   selector: 'app-header',
@@ -13,71 +8,19 @@ import { WebsiteService } from '../../services/website.service';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  readonly range = new FormGroup({
-    start: new FormControl<Date | null>(null),
-    end: new FormControl<Date | null>(null),
-  });
 
   @Output() toggleSidebar = new EventEmitter<void>();
-
-  showLayout: boolean = true;
   userName: string | null = null;
   userEmail: string | null = null;
-  websites: any[] = [];
-  selectedWebsite: string | null = null;
 
   private destroy$ = new Subject<void>();
 
-  constructor(private dateRangeService: DateRangeService, private auth: AuthService, private router: Router, private websiteService: WebsiteService) {
+  constructor(private router: Router) {
   }
 
   ngOnInit(): void {
-    this.router.events
-      .pipe(filter((e: Event): e is NavigationEnd => e instanceof NavigationEnd), takeUntil(this.destroy$))
-      .subscribe((e) => {
-        this.showLayout = !['/login', '/register'].includes(e.urlAfterRedirects);
-      });
-
     this.setUserDetails();
-    this.setWebsiteSelection();
-
-    const { start, end } = this.dateRangeService.getCurrentRange();
-
-    if (!start || !end) {
-      const today = new Date();
-      const defaultStart = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate() - 7, 0, 0, 0, 0));
-      const defaultEnd = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59, 999));
-
-      this.dateRangeService.setRange({ start: defaultStart, end: defaultEnd });
-      localStorage.setItem('startDate', defaultStart.toISOString());
-      localStorage.setItem('endDate', defaultEnd.toISOString());
-      this.range.setValue({ start: defaultStart, end: defaultEnd });
-    } else {
-      this.range.setValue({ start, end });
-    }
-
-    this.range.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(val => {
-      const { start, end } = val;
-      if (start && end) {
-        const normalizedStart = new Date(Date.UTC(start.getFullYear(), start.getMonth(), start.getDate(), 0, 0, 0, 0));
-        const normalizedEnd = new Date(Date.UTC(end.getFullYear(), end.getMonth(), end.getDate(), 23, 59, 59, 999));
-
-        if (normalizedStart > normalizedEnd) {
-          this.range.setErrors({ invalidRange: true });
-          return;
-        }
-
-        localStorage.setItem('startDate', normalizedStart.toISOString());
-        localStorage.setItem('endDate', normalizedEnd.toISOString());
-        this.dateRangeService.setRange({ start: normalizedStart, end: normalizedEnd });
-      } else {
-        this.range.setErrors({ invalidRange: true });
-      }
-    });
-
-    this.loadWebsites();
   }
-
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -90,37 +33,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.userEmail = user.email || null;
   }
 
-  private setWebsiteSelection(): void {
-    const uid = JSON.parse(localStorage.getItem('websiteUid') || 'null');
-    if (uid) {
-      this.selectedWebsite = uid;
-      this.websiteService.setSelectedWebsite(uid);
-    }
-  }
-
-  private loadWebsites(): void {
-    this.websiteService.getWebsites().subscribe({
-      next: (res: any) => {
-        const arr = Array.isArray(res) ? res : res.data;
-        this.websites = Array.isArray(arr) ? arr : [];
-
-        const localWebsiteUid = JSON.parse(localStorage.getItem('websiteUid') || 'null');
-        const matchedWebsite = this.websites.find(w => w.website_id === localWebsiteUid);
-
-        if (matchedWebsite) {
-          this.onWebsiteChange(matchedWebsite.website_id);
-        } else if (this.websites.length) {
-          this.onWebsiteChange(this.websites[0].website_id);
-        }
-      },
-    });
-  }
-
-  onWebsiteChange(websiteId: string): void {
-    this.selectedWebsite = websiteId;
-    this.websiteService.setSelectedWebsite(websiteId);
-    localStorage.setItem('websiteUid', JSON.stringify(websiteId));
-  }
 
   onToggleSidebar(): void {
     this.toggleSidebar.emit();

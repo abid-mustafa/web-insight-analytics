@@ -1,4 +1,4 @@
-<mat-toolbar class="header" *ngIf="showLayout">
+<mat-toolbar class="header">
   <button mat-icon-button (click)="onToggleSidebar()" class="icon">
     <mat-icon>menu</mat-icon>
   </button>
@@ -6,53 +6,6 @@
     <img src="assets/logo.ico" alt="Logo" class="logo" />
   </span>
   <span><b>Web Insight</b></span>
-
-  <div class="website-selector">
-    <mat-form-field>
-      <mat-select [(ngModel)]="selectedWebsite" (selectionChange)="onWebsiteChange($event.value)">
-        <mat-option [value]="null" disabled>Select a site</mat-option>
-        <mat-option *ngFor="let site of websites" [value]="site.website_id">
-          {{ site.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-
-  <button mat-icon-button [matMenuTriggerFor]="menu" class="icon">
-    <mat-icon>calendar_today</mat-icon>
-  </button>
-  <mat-menu #menu="matMenu">
-    <mat-form-field class="date-menu">
-      <mat-label>Select a date range</mat-label>
-
-      <!-- <div class="preset-ranges">
-        <button mat-button (click)="selectPreset('today')">Today</button>
-        <button mat-button (click)="selectPreset('yesterday')">Yesterday</button>
-        <button mat-button (click)="selectPreset('last7')">Last 7 Days</button>
-        <button mat-button (click)="selectPreset('last30')">Last 30 Days</button>
-        <button mat-button (click)="selectPreset('thisMonth')">This Month</button>
-        <button mat-button (click)="selectPreset('lastMonth')">Last Month</button>
-      </div> -->
-
-      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
-        <input matStartDate formControlName="start" placeholder="Start date" />
-        <input matEndDate formControlName="end" placeholder="End date" />
-      </mat-date-range-input>
-      <mat-hint>DD/MM/YYYY - DD/MM/YYYY</mat-hint>
-      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-date-range-picker #picker></mat-date-range-picker>
-
-      <mat-error *ngIf="range.hasError('invalidRange')">
-        Start date must be before or equal to end date.
-      </mat-error>
-    </mat-form-field>
-  </mat-menu>
-
-  <p *ngIf="range.value.start && range.value.end" class="selected-dates">
-    Selected dates: {{ range.value.start | date : "dd/MM/yyyy" }}
-    -
-    {{ range.value.end | date : "dd/MM/yyyy" }}
-  </p>
 
   <span class="header-spacer"></span>
 

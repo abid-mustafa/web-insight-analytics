@@ -47,7 +47,7 @@ import { SummaryCardComponent } from './components/summary-card/summary-card.com
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
-import { AiComponent } from './components/ai/ai.component';
+import { IntelligentSearchbarComponent } from './components/ai/intelligent-searchbar.component';
 import { CustomComponent } from './components/custom/custom.component';
 import { WebsiteFormComponent } from './components/website-form/website-form.component';
 import { WebsiteManagementComponent } from './components/website-management/website-management.component';
@@ -56,6 +56,9 @@ import { RealtimeCardComponent } from './components/realtime-card/realtime-card.
 import { DialogComponent } from './components/dialog/dialog.component';
 import { SingleValueCardComponent } from './components/single-value-card/single-value-card.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DatePickerComponent } from './components/date-picker/date-picker.component';
+import { WebsitePickerComponent } from './components/website-picker/website-picker.component';
+import { AiReportComponent } from './components/ai-report/ai-report.component';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -86,7 +89,7 @@ const socketConfig: SocketIoConfig = {
     LoginComponent,
     RegisterComponent,
     RealtimeCardComponent,
-    AiComponent,
+    IntelligentSearchbarComponent,
     RealtimeComponent,
     CustomComponent,
     WebsiteFormComponent,
@@ -94,7 +97,10 @@ const socketConfig: SocketIoConfig = {
     UserMenuComponent,
     DialogComponent,
     SingleValueCardComponent,
-    DashboardComponent
+    DashboardComponent,
+    DatePickerComponent,
+    WebsitePickerComponent,
+    AiReportComponent
   ],
   imports: [
     BrowserModule,

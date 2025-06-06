@@ -10,6 +10,7 @@ import { filter } from 'rxjs/operators';
 export class AppComponent {
   isSidebarExpanded = true;
   showLayout = false;
+  showPickers = false;
 
   constructor(private router: Router) {
     this.router.events
@@ -18,9 +19,11 @@ export class AppComponent {
         filter((e: Event): e is NavigationEnd => e instanceof NavigationEnd)
       )
       .subscribe((e) => {
-        // now TS knows `e` has `urlAfterRedirects`
-        const hideOn = ['/login', '/register'];
-        this.showLayout = !hideOn.includes(e.urlAfterRedirects);
+        const url = e.urlAfterRedirects;
+        this.showLayout = url !== '/login' && url !== '/register';
+        if (this.showLayout) {
+          this.showPickers = !url.includes('ai') && url !== '/manage-websites' && url !== '/website-form';
+        }
       });
   }
 

@@ -1,5 +1,5 @@
 .sidebar.collapsed {
-  width: 72px;
+  width: var(--sidebar-width-minimized);
 }
 
 .sidebar.collapsed .behavior-children {
@@ -11,11 +11,10 @@
 }
 
 .sidenav-container {
-  width: 240px;
+  width: var(--sidebar-width);
   position: fixed;
-  top: 90px;
-  height: calc(100% - 90px);
-  width: 15%;
+  top: var(--header-height);
+  height: calc(100% - var(--header-height));
   background-color: transparent;
   transition: all 0.3s ease;
 }
@@ -128,7 +127,7 @@ mat-nav-list {
 
 :host-context(.sidebar-collapsed) {
   .sidenav-container {
-    width: 72px;
+    width: var(--sidebar-width-minimized);
   }
 
   .sidebar {

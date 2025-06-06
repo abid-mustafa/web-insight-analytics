@@ -29,6 +29,7 @@ export class RealtimeCardComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((id) => {
         this.currentWebsiteId = id;
+
         // clear out old data
         if (id) {
           this.fetchData();

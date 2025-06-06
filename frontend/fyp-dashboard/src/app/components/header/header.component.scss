@@ -1,12 +1,11 @@
 .header {
   position: fixed;
   top: 0;
-  height: 90px;
+  height: var(--header-height);
   background-color: #1a2a40;
   color: #d9d9d9;
   display: flex;
   align-items: center;
-  padding: 0 24px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 1000;
 }
@@ -25,108 +24,9 @@
 }
 
 .logo {
-  width: 50px;
-  height: 50px;
   vertical-align: middle;
   border-radius: 8px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
-.website-selector {
-  min-width: 180px;
-  padding-left: 30px;
-  padding-top: 15px;
-  padding-right: 15px;
-
-  ::ng-deep {
-    .mat-mdc-form-field .mdc-text-field {
-      background-color: #ffffff !important;
-    }
-
-    .mdc-text-field--outlined {
-      --mdc-outlined-text-field-outline-color: rgba(0, 0, 0, 0.2);
-      --mdc-outlined-text-field-hover-outline-color: rgba(0, 0, 0, 0.3);
-      --mdc-outlined-text-field-focus-outline-color: rgba(0, 0, 0, 0.4);
-      --mdc-outlined-text-field-label-text-color: rgba(0, 0, 0, 0.6);
-      --mdc-outlined-text-field-caret-color: #000000;
-      --mdc-outlined-text-field-focus-label-text-color: #000000;
-    }
-
-    .mat-mdc-form-field-flex {
-      background-color: #ffffff;
-    }
-
-    .mat-mdc-select-value-text {
-      color: #000000;
-    }
-
-    .mat-mdc-select-arrow {
-      color: #000000;
-    }
-
-    .mdc-floating-label {
-      color: rgba(0, 0, 0, 0.6) !important;
-    }
-
-    .mat-mdc-select-panel {
-      background-color: #ffffff;
-      color: #000000;
-    }
-
-    .mat-mdc-input-element {
-      color: #000000;
-      font-size: 0.875rem;
-
-      &::placeholder {
-        color: rgba(0, 0, 0, 0.4);
-      }
-    }
-  }
-}
-
-.date-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-
-  ::ng-deep {
-    .mat-mdc-form-field {
-      width: 100%;
-    }
-
-    .mat-mdc-form-field-subscript-wrapper {
-      display: none;
-    }
-
-    .mat-mdc-form-field-flex {
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 6px;
-      padding: 0 12px;
-    }
-
-    .mat-mdc-input-element {
-      color: #ffffff;
-      font-size: 0.875rem;
-
-      &::placeholder {
-        color: rgba(255, 255, 255, 0.5);
-      }
-    }
-
-    .mat-datepicker-toggle {
-      color: #d9d9d9;
-    }
-  }
-}
-
-.selected-dates {
-  margin-left: 16px;
-  font-weight: 500;
-  color: #d9d9d9;
-  font-size: 1rem;
+  padding: 0 15px;
 }
 
 .user-menu {
@@ -136,7 +36,6 @@
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     min-width: 220px;
-    margin-top: 8px;
 
     .mat-mdc-menu-content {
       padding: 8px 0;

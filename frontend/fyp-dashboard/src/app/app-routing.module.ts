@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { AuthGuard } from './services/auth-guard.guard';
-import { AiComponent } from './components/ai/ai.component';
+import { IntelligentSearchbarComponent as IntelligentSearchbarComponent } from './components/ai/intelligent-searchbar.component';
 import { CustomComponent } from './components/custom/custom.component';
 import { WebsiteFormComponent } from './components/website-form/website-form.component';
 import { WebsiteManagementComponent } from './components/website-management/website-management.component';
@@ -17,6 +17,7 @@ import { sessionsDashboard } from './dashboard-config/sessions-dashboard-config'
 import { trafficDashboard } from './dashboard-config/traffic-dashboard-config';
 import { ecommerceDashboard } from './dashboard-config/e-commerce-dashboard-config';
 import { RealtimeComponent } from './components/realtime/realtime.component';
+import { AiReportComponent } from './components/ai-report/ai-report.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'Web Insight | Login' },
@@ -54,8 +55,14 @@ const routes: Routes = [
     data: { requiresAuth: true, dashboard: ecommerceDashboard }
   },
   {
-    path: 'ai', title: 'Web Insight | AI',
-    component: AiComponent,
+    path: 'ai/intelligent-searchbar', title: 'Web Insight | Intelligent Searchbar',
+    component: IntelligentSearchbarComponent,
+    canActivate: [AuthGuard],
+    data: { requiresAuth: true }
+  },
+  {
+    path: 'ai/report', title: 'Web Insight | AI Report',
+    component: AiReportComponent,
     canActivate: [AuthGuard],
     data: { requiresAuth: true }
   },

@@ -1,0 +1,9 @@
+<mat-form-field>
+    <mat-select [(ngModel)]="selectedWebsite" placeholder="Select a site"
+        (selectionChange)="onWebsiteChange($event.value)">
+        <mat-option [value]="null" disabled>Select a site</mat-option>
+        <mat-option *ngFor="let site of websites" [value]="site.website_id">
+            {{ site.name }}
+        </mat-option>
+    </mat-select>
+</mat-form-field>

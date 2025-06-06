@@ -1,20 +1,19 @@
-<!-- when showLayout is true, render your full dashboard shell -->
 <ng-container *ngIf="showLayout; else authOnly">
   <div class="layout">
     <app-header (toggleSidebar)="toggleSidebar()"></app-header>
     <div class="body">
-      <app-sidebar
-        [isExpanded]="isSidebarExpanded"
-        (toggleSidebar)="toggleSidebar()"
-      ></app-sidebar>
-      <div class="main-content">
+      <app-sidebar [isExpanded]="isSidebarExpanded" (toggleSidebar)="toggleSidebar()"></app-sidebar>
+      <div class="main-content" [ngClass]="{ 'sidebar-collapsed': !isSidebarExpanded }">
+        <div class="picker-container" *ngIf="showPickers">
+          <app-website-picker></app-website-picker>
+          <app-date-picker></app-date-picker>
+        </div>
         <router-outlet></router-outlet>
       </div>
     </div>
   </div>
 </ng-container>
 
-<!-- when showLayout is false, only render the routed page (login/register) -->
 <ng-template #authOnly>
   <router-outlet></router-outlet>
 </ng-template>

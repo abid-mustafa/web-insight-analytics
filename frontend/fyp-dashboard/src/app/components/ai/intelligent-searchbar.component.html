@@ -1,0 +1,43 @@
+<div class="ai-container">
+  <mat-card class="ai-card">
+    <mat-card-content>
+      <form class="input-section" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="ai-textfield" floatLabel="always">
+          <mat-label>Your input</mat-label>
+          <input matInput name="userInput" required [(ngModel)]="userInput"
+            placeholder="Type something AI-related..." />
+        </mat-form-field>
+        <button mat-raised-button class="submit-btn" type="submit" [disabled]="!userInput.trim().length">
+          <mat-icon>send</mat-icon>
+          Submit
+        </button>
+      </form>
+
+      <section *ngIf="submitted" class="response-section">
+        <header class="response-header">
+          <mat-icon>chat_bubble</mat-icon>
+          <span>AI's Response</span>
+        </header>
+
+        <div class="overlay-spinner" *ngIf="searchbarIsLoading">
+          <div class="loading-spinner"></div>
+        </div>
+
+        <div *ngIf="aiOutput?.prompt_type === 'general_question'" class="response-content">
+          {{ aiOutput.text }}
+        </div>
+
+        <div *ngIf="aiOutput?.prompt_type === 'query'" class="table-container">
+          <table mat-table [dataSource]="tableData" class="mat-elevation-z2">
+            <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+              <th mat-header-cell *matHeaderCellDef>{{ column | titlecase }}</th>
+              <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+      </section>
+    </mat-card-content>
+  </mat-card>
+</div>

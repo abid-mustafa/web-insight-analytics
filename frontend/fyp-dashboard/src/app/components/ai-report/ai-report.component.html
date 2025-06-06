@@ -1,0 +1,53 @@
+<div class="ai-container">
+    <mat-card class="ai-card">
+        <mat-card-content>
+            <form [formGroup]="formData" class="input-section">
+                <mat-form-field appearance="outline" class="ai-textfield">
+                    <mat-label>From Date</mat-label>
+                    <input matInput [matDatepicker]="fromPicker" formControlName="start">
+                    <mat-hint>DD/MM/YYYY - DD/MM/YYYY</mat-hint>
+                    <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #fromPicker></mat-datepicker>
+                    <mat-error *ngIf="formData.get('start')?.hasError('required')">
+                        Start date is required.
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="ai-textfield">
+                    <mat-label>To Date</mat-label>
+                    <input matInput [matDatepicker]="toPicker" formControlName="end">
+                    <mat-hint>DD/MM/YYYY - DD/MM/YYYY</mat-hint>
+                    <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #toPicker></mat-datepicker>
+                    <mat-error *ngIf="formData.get('end')?.hasError('required')">
+                        End date is required.
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-select formControlName="selectedWebsite" placeholder="Select a site">
+                        <mat-option [value]="null" disabled>Select a site</mat-option>
+                        <mat-option *ngFor="let site of websites" [value]="site.website_id">
+                            {{ site.name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="formData.get('selectedWebsite')?.hasError('required')">
+                        Website selection is required.
+                    </mat-error>
+                </mat-form-field>
+
+                <button mat-raised-button class="submit-btn" (click)="getAIReport()" [disabled]="!formData.valid">
+                    Generate Report
+                </button>
+
+                <mat-error *ngIf="formData.hasError('invalidRange')">
+                    Start date must not be after end date.
+                </mat-error>
+            </form>
+
+            <mat-error *ngIf="error">{{ error }}</mat-error>
+            <div *ngIf="reportIsLoading">{{ reportIsLoading }}</div>
+            <div *ngIf="generatedReportResponse">{{ generatedReportResponse }}</div>
+        </mat-card-content>
+    </mat-card>
+</div>
