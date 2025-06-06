@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ApiService } from '../../services/api.service';
 import { WebsiteService } from '../../services/website.service';
@@ -8,7 +8,7 @@ import { WebsiteService } from '../../services/website.service';
   templateUrl: './single-value-card.component.html',
   styleUrl: './single-value-card.component.scss',
 })
-export class SingleValueCardComponent implements OnInit, OnDestroy {
+export class SingleValueCardComponent implements OnInit, OnChanges, OnDestroy {
   @Input() title!: string;
   @Input() endpoint!: string;
   @Input() fromDate!: string;
@@ -31,6 +31,16 @@ export class SingleValueCardComponent implements OnInit, OnDestroy {
         this.currentWebsiteId = id;
         if (id) this.fetchData();
       });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['toDate'] &&
+      !changes['toDate'].firstChange &&
+      this.currentWebsiteId
+    ) {
+      this.fetchData();
+    }
   }
 
   private fetchData(): void {

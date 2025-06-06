@@ -3,25 +3,26 @@
     <mat-card-title>{{ title }}</mat-card-title>
   </mat-card-header>
 
-  <ng-container *ngIf="value || !isLoading; else initialLoading">
-    <div *ngIf="value; else noData">
-      <mat-card-content>
-        <div class="counter">{{ value }}</div>
-      </mat-card-content>
-    </div>
+  <mat-card-content>
+    <div class="content-container">
+      <ng-container *ngIf="!isLoading; else loading">
+        <div *ngIf="value !== null; else noData" class="value-container">
+          <div class="counter">{{ value }}</div>
+        </div>
+      </ng-container>
 
-  </ng-container>
+      <ng-template #noData>
+        <div class="no-data-message">
+          <mat-icon>info</mat-icon>
+          <p>No data available for the selected date range</p>
+        </div>
+      </ng-template>
 
-  <ng-template #noData>
-    <div class="no-data-message">
-      <mat-icon>info</mat-icon>
-      <p>No data available for the selected date range</p>
+      <ng-template #loading>
+        <div class="overlay-spinner">
+          <div class="loading-spinner"></div>
+        </div>
+      </ng-template>
     </div>
-  </ng-template>
-
-  <ng-template #initialLoading>
-    <div class="overlay-spinner">
-      <div class="loading-spinner"></div>
-    </div>
-  </ng-template>
+  </mat-card-content>
 </mat-card>

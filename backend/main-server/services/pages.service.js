@@ -144,8 +144,6 @@ exports.getBounceRateByTitle = async (websiteId, offset, startDate, endDate) => 
         )
         SELECT 
             pv.page_title,
-            COUNT(DISTINCT s.id) AS total_sessions,
-            COUNT(DISTINCT CASE WHEN sc.session_page_count = 1 THEN s.id END) AS bounced_sessions,
             ROUND(
                 (COUNT(DISTINCT CASE WHEN sc.session_page_count = 1 THEN s.id END) 
                 / COUNT(DISTINCT s.id)) * 100, 2

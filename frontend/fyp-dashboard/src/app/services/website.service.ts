@@ -41,13 +41,13 @@ export class WebsiteService {
     return this.http.get<any>(`${this.baseUrl}/details`);
   }
 
-  updateWebsite(websiteId: string, domain: string, name: string): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/update`, { websiteId, domain, name }, { withCredentials: true });
+  updateWebsite(websiteUid: string, domain: string, name: string): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}`, { websiteUid, domain, name }, { withCredentials: true });
   }
 
   /** ← NEW: call this whenever the header selection changes */
-  setSelectedWebsite(id: string) {
-    this.selectedWebsiteSubject.next(id);
-    localStorage.setItem('websiteUid', JSON.stringify(id));
+  setSelectedWebsite(uid: string) {
+    this.selectedWebsiteSubject.next(uid);
+    localStorage.setItem('websiteUid', JSON.stringify(uid));
   }
 }

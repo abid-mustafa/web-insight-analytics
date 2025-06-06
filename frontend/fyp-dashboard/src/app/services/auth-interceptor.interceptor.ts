@@ -35,10 +35,12 @@ export class AuthInterceptorProvider implements HttpInterceptor {
                         return;
                     }
                     else if (err.status === 409) {
+                        if (err.error?.code === 'LimitReached') {
+                            return;
+                        }
                         this.showDialog('Email already registered', err.error?.message || 'A user already exists with this email, try logging in', () => {
                             this.clearData();
                         });
-
                         return;
                     }
                     else if (err.status === 0 || err.status === 500) {

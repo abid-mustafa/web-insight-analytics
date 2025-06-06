@@ -1,22 +1,21 @@
 const db = require('../database')
 
-exports.getWebsitesByUserid = async (userId) => {
+const getWebsitesByUserid = async (userId) => {
     const [result] = await db.query(`
-        SELECT 
-            website_id, name
-        FROM
-            websites
-        WHERE user_id = ?; 
-        `, [userId])
+        SELECT website_id, name, domain FROM websites WHERE user_id = ?;
+    `, [userId]);
+    return result;
+};
 
-    return result
-}
+exports.getWebsitesByUserid = getWebsitesByUserid;
 
 exports.addWebsite = async (userId, domain, websiteUid, name) => {
-    const result = await this.getWebsitesByUserid(userId)
+    const result = await getWebsitesByUserid(userId)
 
     if (result.length >= 3) {
-        throw new Error('You can only add upto 3 websites')
+        const err = new Error('You can only add up to 3 websites');
+        err.code = 'LimitReached';
+        throw err;
     }
 
     await db.query(`
@@ -25,3 +24,22 @@ exports.addWebsite = async (userId, domain, websiteUid, name) => {
         `, [userId, domain, websiteUid, name])
     return
 }
+
+exports.updateWebsite = async (userId, domain, websiteUid, name) => {
+    await db.query(
+        `UPDATE websites 
+         SET domain = ?, name = ?
+         WHERE user_id = ? AND website_id = ?`,
+        [domain, name, userId, websiteUid]
+    );
+    return;
+};
+
+exports.deleteWebsite = async (userId, websiteUid) => {
+    await db.query(
+        `DELETE FROM websites 
+         WHERE user_id = ? AND website_id = ?`,
+        [userId, websiteUid]
+    );
+    return;
+};

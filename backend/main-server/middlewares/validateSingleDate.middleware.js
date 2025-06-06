@@ -5,7 +5,7 @@ module.exports = function validateDateRangeSingle(req, res, next) {
 
     if (!endDate) {
         const error = new Error("Missing endDate")
-        error.status = 400
+        error.statusCode = 400
         return next(error)
     }
 

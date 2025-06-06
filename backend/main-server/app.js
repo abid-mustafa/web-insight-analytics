@@ -42,7 +42,7 @@ app.use(
                 callback(new Error('CORS policy violation'))
             }
         },
-        methods: 'GET, POST',
+        methods: 'GET, POST, PUT, DELETE',
         // TODO: change to true later
         credentials: true,
     })

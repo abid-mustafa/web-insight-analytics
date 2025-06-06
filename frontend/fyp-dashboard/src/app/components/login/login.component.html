@@ -1,7 +1,7 @@
 <div class="auth-container">
   <div class="auth-card">
     <h2>Login</h2>
-    <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <form [formGroup]="loginForm" (ngSubmit)="login()" class="form-base">
       <div class="form-group">
         <mat-form-field appearance="fill">
           <input matInput id="email" formControlName="email" placeholder="Enter email" type="email" />

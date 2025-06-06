@@ -11,7 +11,7 @@ async function getWebsiteIdFromUid(websiteUid) {
 
     if (!result) {
         const error = new Error('Website not found')
-        error.status = 404
+        error.statusCode = 404
         throw error
     }
 
@@ -29,7 +29,7 @@ async function getSessionIdFromUid(sessionUid) {
 
     if (!result) {
         const error = new Error('Session not found')
-        error.status = 404
+        error.statusCode = 404
         throw error
     }
 

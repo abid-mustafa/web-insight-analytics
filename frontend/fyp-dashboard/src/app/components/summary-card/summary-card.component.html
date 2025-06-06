@@ -2,7 +2,7 @@
   <div class="card-header">
     <h3 class="card-title">{{ title }}</h3>
   </div>
-  <ng-container *ngIf="chartData; else initialLoading">
+  <ng-container *ngIf="!isLoading; else loading">
     <div class="chart-container" *ngIf="chartData?.labels?.length; else noData">
       <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="chartType"></canvas>
     </div>
@@ -15,7 +15,7 @@
     </div>
   </ng-template>
 
-  <ng-template #initialLoading>
+  <ng-template #loading>
     <div class="overlay-spinner">
       <div class="loading-spinner"></div>
     </div>

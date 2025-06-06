@@ -55,6 +55,7 @@ export class WebsiteManagementComponent implements OnInit {
   onSubmit() {
     if (this.editForm.valid && this.selectedWebsiteId) {
       const { name, domain } = this.editForm.value;
+
       this.websiteService.updateWebsite(this.selectedWebsiteId, domain, name).subscribe({
         next: () => {
           this.successMessage = 'Website data updated successfully!';
@@ -75,6 +76,6 @@ export class WebsiteManagementComponent implements OnInit {
   }
 
   getTrackingScript(websiteId: string) {
-    return `<script async src="http://127.0.0.1:5000/static/tracker.js?websiteId=${websiteId}"></script>`;
+    return `<script defer src="http://127.0.0.1:5000/static/tracker.js?website_uid=${websiteId}"></script>`;
   }
 }

@@ -1,0 +1,49 @@
+.form-base {
+    max-width: 400px;
+    padding: 32px;
+
+    input,
+    textarea,
+    select {
+        font-size: 18px;
+    }
+
+    mat-form-field {
+        width: 100%;
+        font-size: 16px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px 24px;
+        margin: 12px;
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px var(--primary-300);
+
+        &:disabled {
+            background: var(--primary-200);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        &:hover:not(:disabled) {
+            background: var(--primary-700);
+            box-shadow: 0 4px 8px var(--primary-300);
+            transform: translateY(-1px);
+        }
+
+        &:active:not(:disabled) {
+            transform: translateY(0);
+        }
+    }
+
+    button[type="submit"] {
+        background: var(--primary-600);
+        color: #fff !important;
+    }
+}

@@ -14,7 +14,7 @@
   <div class="content-container">
     <!-- TABLE VIEW -->
     <ng-container *ngIf="viewType === 'table'">
-      <ng-container *ngIf="dataSource.data.length || !isLoading; else initialLoading">
+      <ng-container *ngIf="dataSource.data.length || !isLoading; else loading">
         <div class="table-wrapper">
           <div class="table-scroll" *ngIf="dataSource.data.length; else noData">
             <table mat-table [dataSource]="dataSource" class="custom-table">
@@ -39,12 +39,8 @@
             </div>
           </ng-template>
 
-          <mat-paginator
-            [pageSize]="pageSize"
-            [showFirstLastButtons]="true"
-            [length]="length"
-            (page)="onPageChange($event)"
-          ></mat-paginator>
+          <mat-paginator [pageSize]="pageSize" [showFirstLastButtons]="true" [length]="length"
+            (page)="onPageChange($event)"></mat-paginator>
 
           <div class="overlay-spinner" *ngIf="isLoading">
             <div class="loading-spinner"></div>
@@ -52,7 +48,7 @@
         </div>
       </ng-container>
 
-      <ng-template #initialLoading>
+      <ng-template #loading>
         <div class="overlay-spinner">
           <div class="loading-spinner"></div>
         </div>
@@ -65,14 +61,8 @@
         <mat-spinner></mat-spinner>
       </div>
       <div class="chart-container" *ngIf="chartData">
-        <canvas
-          baseChart
-          [data]="chartData"
-          [options]="viewType === 'pie' ? pieChartOptions : chartOptions"
-          [type]="chartType"
-          width="600"
-          height="270"
-        ></canvas>
+        <canvas baseChart [data]="chartData" [options]="viewType === 'pie' ? pieChartOptions : chartOptions"
+          [type]="chartType" width="600" height="270"></canvas>
       </div>
     </ng-container>
   </div>

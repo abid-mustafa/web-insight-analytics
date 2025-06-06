@@ -31,9 +31,6 @@ export class DashboardComponent {
         if (start && end) {
           this.fromDate = start.toISOString();
           this.toDate = end.toISOString();
-
-          console.log(this.fromDate, this.toDate);
-
         }
       });
   }

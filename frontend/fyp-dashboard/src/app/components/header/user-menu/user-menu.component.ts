@@ -28,13 +28,7 @@ export class UserMenuComponent {
     });
   }
 
-  confirmLogout(): void {
-    if (window.confirm('Are you sure you want to log out?')) {
-      this.logout();
-    }
-  }
-
-  private logout(): void {
+  logout(): void {
     this.auth.logout().subscribe(() => {
       localStorage.clear();
       this.router.navigate(['/login']);

@@ -28,9 +28,31 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
-  <div *ngIf="websites.length > 0" class="tracking-script">
+  <div class="edit-form-container">
+    <!-- Edit Form -->
+    <form *ngIf="selectedWebsiteId" [formGroup]="editForm" (ngSubmit)="onSubmit()" class="form-base">
+      <mat-form-field>
+        <mat-label>Website Name</mat-label>
+        <input matInput formControlName="name" />
+        <mat-error *ngIf="editForm.get('name')?.invalid && editForm.get('name')?.touched">
+          Name is required (min 2 chars).
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Domain</mat-label>
+        <input matInput formControlName="domain" />
+        <mat-error *ngIf="editForm.get('domain')?.invalid && editForm.get('domain')?.touched">
+          Valid domain required.
+        </mat-error>
+      </mat-form-field>
+      <button mat-raised-button class="submit-btn" type="submit" [disabled]="editForm.invalid">Save</button>
+      <button mat-raised-button type="button" (click)="onCancel()">Cancel</button>
+    </form>
+  </div>
+
+  <div *ngIf="websites.length > 0 && selectedWebsiteId" class="tracking-script">
     <h3>Tracking Script</h3>
     <p>Add this script to your website to start tracking:</p>
-    <pre>{{ getTrackingScript(websites[0].website_id) }}</pre>
+    <pre>{{ getTrackingScript(selectedWebsiteId) }}</pre>
   </div>
 </div>

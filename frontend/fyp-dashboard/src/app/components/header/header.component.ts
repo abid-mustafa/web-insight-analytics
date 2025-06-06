@@ -133,17 +133,4 @@ export class HeaderComponent implements OnInit, OnDestroy {
   navigateToWebsiteManager(): void {
     this.router.navigate(['/manage-websites']);
   }
-
-  logout(): void {
-    this.auth.logout().subscribe({
-      next: () => {
-        localStorage.clear();
-        this.router.navigate(['/login']);
-      },
-      error: () => {
-        localStorage.clear();
-        this.router.navigate(['/login']);
-      },
-    });
-  }
 }

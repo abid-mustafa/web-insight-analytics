@@ -1,7 +1,7 @@
 <div class="auth-container">
   <div class="auth-card">
     <h2>Register</h2>
-    <form [formGroup]="registerForm" (ngSubmit)="register()">
+    <form [formGroup]="registerForm" (ngSubmit)="register()" class="form-base">
       <div class="form-group">
         <mat-form-field appearance="fill">
           <input id="name" matInput formControlName="name" placeholder="Enter your name" type="text" />
